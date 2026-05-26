@@ -38,7 +38,9 @@
     </div>
 {/if}
 
-<PasskeyVerify />
+{#if false}
+    <PasskeyVerify />
+{/if}
 
 <Form
     {...store.form()}

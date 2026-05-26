@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    'stokker' => [
+        'base_url' => env('STOKKER_API_BASE_URL', 'https://api.stokker.com'),
+        'timeout' => (int) env('STOKKER_API_TIMEOUT', 30),
+        'connect_timeout' => (int) env('STOKKER_API_CONNECT_TIMEOUT', 10),
+    ],
+
 ];

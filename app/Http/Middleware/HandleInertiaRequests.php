@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\ProductFavorite;
+use App\Support\ProductFavoriteOwner;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -41,7 +43,21 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
-            'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'favoritesCount' => fn () => $this->favoritesCount($request),
+            'sidebarOpen' => $request->cookie('sidebar_state', 'true') === 'true',
         ];
+    }
+
+    private function favoritesCount(Request $request): int
+    {
+        $owner = ProductFavoriteOwner::attributes($request);
+
+        if ($owner === []) {
+            return 0;
+        }
+
+        return ProductFavorite::query()
+            ->where($owner)
+            ->count();
     }
 }

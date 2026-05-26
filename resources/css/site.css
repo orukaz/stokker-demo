@@ -1,0 +1,82 @@
+@theme {
+    --font-teko: 'Teko', sans-serif;
+
+    --color-stokker-primary-50: #f4fafe;
+    --color-stokker-primary-75: #e7f0f6;
+    --color-stokker-primary-100: #dae7f4;
+    --color-stokker-primary-200: #007ac2;
+    --color-stokker-primary-300: #007ac2;
+    --color-stokker-primary-400: #4887c7;
+    --color-stokker-primary-500: #0066a6;
+    --color-stokker-primary-600: #0d55a3;
+    --color-stokker-primary-700: #135782;
+    --color-stokker-primary: #0075ba;
+    --color-stokker-primary-dark: #0d3b86;
+    --color-stokker-primary-soft: #dae7f4;
+    --color-stokker-header-action: #1484c7;
+    --color-stokker-green: #599e75;
+    --color-stokker-light-green: #eaf3ee;
+    --color-stokker-red: #b12704;
+    --color-stokker-danger: #ff4d4d;
+    --color-stokker-secondary: #f4f4f3;
+    --color-stokker-secondary-50: #ffffff;
+    --color-stokker-secondary-200: #e0e0e0;
+    --color-stokker-secondary-300: #c9cdd0;
+    --color-stokker-secondary-400: #c2c7cb;
+    --color-stokker-secondary-500: #879197;
+}
+
+@layer base {
+    .site-layout {
+        background: var(--color-white);
+        color: var(--color-black);
+        font-family: var(--font-sans);
+        font-optical-sizing: auto;
+        font-variation-settings: 'wdth' 100;
+        font-weight: 400;
+    }
+
+    .site-layout h1,
+    .site-layout .h1 {
+        font-family: var(--font-sans);
+        font-size: var(--text-4xl);
+        line-height: var(--text-4xl--line-height);
+        font-weight: 400;
+    }
+
+    .site-layout h2,
+    .site-layout .h2 {
+        font-family: var(--font-teko);
+        font-size: var(--text-3xl);
+        line-height: var(--text-3xl--line-height);
+        font-weight: 400;
+    }
+
+    .site-layout h3,
+    .site-layout .h3 {
+        font-size: var(--text-2xl);
+        line-height: var(--text-2xl--line-height);
+        font-weight: inherit;
+    }
+
+    .site-layout h4,
+    .site-layout .h4 {
+        font-size: var(--text-xl);
+        line-height: var(--text-xl--line-height);
+        font-weight: 600;
+    }
+
+    .site-layout h5,
+    .site-layout .h5 {
+        font-size: var(--text-lg);
+        line-height: var(--text-lg--line-height);
+        font-weight: 500;
+    }
+
+    .site-layout h6,
+    .site-layout .h6 {
+        font-size: var(--text-base);
+        line-height: var(--text-base--line-height);
+        font-weight: 500;
+    }
+}

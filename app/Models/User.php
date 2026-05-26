@@ -7,6 +7,8 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\Contracts\PasskeyUser;
@@ -19,6 +21,17 @@ class User extends Authenticatable implements PasskeyUser
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, PasskeyAuthenticatable, TwoFactorAuthenticatable;
+
+    public function favoriteProducts(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'product_favorites')
+            ->withTimestamps();
+    }
+
+    public function productFavorites(): HasMany
+    {
+        return $this->hasMany(ProductFavorite::class);
+    }
 
     /**
      * Get the attributes that should be cast.
