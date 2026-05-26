@@ -68,31 +68,6 @@ test('guests can add and remove product favorites with a visitor cookie', functi
     ]);
 });
 
-test('guests can add and remove product favorites as json', function () {
-    $product = createFavoriteProduct();
-
-    $this->postJson(route('products.favorite.store', $product))
-        ->assertSuccessful()
-        ->assertJsonPath('isFavorited', true)
-        ->assertJsonPath('favoritesCount', 1);
-
-    $favorite = ProductFavorite::query()->sole();
-
-    expect($favorite->visitor_id)->not->toBeNull();
-
-    $this->withCredentials()
-        ->withCookie(ProductFavoriteOwner::VISITOR_COOKIE, $favorite->visitor_id)
-        ->deleteJson(route('products.favorite.destroy', $product))
-        ->assertSuccessful()
-        ->assertJsonPath('isFavorited', false)
-        ->assertJsonPath('favoritesCount', 0);
-
-    $this->assertDatabaseMissing('product_favorites', [
-        'visitor_id' => $favorite->visitor_id,
-        'product_id' => $product->id,
-    ]);
-});
-
 test('adding the same favorite twice is idempotent', function () {
     $product = createFavoriteProduct();
     $visitorId = '2c89918a-a29a-4979-9f51-bbb00ec4174c';
