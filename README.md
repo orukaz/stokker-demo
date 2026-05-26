@@ -1,5 +1,7 @@
 # Stokker Demo
 
+Demo URL: https://stokker-demo.orumets.ee/
+
 ## Autor
 
 Raido Orumets  
@@ -47,14 +49,85 @@ Loo lihtne veebileht, mis kuvab etteantud Stokkeri tooteandmeid ning võimaldab 
 
 ## Lahendus
 
-Rakendus on ehitatud Laravel 13 + Inertia v3 + Svelte 5 stackiga.
+Rakendus on ehitatud Laraveli full-stack lähenemisega, kus backend ja frontend on samas koodibaasis.
 
-Lahendus sisaldab:
-- Toodete tabelit andmebaasis.
-- XML feedi importi Stokker API-st.
-- Toodete nimekirja vaadet (pilt, nimetus, hind).
-- Lemmikute märkimist ja salvestamist andmebaasi.
-- Endless scroll funktsionaalsust (alglaadimine + järkjärguline lisalaadimine).
+### Tehnoloogiad
+
+- **PHP 8.4** - Laraveli jooksutamiseks. - https://www.php.net/releases/8.4/en.php
+- **Laravel 13** - Populaarne full-stack PHP framework kiireks arenduseks ja paljude sisseehitatud funktsioonidega. - https://laravel.com/docs
+- **Inertia.js 3** - Sarnaneb veidi Next.js kasutuskogemusega, aga töötab Laraveli backend-first mudeliga ilma eraldi REST API kihita. - https://inertiajs.com
+- **Svelte 5** (`@inertiajs/svelte` v3) - JavaScripti SPA Framework, mis on Stokkeris juba kasutusel. - https://svelte.dev
+- **Tailwind CSS 4** - Kiire ja praktiline viis responsive kasutajaliideste loomiseks. - https://tailwindcss.com
+- **shadcn-svelte** - Valmis UI komponendid, tagavad ligipääsetavuse ja on kiiresti edasi arendatavad. - https://www.shadcn-svelte.com
+- **Lucide** (`lucide-svelte`) - Lihtne viis lisada ühtse stiiliga ikoone. - https://lucide.dev
+- **MySQL** - Relatsiooniline andmebaas toodete ja lemmikute salvestamiseks. - https://www.mysql.com
+
+### Miks selline stack
+
+- **Laravel + Inertia + Svelte** annab kiire arenduse ja lihtsama arhitektuuri:
+  serveripoolne loogika jääb Laravelisse, frontend on siiski SPA-kogemusega.
+- **Inertia v3** sobib hästi endless scroll jaoks (`Inertia::scroll` + `InfiniteScroll` komponent).
+
+Valiku peamine eesmärk oli teha lahendus, mida on lihtne edasi arendada ja hooldada.
+Selle asemel, et ehitada eraldi backend API + eraldi frontend rakendus, kasutasin
+ühtset Laraveli koodibaasi. See vähendab oluliselt tehnilist keerukust:
+- vähem dubleeritud loogikat (validatsioon, autentimine, route'id)
+- kiirem arendus (üks deploy- ja arendusvoog)
+- lihtsam testimine (backend ja leheandmed samas rakenduses)
+
+**Laravel 13** oli hea valik, sest see annab stabiilse ja modernse põhja:
+Eloquent, scheduler, queue/readiness, Artisan käsud ja migratsioonid on kõik
+tootmisküpsed ning hoiavad arenduse struktureerituna.
+
+**Inertia.js 3** võimaldas teha SPA-laadse kasutuskogemuse ilma REST API kihita.
+Server tagastab otse lehe jaoks vajalikud propsid, mis tähendab, et lehe loogika
+on väga läbipaistev: route -> controller -> Inertia page. See tegi eriti lihtsaks
+endless scrolli lahenduse.
+
+**Svelte 5** sai valitud, kuna see on kerge runtime'iga ja selge komponentmudeliga.
+Tootegridi ning lemmikute interaktsioonid on lihtsad hallata väikese boilerplate'iga.
+
+**Tailwind CSS 4** andis kiire viisi ehitada Stokkeri stiiliga sarnane tootenimekiri
+ja hoida klassid komponentide lähedal. See kiirendas UI iteratsioone.
+
+**shadcn-svelte** ja **Lucide** vähendasid UI komponentide nullist ehitamise vajadust:
+ikoonid, sisendite baaskomponendid ja väiksemad UI osad said teha kiiremini ning
+ühtlasema kvaliteediga.
+
+### Kuidas lahendus töötab
+
+1. **Toodete andmemudel**
+   - `products` tabel salvestab feedist tulnud tooted (`code`, `title`, `price`, `image_url`, `synced_at` jne).
+   - `product_favorites` tabel salvestab lemmikud.
+   - Lemmikud on seotud kas `user_id` (sisselogitud kasutaja) või `visitor_id` (külaline cookie kaudu).
+
+2. **Andmete import XML-ist**
+   - Käsk `php artisan stokker:sync-products` loeb Stokkeri XML feedi.
+   - Parser (`StokkerProductsParser`) normaliseerib hinnad/valuuta ja mapib väljad.
+   - Service (`StokkerService`) valideerib iga toote ja teeb `upsert`-i `code` alusel.
+   - Tulemuseks on idempotentne sync (olemasolevad tooted uuendatakse, uued lisatakse).
+   - See lähenemine on turvaline ka korduvatel käivitustel: sama käsk ei tekita duplikaate.
+
+3. **Tootenimekiri**
+   - Route: `/et/mootorsaed`.
+   - Controller tagastab Inertia lehe `products/Index`.
+   - Iga toote kohta kuvatakse pilt, nimetus ja hind.
+
+4. **Lemmikute funktsionaalsus**
+   - `POST /products/{product}/favorite` lisab lemmiku.
+   - `DELETE /products/{product}/favorite` eemaldab lemmiku.
+   - UI uuendab olekut koheselt ja näitab favorited seisu tootenimekirjas.
+   - Külaliskasutaja puhul kasutatakse `visitor_id` cookie't, et lemmikud töötaksid ka ilma sisselogimiseta.
+
+5. **Endless scroll**
+   - Esimene laadimine: 20 toodet.
+   - Järgmised laadimised cursor-paginatsiooniga: 10 toodet korraga.
+   - Frontendis kasutatakse Inertia `InfiniteScroll` komponenti.
+
+6. **Automaatne sünkroniseerimine**
+   - Scheduler käivitab käsu `php artisan stokker:sync-products` iga tund (`hourly()`).
+   - `withoutOverlapping()` väldib sama käsu paralleelset käivitust.
+   - Nii püsivad tooted ajakohased ilma käsitsi sekkumiseta, kuid vajadusel saab sama käsu alati käsitsi käivitada.
 
 ## Kuidas käivitada
 
