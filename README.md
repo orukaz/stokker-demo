@@ -60,16 +60,21 @@ Lahendus sisaldab:
 
 ### Nõuded
 
-- PHP 8.4+
-- Composer
-- Node.js + npm
-- Andmebaas: PostgreSQL, MySQL **või** SQLite
+- **PHP**: min 8.4, max 8.4.x (testitud: 8.4.21)
+- **Composer**: min 2.0, max 2.x (testitud: 2.9.5)
+- **Node.js**: min 22, max 26.x (testitud: 26.0.0)
+- **npm**: min 10, max 11.x (testitud: 11.12.1)
+- **Laravel Herd** (soovituslik lokaalse `.test` domeeni jaoks)
+- **Andmebaas**:
+  PostgreSQL min 10.0, max uusim stabiilne
+  MySQL min 5.7, max uusim stabiilne
+  SQLite min 3.26.0, max uusim stabiilne
 
 ### Andmebaasi seadistamine (`.env`)
 
 Vali üks neist:
 
-PostgreSQL:
+**PostgreSQL**:
 ```env
 DB_CONNECTION=pgsql
 DB_HOST=127.0.0.1
@@ -79,7 +84,7 @@ DB_USERNAME=postgres
 DB_PASSWORD=secret
 ```
 
-MySQL:
+**MySQL**:
 ```env
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -89,25 +94,25 @@ DB_USERNAME=root
 DB_PASSWORD=secret
 ```
 
-SQLite:
+**SQLite**:
 ```env
 DB_CONNECTION=sqlite
 DB_DATABASE=/absolute/path/to/database/database.sqlite
 ```
 
 SQLite puhul loo fail enne migratsioone:
-```bash
+```sh
 touch database/database.sqlite
 ```
 
 ### Variant 1: kiire viis
 
 1. Paigalda sõltuvused ja tee esmane setup:
-   ```bash
+   ```sh
    composer run setup
    ```
 2. Käivita arenduskeskkond:
-   ```bash
+   ```sh
    composer run dev
    ```
 3. Ava rakendus brauseris:
@@ -116,33 +121,74 @@ touch database/database.sqlite
 ### Variant 2: tavaline käsitsi viis
 
 1. Paigalda PHP sõltuvused:
-   ```bash
+   ```sh
    composer install
    ```
 2. Paigalda JS sõltuvused:
-   ```bash
+   ```sh
    npm install
    ```
 3. Loo `.env` fail:
-   ```bash
+   ```sh
    cp .env.example .env
    ```
-4. Genereeri rakenduse võti:
-   ```bash
+4. Soovi korral määra demo kasutajate parool (`.env`):
+   ```env
+   DEMO_USER_PASSWORD=password
+   ```
+5. Genereeri rakenduse võti:
+   ```sh
    php artisan key:generate
    ```
-5. Seadista andmebaas (`.env`) ja käivita migratsioonid:
-   ```bash
+6. Seadista andmebaas (`.env`) ja käivita migratsioonid:
+   ```sh
    php artisan migrate
    ```
-6. Käivita backend:
-   ```bash
+7. Käivita backend:
+   ```sh
    php artisan serve
    ```
-7. Käivita frontend:
-   ```bash
+8. Käivita frontend:
+   ```sh
    npm run dev
    ```
 
-Kui kasutad Herdi domeeni, ava `https://stokker-demo.test`.  
+Kui kasutad Laravel Herdi domeeni, ava `https://stokker-demo.test`.  
 Kui kasutad `php artisan serve`, ava `http://127.0.0.1:8000`.
+
+### Andmete ettevalmistus
+
+Käivita seederid:
+```sh
+php artisan db:seed
+```
+
+`php artisan db:seed`:
+- loob demo kasutajad
+- käivitab `php artisan stokker:sync-products` käsu
+- impordib/sünkroniseerib tooted Stokkeri XML feedist
+
+Loodavad demo kasutajad:
+- `mari@example.com` (nimi: Mari Maasikas)
+- `admin@example.com` (nimi: Admin User)
+
+Mõlema parool tuleb `.env` väärtusest `DEMO_USER_PASSWORD` (vaikimisi `password`).
+
+### Scheduler
+
+Scheduler käivitab regulaarselt käsu `php artisan stokker:sync-products`.
+
+Arenduses võid scheduleri käivitada eraldi terminalis:
+```sh
+php artisan schedule:work
+```
+
+Ühekordseks kontrolliks:
+```sh
+php artisan schedule:run
+```
+
+Sama sünkroniseerimiskäsku saab käivitada ka käsitsi:
+```sh
+php artisan stokker:sync-products
+```
