@@ -122,6 +122,16 @@
                                     Ehitus
                                 </button>
                             </li>
+                            <li>
+                                <a
+                                    href="https://github.com/orukaz/stokker-demo"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="inline-flex h-full items-center px-4 py-2 text-sky-200 transition-colors hover:text-sky-100"
+                                >
+                                    GitHub
+                                </a>
+                            </li>
                         </ul>
                         <ul class="flex">
                             {#each ['Meist', 'Blogi', 'Kontaktid', 'Iseteenindus'] as item}
