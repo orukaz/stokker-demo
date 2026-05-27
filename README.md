@@ -64,67 +64,110 @@ Rakendus on ehitatud Laraveli full-stack lähenemisega, kus backend ja frontend 
 
 ### Miks selline stack
 
-- **Laravel + Inertia + Svelte** annab kiire arenduse ja lihtsama arhitektuuri:
-  serveripoolne loogika jääb Laravelisse, frontend on siiski SPA-kogemusega.
-- **Inertia v3** sobib hästi endless scroll jaoks (`Inertia::scroll` + `InfiniteScroll` komponent).
+Selle ülesande eesmärk oli teha toimiv lahendus kiiresti, puhtalt ja nii, et seda oleks lihtne edasi arendada.
 
-Valiku peamine eesmärk oli teha lahendus, mida on lihtne edasi arendada ja hooldada.
-Selle asemel, et ehitada eraldi backend API + eraldi frontend rakendus, kasutasin
-ühtset Laraveli koodibaasi. See vähendab oluliselt tehnilist keerukust:
-- vähem dubleeritud loogikat (validatsioon, autentimine, route'id)
-- kiirem arendus (üks deploy- ja arendusvoog)
-- lihtsam testimine (backend ja leheandmed samas rakenduses)
+**Laravel 13** sobis hästi, sest see on populaarne full-stack framework, mis katab suure osa arendusprotsessist out of the box: routing, migratsioonid, käsurea käsud, scheduler, queue, auth, ORM ja erinevad andmebaasiühendused.  
+Selle ülesande kontekstis andis see kohe valmis tööriistad:
+- scheduler (taustal automaatsete tegevuste käivitamiseks)
+- custom käsurea käsud (nt `php artisan stokker:sync-products`)
+- hea rakenduse ülesehitus (route, controller, service, model)
+- API võimekus (vajadusel lihtne lisada API endpointe)
+- frontend/backend starter-kit tugi kiireks käivituseks
+- erinevate andmebaaside tugi
+- kasutajate süsteem (auth)
 
-**Laravel 13** oli hea valik, sest see annab stabiilse ja modernse põhja:
-Eloquent, scheduler, queue/readiness, Artisan käsud ja migratsioonid on kõik
-tootmisküpsed ning hoiavad arenduse struktureerituna.
+**Inertia.js 3** toimib sillana Laraveli ja Svelte vahel ning kattis selle ülesande raames kohe eesmärgi.  
+Andmed liiguvad otse route -> controller -> Svelte vaade, ilma eraldi REST API kihita.  
+Tulemus on kiirem arendus, vähem dubleerimist ja lihtsam ülesehitus, eriti nimekirja ning endless scroll vaadete puhul.
 
-**Inertia.js 3** võimaldas teha SPA-laadse kasutuskogemuse ilma REST API kihita.
-Server tagastab otse lehe jaoks vajalikud propsid, mis tähendab, et lehe loogika
-on väga läbipaistev: route -> controller -> Inertia page. See tegi eriti lihtsaks
-endless scrolli lahenduse.
+**Svelte 5** oli loogiline valik, sest see on JavaScripti SPA framework, mis on Stokkeri stackis juba kasutusel.  
+See aitas hoida frontend koodi lihtsa ja kiirelt muudetavana.
 
-**Svelte 5** sai valitud, kuna see on kerge runtime'iga ja selge komponentmudeliga.
-Tootegridi ning lemmikute interaktsioonid on lihtsad hallata väikese boilerplate'iga.
+**Tailwind CSS 4** on üks parimaid responsive-first veebikujunduse raamistikke, millega sain tootenimekirja kiiresti ja ühtlase stiiliga ellu viia.  
 
-**Tailwind CSS 4** andis kiire viisi ehitada Stokkeri stiiliga sarnane tootenimekiri
-ja hoida klassid komponentide lähedal. See kiirendas UI iteratsioone.
-
-**shadcn-svelte** ja **Lucide** vähendasid UI komponentide nullist ehitamise vajadust:
-ikoonid, sisendite baaskomponendid ja väiksemad UI osad said teha kiiremini ning
-ühtlasema kvaliteediga.
+**shadcn-svelte** (ehk **shadcn**) on üks parimaid UI-komponentide raamistikke: komponendid on väga hästi kohandatavad ning järgivad **ligipääsetavuse** nõudeid.
 
 ### Kuidas lahendus töötab
 
-1. **Toodete andmemudel**
-   - `products` tabel salvestab feedist tulnud tooted (`code`, `title`, `price`, `image_url`, `synced_at` jne).
-   - `product_favorites` tabel salvestab lemmikud.
-   - Lemmikud on seotud kas `user_id` (sisselogitud kasutaja) või `visitor_id` (külaline cookie kaudu).
+1. **Andmemudel**
+   **Toodete andmemudel (`products`)**
+
+   | Väli | Tüüp | Selgitus |
+   |---|---|---|
+   | `id` | `bigint unsigned` | Kirje ID |
+   | `code` | `varchar(255)` | Unikaalne tootekood |
+   | `title` | `varchar(255)` | Toote nimetus |
+   | `description` | `text` | Kirjeldus |
+   | `link` | `text` | Toote lehe URL |
+   | `image_url` | `text` | Pildi URL |
+   | `brand` | `varchar(255)` | Bränd |
+   | `condition` | `varchar(255)` | Seisukord |
+   | `availability` | `varchar(255)` | Saadavuse staatus |
+   | `quantity` | `decimal(14,4)` | Kogus |
+   | `price` | `decimal(14,4)` | Hind |
+   | `currency` | `char(3)` | Valuuta (nt EUR) |
+   | `synced_at` | `timestamp` | Viimase sünkroniseerimise aeg |
+   | `created_at` | `timestamp` | Loomise aeg |
+   | `updated_at` | `timestamp` | Uuendamise aeg |
+
+   **Lemmikud (`product_favorites`)**
+
+   | Väli | Tüüp | Selgitus |
+   |---|---|---|
+   | `id` | `bigint unsigned` | Kirje ID |
+   | `user_id` | `bigint unsigned` | Sisselogitud kasutaja ID |
+   | `visitor_id` | `char(36)` | Külalise ID cookie kaudu |
+   | `product_id` | `bigint unsigned` | Lemmikuks märgitud toote ID |
+   | `created_at` | `timestamp` | Loomise aeg |
+   | `updated_at` | `timestamp` | Uuendamise aeg |
 
 2. **Andmete import XML-ist**
-   - Käsk `php artisan stokker:sync-products` loeb Stokkeri XML feedi.
-   - Parser (`StokkerProductsParser`) normaliseerib hinnad/valuuta ja mapib väljad.
-   - Service (`StokkerService`) valideerib iga toote ja teeb `upsert`-i `code` alusel.
-   - Tulemuseks on idempotentne sync (olemasolevad tooted uuendatakse, uued lisatakse).
-   - See lähenemine on turvaline ka korduvatel käivitustel: sama käsk ei tekita duplikaate.
+   ```text
+   app/
+   ├── Console/
+   │   └── Commands/
+   │       └── SyncStokkerProductsCommand.php
+   └── Services/
+       └── Stokker/
+           ├── StokkerApi.php
+           ├── StokkerProductData.php
+           ├── StokkerProductsParser.php
+           └── StokkerService.php
+   ```
+
+   **Klasside rollid**
+   - `StokkerApi`: teeb HTTP päringu Stokkeri feedi (`/feed/products`) ja tagastab XML sisu.
+   - `StokkerProductsParser`: loeb XML-i, parsib tooteread ja normaliseerib väärtused (`price`, `currency`, `quantity`).
+   - `StokkerProductData`: DTO, mis hoiab ühe toote andmeid tüübiturvaliselt ja teisendab need DB jaoks massiiviks.
+   - `StokkerService`: orkestreerib kogu sync voo (fetch -> parse -> validate -> upsert).
+
+   **Kuidas sync töötab**
+   - Käsk `php artisan stokker:sync-products` kutsub `StokkerService::syncProducts('SET', 'FO01')`.
+   - `StokkerService` küsib XML-i `StokkerApi` kaudu.
+   - XML teisendatakse toodete kogumikuks `StokkerProductsParser` abil.
+   - Iga kirje valideeritakse; vigased kirjed jäetakse vahele ja logitakse.
+   - Kehtivad kirjed salvestatakse `products` tabelisse `upsert`-iga unikaalse `code` alusel.
+
+   **Commands**
+   - `php artisan stokker:sync-products` - käivitab toodete XML impordi/sünkroniseerimise käsitsi; scheduleris jookseb sama töö iga tund (`hourly()`, cron `0 * * * *`).
+   - `php artisan schedule:work` - käivitab scheduleri lokaalarenduses.
+   - `php artisan schedule:run` - käivitab scheduleri ühe korra (kiireks kontrolliks).
 
 3. **Tootenimekiri**
    - Route: `/et/mootorsaed`.
    - Controller tagastab Inertia lehe `products/Index`.
    - Iga toote kohta kuvatakse pilt, nimetus ja hind.
+   - Kasutatakse endless scroll'i: esimene laadimine 20 toodet, järgmised laadimised cursor-paginatsiooniga 10 toodet korraga.
+   - Frontendis kasutatakse Inertia `InfiniteScroll` komponenti.
 
 4. **Lemmikute funktsionaalsus**
    - `POST /products/{product}/favorite` lisab lemmiku.
    - `DELETE /products/{product}/favorite` eemaldab lemmiku.
    - UI uuendab olekut koheselt ja näitab favorited seisu tootenimekirjas.
-   - Külaliskasutaja puhul kasutatakse `visitor_id` cookie't, et lemmikud töötaksid ka ilma sisselogimiseta.
+   - Sisselogitud kasutaja puhul seotakse lemmikud `user_id` alusel.
+   - Külaliskasutaja puhul kasutatakse `visitor_id` cookie't (UUID), et lemmikud töötaksid ka ilma sisselogimiseta.
 
-5. **Endless scroll**
-   - Esimene laadimine: 20 toodet.
-   - Järgmised laadimised cursor-paginatsiooniga: 10 toodet korraga.
-   - Frontendis kasutatakse Inertia `InfiniteScroll` komponenti.
-
-6. **Automaatne sünkroniseerimine**
+5. **Automaatne sünkroniseerimine**
    - Scheduler käivitab käsu `php artisan stokker:sync-products` iga tund (`hourly()`).
    - `withoutOverlapping()` väldib sama käsu paralleelset käivitust.
    - Nii püsivad tooted ajakohased ilma käsitsi sekkumiseta, kuid vajadusel saab sama käsu alati käsitsi käivitada.
