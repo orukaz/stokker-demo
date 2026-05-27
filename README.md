@@ -51,6 +51,11 @@ Loo lihtne veebileht, mis kuvab etteantud Stokkeri tooteandmeid ning võimaldab 
 
 Rakendus on ehitatud Laraveli full-stack lähenemisega, kus backend ja frontend on samas koodibaasis.
 
+### Server ja deploy
+
+Lahendus jookseb DigitalOceani pilveserveri virtuaalmasinas (VM): https://stokker-demo.orumets.ee/  
+Serveri haldust ja automaatset deploy protsessi juhib Laravel Forge ([forge.laravel.com](https://forge.laravel.com)), mis teeb koodi uuendamise ja teenuste restartimise mugavaks.
+
 ### Tehnoloogiad
 
 - **PHP 8.4** - Laraveli jooksutamiseks. - https://www.php.net/releases/8.4/en.php
@@ -181,6 +186,50 @@ See aitas hoida frontend koodi lihtsa ja kiirelt muudetavana.
    - UI uuendab olekut koheselt ja näitab favorited seisu tootenimekirjas.
    - Sisselogitud kasutaja puhul seotakse lemmikud `user_id` alusel.
    - Külaliskasutaja puhul kasutatakse `visitor_id` cookie't (UUID), et lemmikud töötaksid ka ilma sisselogimiseta.
+
+   **Sisendid ja väljundid**
+
+   ```http
+   POST /products/{product}/favorite
+   Accept: application/json
+   ```
+
+   **Sisend**
+   ```json
+   Path params:
+   {
+     "product": 123
+   }
+   ```
+
+   **Väljund (200)**
+   ```json
+   {
+     "isFavorited": true,
+     "favoritesCount": 5
+   }
+   ```
+
+   ```http
+   DELETE /products/{product}/favorite
+   Accept: application/json
+   ```
+
+   **Sisend**
+   ```json
+   Path params:
+   {
+     "product": 123
+   }
+   ```
+
+   **Väljund (200)**
+   ```json
+   {
+     "isFavorited": false,
+     "favoritesCount": 4
+   }
+   ```
 
 5. **Automaatne sünkroniseerimine**
    - Scheduler käivitab käsu `php artisan stokker:sync-products` iga tund (`hourly()`).
