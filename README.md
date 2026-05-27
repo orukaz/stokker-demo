@@ -160,6 +160,21 @@ See aitas hoida frontend koodi lihtsa ja kiirelt muudetavana.
    - Kasutatakse endless scroll'i: esimene laadimine 20 toodet, järgmised laadimised cursor-paginatsiooniga 10 toodet korraga.
    - Frontendis kasutatakse Inertia `InfiniteScroll` komponenti.
 
+   **Frontendi ülesehitus**
+   ```text
+   resources/js/
+   ├── pages/
+   │   └── products/
+   │       └── Index.svelte                 # tootenimekirja leht + InfiniteScroll
+   ├── layouts/
+   │   └── SiteLayout.svelte                # avaliku vaate layout
+   └── components/
+       └── site/
+           ├── ProductCard.svelte           # toote kaart (pilt, nimetus, hind, saadavus)
+           ├── ProductFavoriteToggle.svelte # lemmiku lisamine/eemaldamine
+           └── FavoritesHeaderButton.svelte # lemmikute loendur päises
+   ```
+
 4. **Lemmikute funktsionaalsus**
    - `POST /products/{product}/favorite` lisab lemmiku.
    - `DELETE /products/{product}/favorite` eemaldab lemmiku.
