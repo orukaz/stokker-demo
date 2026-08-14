@@ -1,6 +1,6 @@
 @import 'tailwindcss' source(none);
 
-@source '../js/**/*.vue';
+@source '../js/**/*.{ts,vue}';
 
 :root {
     --background: oklch(1 0 0);

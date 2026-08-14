@@ -37,13 +37,13 @@ function confirmSignature(signature: SignatureResult): void {
     <main class="grid min-h-dvh place-items-center bg-muted/35 p-6">
         <Dialog :open="open" @update:open="updateOpen">
             <DialogTrigger as-child>
-                <Button type="button" size="lg">Allkirjasta</Button>
+                <Button type="button" size="lg">Sign</Button>
             </DialogTrigger>
 
             <DialogContent>
-                <DialogTitle class="sr-only">Anna allkiri</DialogTitle>
+                <DialogTitle class="sr-only">Add signature</DialogTitle>
                 <DialogDescription class="sr-only">
-                    Joonista allkiri ja kinnita läbipaistev PNG-fail.
+                    Draw a signature and confirm the transparent PNG file.
                 </DialogDescription>
 
                 <SignaturePad
@@ -51,7 +51,7 @@ function confirmSignature(signature: SignatureResult): void {
                     output-format="png"
                     :output-width="1024"
                     :output-height="384"
-                    signature-label="Allkiri"
+                    signature-label="Signature"
                     @confirmed="confirmSignature"
                 />
             </DialogContent>

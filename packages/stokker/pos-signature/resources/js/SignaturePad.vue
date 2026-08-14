@@ -1,8 +1,25 @@
 <script setup lang="ts">
-import { Redo2, RotateCcw, Undo2 } from '@lucide/vue';
+import { Check, Redo2, RotateCcw, Undo2 } from '@lucide/vue';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from './components/ui/alert-dialog';
 import { Button } from './components/ui/button';
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from './components/ui/tooltip';
 import type {
     SignatureOutputFormat,
     SignaturePadProps,
@@ -37,7 +54,7 @@ const props = withDefaults(defineProps<SignaturePadProps>(), {
     outputFormat: 'png',
     outputWidth: 1024,
     outputHeight: 384,
-    signatureLabel: 'Allkiri',
+    signatureLabel: 'Signature',
 });
 
 const emit = defineEmits<{
@@ -510,71 +527,135 @@ defineExpose({
 </script>
 
 <template>
-    <div class="flex h-full min-h-0 flex-col bg-background">
-        <div class="relative min-h-0 flex-1 overflow-hidden bg-background">
-            <canvas
-                ref="canvasElement"
-                class="block size-full cursor-crosshair touch-none select-none"
-                tabindex="0"
-                aria-label="Allkirja joonistamise ala"
-            />
+    <TooltipProvider :delay-duration="300">
+        <div class="flex h-full min-h-0 flex-col bg-background">
+            <div class="relative min-h-0 flex-1 overflow-hidden bg-background">
+                <canvas
+                    ref="canvasElement"
+                    class="block size-full cursor-crosshair touch-none select-none"
+                    tabindex="0"
+                    aria-label="Signature drawing area"
+                />
 
-            <div
-                class="pointer-events-none absolute inset-x-6 bottom-5 text-xs text-muted-foreground"
-            >
-                <div class="border-t border-foreground/35 pt-1.5">
-                    {{ signatureLabel }}
+                <div
+                    class="pointer-events-none absolute inset-x-6 bottom-5 text-xs text-muted-foreground"
+                >
+                    <div
+                        class="border-t border-dashed border-foreground/35 pt-1.5"
+                    >
+                        {{ signatureLabel }}
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div
-            class="grid shrink-0 grid-cols-3 gap-2 border-t bg-background p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] lg:grid-cols-[auto_auto_auto_1fr]"
-        >
-            <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                class="w-full lg:w-9"
-                :disabled="!canRestart"
-                aria-label="Alusta uuesti"
-                title="Alusta uuesti"
-                @click="restart"
+            <div
+                class="flex shrink-0 items-center gap-2 border-t bg-background p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]"
             >
-                <RotateCcw />
-            </Button>
-            <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                class="w-full lg:w-9"
-                :disabled="!canUndo"
-                aria-label="Undo"
-                title="Undo"
-                @click="undo"
-            >
-                <Undo2 />
-            </Button>
-            <Button
-                type="button"
-                variant="outline"
-                size="icon"
-                class="w-full lg:w-9"
-                :disabled="!canRedo"
-                aria-label="Redo"
-                title="Redo"
-                @click="redo"
-            >
-                <Redo2 />
-            </Button>
-            <Button
-                type="button"
-                class="col-span-3 h-11 lg:col-span-1"
-                :disabled="!hasSignature"
-                @click="confirmSignature"
-            >
-                Kinnita
-            </Button>
+                <div class="flex shrink-0 gap-2">
+                    <AlertDialog>
+                        <Tooltip>
+                            <TooltipTrigger as-child>
+                                <AlertDialogTrigger as-child>
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        size="icon"
+                                        class="size-11"
+                                        :disabled="!canRestart"
+                                        aria-label="Clear"
+                                    >
+                                        <RotateCcw />
+                                    </Button>
+                                </AlertDialogTrigger>
+                            </TooltipTrigger>
+                            <TooltipContent>Clear</TooltipContent>
+                        </Tooltip>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                    Clear signature?
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    The current signature and its edit history
+                                    will be removed.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                    class="bg-destructive text-white hover:bg-destructive/90"
+                                    @click="restart"
+                                >
+                                    Clear
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                    <Tooltip>
+                        <TooltipTrigger as-child>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="icon"
+                                class="size-11"
+                                :disabled="!canUndo"
+                                aria-label="Undo"
+                                @click="undo"
+                            >
+                                <Undo2 />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Undo</TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                        <TooltipTrigger as-child>
+                            <Button
+                                type="button"
+                                variant="outline"
+                                size="icon"
+                                class="size-11"
+                                :disabled="!canRedo"
+                                aria-label="Redo"
+                                @click="redo"
+                            >
+                                <Redo2 />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>Redo</TooltipContent>
+                    </Tooltip>
+                </div>
+                <AlertDialog>
+                    <AlertDialogTrigger as-child>
+                        <Button
+                            type="button"
+                            variant="default"
+                            class="h-11 flex-1"
+                            :disabled="!hasSignature"
+                        >
+                            <Check />
+                            Confirm
+                        </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle
+                                >Confirm signature?</AlertDialogTitle
+                            >
+                            <AlertDialogDescription>
+                                The signature will be submitted as a transparent
+                                {{ outputFormat.toUpperCase() }} file.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction @click="confirmSignature">
+                                <Check />
+                                Confirm
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+            </div>
         </div>
-    </div>
+    </TooltipProvider>
 </template>

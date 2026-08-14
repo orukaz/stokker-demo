@@ -54,7 +54,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits);
                 class="absolute top-[max(1rem,env(safe-area-inset-top))] right-[max(1rem,env(safe-area-inset-right))] z-20 grid size-9 place-items-center rounded-md bg-background/90 text-muted-foreground shadow-sm ring-1 ring-border transition-colors hover:bg-accent hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
             >
                 <X />
-                <span class="sr-only">Sulge</span>
+                <span class="sr-only">Close</span>
             </DialogClose>
         </DialogContent>
     </DialogPortal>
