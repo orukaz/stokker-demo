@@ -668,14 +668,14 @@ defineExpose({
                                     </span>
                                 </SelectTrigger>
                             </TooltipTrigger>
-                            <SelectContent align="start" class="min-w-20">
+                            <SelectContent align="center" class="min-w-12">
                                 <SelectItem
                                     v-for="color in signatureStrokeColors"
                                     :key="color.value"
                                     :value="color.value"
                                 >
                                     <span
-                                        class="size-5 rounded-full border border-black/15"
+                                        class="inline-block size-5 shrink-0 rounded-full border border-black/15"
                                         :style="{
                                             backgroundColor: color.value,
                                         }"
