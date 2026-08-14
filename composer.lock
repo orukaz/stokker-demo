@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "37d7124e5e8adb2f81f598cdbef54192",
+    "content-hash": "27bdb4e5d7759d012a6a71bcba016823",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -4298,6 +4298,40 @@
                 }
             ],
             "time": "2026-03-23T22:56:56+00:00"
+        },
+        {
+            "name": "stokker/pos-signature",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "packages/stokker/pos-signature",
+                "reference": "4f14ef36e4aabfc0329e54be72cf21caab8373a0"
+            },
+            "require": {
+                "illuminate/support": "^13.0",
+                "php": "^8.3"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Stokker\\PosSignature\\PosSignatureServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Stokker\\PosSignature\\": "src/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Touch and mouse signature capture screen for Stokker POS.",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
         },
         {
             "name": "symfony/clock",

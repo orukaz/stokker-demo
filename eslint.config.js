@@ -3,6 +3,7 @@ import stylistic from '@stylistic/eslint-plugin';
 import prettier from 'eslint-config-prettier/flat';
 import importPlugin from 'eslint-plugin-import';
 import svelte from 'eslint-plugin-svelte';
+import vue from 'eslint-plugin-vue';
 import ts from 'typescript-eslint';
 
 const controlStatements = [
@@ -26,8 +27,17 @@ export default ts.config(
     js.configs.recommended,
     ...ts.configs.recommended,
     ...svelte.configs['flat/recommended'],
+    ...vue.configs['flat/recommended'],
     {
         files: ['**/*.svelte'],
+        languageOptions: {
+            parserOptions: {
+                parser: ts.parser,
+            },
+        },
+    },
+    {
+        files: ['**/*.vue'],
         languageOptions: {
             parserOptions: {
                 parser: ts.parser,

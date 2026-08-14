@@ -1,0 +1,17 @@
+@import 'tailwindcss' source(none);
+
+@source '../js/**/*.vue';
+
+@layer base {
+    html,
+    body,
+    #pos-signature-app {
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    body {
+        margin: 0;
+    }
+}
