@@ -45,6 +45,15 @@ export default ts.config(
         },
     },
     {
+        files: [
+            'packages/stokker/pos-signature/resources/js/components/ui/**/*.vue',
+        ],
+        rules: {
+            'vue/multi-word-component-names': 'off',
+            'vue/require-default-prop': 'off',
+        },
+    },
+    {
         files: ['**/*.svelte.ts'],
         languageOptions: {
             parser: ts.parser,
