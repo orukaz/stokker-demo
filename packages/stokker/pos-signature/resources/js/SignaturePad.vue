@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Check, Redo2, RotateCcw, Undo2 } from '@lucide/vue';
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
 import {
     AlertDialog,
@@ -15,15 +15,23 @@ import {
 } from './components/ui/alert-dialog';
 import { Button } from './components/ui/button';
 import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+} from './components/ui/select';
+import {
     Tooltip,
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
 } from './components/ui/tooltip';
+import { signatureStrokeColors } from './signature';
 import type {
     SignatureOutputFormat,
     SignaturePadProps,
     SignatureResult,
+    SignatureStrokeColor,
 } from './signature';
 
 type Point = {
@@ -55,6 +63,7 @@ const props = withDefaults(defineProps<SignaturePadProps>(), {
     outputWidth: 1024,
     outputHeight: 384,
     signatureLabel: 'Signature',
+    initialStrokeColor: '#111827',
 });
 
 const emit = defineEmits<{
@@ -65,6 +74,13 @@ const canvasElement = ref<HTMLCanvasElement | null>(null);
 const strokes = ref<Stroke[]>([]);
 const redoStrokes = ref<Stroke[]>([]);
 const referenceSize = ref<Size | null>(null);
+const selectedStrokeColor = ref<SignatureStrokeColor>(props.initialStrokeColor);
+const selectedStrokeOption = computed(
+    () =>
+        signatureStrokeColors.find(
+            ({ value }) => value === selectedStrokeColor.value,
+        ) ?? signatureStrokeColors[0],
+);
 const hasSignature = computed(() => strokes.value.length > 0);
 const canUndo = computed(() => strokes.value.length > 0);
 const canRedo = computed(() => redoStrokes.value.length > 0);
@@ -166,13 +182,14 @@ function drawStroke(
     targetContext: CanvasRenderingContext2D,
     points: Point[],
     strokeWidth: number,
+    strokeColor: SignatureStrokeColor,
 ): void {
     if (!points.length) {
         return;
     }
 
-    targetContext.strokeStyle = '#111827';
-    targetContext.fillStyle = '#111827';
+    targetContext.strokeStyle = strokeColor;
+    targetContext.fillStyle = strokeColor;
     targetContext.lineWidth = strokeWidth;
     targetContext.lineCap = 'round';
     targetContext.lineJoin = 'round';
@@ -235,6 +252,7 @@ function redraw(): void {
                 currentView.offsetY,
             ),
             Math.max(1.5, 2.7 * currentView.scale),
+            selectedStrokeColor.value,
         );
     }
 }
@@ -419,10 +437,10 @@ function createSvg(size: Size, layout: StrokeLayout): Blob {
     const elements = layout.points
         .map((points) => {
             if (points.length === 1) {
-                return `<circle cx="${formatNumber(points[0].x)}" cy="${formatNumber(points[0].y)}" r="${formatNumber(layout.strokeWidth / 2)}" fill="#111827"/>`;
+                return `<circle cx="${formatNumber(points[0].x)}" cy="${formatNumber(points[0].y)}" r="${formatNumber(layout.strokeWidth / 2)}" fill="${selectedStrokeColor.value}"/>`;
             }
 
-            return `<path d="${svgPath(points)}" fill="none" stroke="#111827" stroke-width="${formatNumber(layout.strokeWidth)}" stroke-linecap="round" stroke-linejoin="round"/>`;
+            return `<path d="${svgPath(points)}" fill="none" stroke="${selectedStrokeColor.value}" stroke-width="${formatNumber(layout.strokeWidth)}" stroke-linecap="round" stroke-linejoin="round"/>`;
         })
         .join('');
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size.width}" height="${size.height}" viewBox="0 0 ${size.width} ${size.height}">${elements}</svg>`;
@@ -441,6 +459,7 @@ function emitResult(
         mimeType: format === 'svg' ? 'image/svg+xml' : 'image/png',
         width: size.width,
         height: size.height,
+        strokeColor: selectedStrokeColor.value,
     });
 }
 
@@ -456,7 +475,12 @@ function createPng(size: Size, layout: StrokeLayout): void {
     outputCanvas.height = size.height;
 
     for (const points of layout.points) {
-        drawStroke(outputContext, points, layout.strokeWidth);
+        drawStroke(
+            outputContext,
+            points,
+            layout.strokeWidth,
+            selectedStrokeColor.value,
+        );
     }
 
     outputCanvas.toBlob((blob) => {
@@ -518,6 +542,8 @@ onBeforeUnmount(() => {
     resizeObserver?.disconnect();
 });
 
+watch(selectedStrokeColor, redraw);
+
 defineExpose({
     confirm: confirmSignature,
     redo,
@@ -560,7 +586,7 @@ defineExpose({
                                         type="button"
                                         variant="outline"
                                         size="icon"
-                                        class="size-11"
+                                        class="size-10 sm:size-11"
                                         :disabled="!canRestart"
                                         aria-label="Clear"
                                     >
@@ -597,7 +623,7 @@ defineExpose({
                                 type="button"
                                 variant="outline"
                                 size="icon"
-                                class="size-11"
+                                class="size-10 sm:size-11"
                                 :disabled="!canUndo"
                                 aria-label="Undo"
                                 @click="undo"
@@ -613,7 +639,7 @@ defineExpose({
                                 type="button"
                                 variant="outline"
                                 size="icon"
-                                class="size-11"
+                                class="size-10 sm:size-11"
                                 :disabled="!canRedo"
                                 aria-label="Redo"
                                 @click="redo"
@@ -622,6 +648,45 @@ defineExpose({
                             </Button>
                         </TooltipTrigger>
                         <TooltipContent>Redo</TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                        <Select v-model="selectedStrokeColor">
+                            <TooltipTrigger as-child>
+                                <SelectTrigger
+                                    class="justify-center gap-0 p-0 [&>svg]:hidden"
+                                    aria-label="Signature color"
+                                >
+                                    <span
+                                        class="size-5 rounded-full border border-black/15"
+                                        :style="{
+                                            backgroundColor:
+                                                selectedStrokeOption.value,
+                                        }"
+                                    />
+                                    <span class="sr-only">
+                                        {{ selectedStrokeOption.label }}
+                                    </span>
+                                </SelectTrigger>
+                            </TooltipTrigger>
+                            <SelectContent align="start" class="min-w-20">
+                                <SelectItem
+                                    v-for="color in signatureStrokeColors"
+                                    :key="color.value"
+                                    :value="color.value"
+                                >
+                                    <span
+                                        class="size-5 rounded-full border border-black/15"
+                                        :style="{
+                                            backgroundColor: color.value,
+                                        }"
+                                    />
+                                    <span class="sr-only">
+                                        {{ color.label }}
+                                    </span>
+                                </SelectItem>
+                            </SelectContent>
+                        </Select>
+                        <TooltipContent>Signature color</TooltipContent>
                     </Tooltip>
                 </div>
                 <AlertDialog>
