@@ -128,7 +128,7 @@
               <th class="border-b border-neutral-300 px-2 py-2.5">Klient</th>
               <th class="border-b border-neutral-300 px-2 py-2.5">Tootejuht</th>
               <th class="border-b border-neutral-300 px-2 py-2.5">Rea looja</th>
-              <th class="border-b border-neutral-300 px-2 py-2.5 text-right">Allahindlus / ületus</th>
+              <th class="border-b border-neutral-300 px-2 py-2.5 text-right">Algne → rakendatud</th>
               <th class="border-b border-neutral-300 px-2 py-2.5">Põhjendus</th>
             </tr>
           </thead>
@@ -171,7 +171,7 @@
         orderDate: '2026-08-11', orderNumber: 'MT11005183', country: 'EE', department: 'Tartu',
         productCode: '4933478404', productName: 'Löökkruvikeeraja M18 FID3-502X', brand: 'Milwaukee',
         productManager: 'Katrin Saar', lineCreator: 'Priit Tamm',
-        customerCode: '102871', customerName: 'Tammepuit OÜ',
+        customerCode: '102871', customerName: 'Rasmus Tamm',
         quantity: 3, unitPrice: 449, systemDiscount: 12, threshold: 12, appliedDiscount: 17,
         reason: 'Bauhofis oli sama komplekt kampaanias.'
       },
@@ -195,7 +195,7 @@
         orderDate: '2026-08-05', orderNumber: 'MT11004988', country: 'EE', department: 'Tallinn',
         productCode: 'MAK-DUC353Z', productName: 'Akukettsaag DUC353Z', brand: 'Makita',
         productManager: 'Toomas Kask', lineCreator: 'Liis Pärn',
-        customerCode: '104125', customerName: 'Saemeister OÜ',
+        customerCode: '104125', customerName: 'Peeter Saar',
         quantity: 2, unitPrice: 399, systemDiscount: 20, threshold: 20, appliedDiscount: 23,
         reason: 'Klient leidis Hansapostist sama sae odavamalt.'
       },
@@ -244,8 +244,8 @@
       return new Intl.DateTimeFormat('et-EE').format(new Date(value + 'T12:00:00'));
     }
 
-    function discountExcess(row) {
-      return Math.max(row.appliedDiscount - row.threshold, 0);
+    function discountDifference(row) {
+      return Math.max(row.appliedDiscount - row.systemDiscount, 0);
     }
 
     function roundCurrency(value) {
@@ -256,8 +256,8 @@
       return roundCurrency(row.quantity * row.unitPrice * row.appliedDiscount / 100);
     }
 
-    function excessDiscountAmount(row) {
-      const amount = row.quantity * row.unitPrice * discountExcess(row) / 100;
+    function additionalDiscountAmount(row) {
+      const amount = row.quantity * row.unitPrice * discountDifference(row) / 100;
       return roundCurrency(amount);
     }
 
@@ -326,8 +326,8 @@
           <td class="border-b border-neutral-200 px-2 py-3">${row.productManager}</td>
           <td class="border-b border-neutral-200 px-2 py-3">${row.lineCreator}</td>
           <td class="border-b border-neutral-200 px-2 py-3 text-right">
-            <div class="font-semibold text-stokker-dark">${formatDiscount(row.threshold)} → ${formatDiscount(row.appliedDiscount)}</div>
-            <div class="text-neutral-500">Vahe +${formatDiscount(discountExcess(row))}</div>
+            <div class="font-semibold text-stokker-dark">${formatDiscount(row.systemDiscount)} → ${formatDiscount(row.appliedDiscount)}</div>
+            <div class="text-neutral-500">Vahe +${formatDiscount(discountDifference(row))}</div>
           </td>
           <td class="max-w-[300px] border-b border-neutral-200 px-2 py-3">
             <span class="inline-flex items-start gap-1.5 text-stokker-dark">
@@ -343,12 +343,12 @@
     }
 
     function renderSummary(rows) {
-      const totalAmount = rows.reduce((total, row) => total + excessDiscountAmount(row), 0);
+      const totalAmount = rows.reduce((total, row) => total + additionalDiscountAmount(row), 0);
       const averageExcess = rows.length
-        ? rows.reduce((total, row) => total + discountExcess(row), 0) / rows.length
+        ? rows.reduce((total, row) => total + discountDifference(row), 0) / rows.length
         : 0;
       const maximumExcess = rows.length
-        ? Math.max(...rows.map((row) => discountExcess(row)))
+        ? Math.max(...rows.map((row) => discountDifference(row)))
         : 0;
 
       document.querySelector('#summary-count').textContent = String(rows.length);
