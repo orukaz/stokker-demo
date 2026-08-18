@@ -26,7 +26,7 @@
     };
   </script>
 </head>
-<body class="min-h-screen bg-slate-50 font-sans text-[13px] leading-[1.35] text-black">
+<body class="min-h-screen overflow-x-hidden bg-slate-50 font-sans text-[13px] leading-[1.35] text-black">
   <header class="flex min-h-[54px] items-center bg-stokker-blue px-6 text-white shadow-md shadow-stokker-dark/20">
     <div class="text-[19px] font-extrabold tracking-[0.08em]">STOKKER</div>
     <nav class="ml-10 hidden gap-6 font-semibold md:flex" aria-label="POS-i peamenüü">
@@ -75,7 +75,7 @@
                     <label class="inline-flex overflow-hidden rounded border border-neutral-300 bg-white transition focus-within:border-stokker-blue focus-within:ring-2 focus-within:ring-stokker-blue/15">
                       <span class="sr-only">Akutrelli allahindlus protsentides</span>
                       <input
-                        class="discount-input w-[70px] border-0 bg-transparent py-1.5 pl-2 pr-1 text-right outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                        class="discount-input w-[70px] border-0 bg-transparent py-1.5 pl-2 pr-1 text-right text-base outline-none [appearance:textfield] sm:text-[13px] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                         type="number"
                         min="0"
                         max="100"
@@ -111,7 +111,7 @@
                   <label class="inline-flex overflow-hidden rounded border border-neutral-300 bg-white transition focus-within:border-stokker-blue focus-within:ring-2 focus-within:ring-stokker-blue/15">
                     <span class="sr-only">Otsikute komplekti allahindlus protsentides</span>
                     <input
-                      class="discount-input w-[70px] border-0 bg-transparent py-1.5 pl-2 pr-1 text-right outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                      class="discount-input w-[70px] border-0 bg-transparent py-1.5 pl-2 pr-1 text-right text-base outline-none [appearance:textfield] sm:text-[13px] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                       type="number"
                       min="0"
                       max="100"
@@ -146,7 +146,7 @@
                   <label class="inline-flex overflow-hidden rounded border border-neutral-300 bg-white transition focus-within:border-stokker-blue focus-within:ring-2 focus-within:ring-stokker-blue/15">
                     <span class="sr-only">Survepesuri allahindlus protsentides</span>
                     <input
-                      class="discount-input w-[70px] border-0 bg-transparent py-1.5 pl-2 pr-1 text-right outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                      class="discount-input w-[70px] border-0 bg-transparent py-1.5 pl-2 pr-1 text-right text-base outline-none [appearance:textfield] sm:text-[13px] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                       type="number"
                       min="0"
                       max="100"
@@ -188,9 +188,9 @@
 
   </main>
 
-  <div class="fixed inset-0 z-50 hidden place-items-center bg-black/20 p-4" id="discount-modal-layer">
+  <div class="fixed inset-0 z-50 hidden items-start justify-items-center overflow-y-auto bg-black/20 p-2 pt-3 sm:items-center sm:p-4" id="discount-modal-layer">
     <section
-      class="flex max-h-[calc(100vh-2rem)] w-full max-w-[620px] flex-col overflow-hidden bg-white shadow-modal"
+      class="flex max-h-[calc(100dvh-1.5rem)] w-full max-w-[620px] flex-col overflow-hidden bg-white shadow-modal sm:max-h-[calc(100dvh-2rem)]"
       role="alertdialog"
       aria-modal="true"
       aria-labelledby="discount-modal-title"
@@ -201,8 +201,8 @@
         <button class="ml-auto grid size-8 place-items-center bg-transparent text-xl leading-none hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" id="close-modal" type="button" aria-label="Sulge modaal">×</button>
       </header>
 
-      <form id="discount-form" novalidate>
-        <div class="overflow-auto p-4">
+      <form class="flex min-h-0 flex-1 flex-col" id="discount-form" novalidate>
+        <div class="min-h-0 overflow-auto p-4">
           <p class="mb-4" id="discount-modal-description">
             Allahindlus ületab tooterea lubatud piiri ja vajab põhjendust.
           </p>
@@ -238,7 +238,7 @@
             </label>
             <div>
               <textarea
-                class="block min-h-24 w-full resize-y border border-neutral-300 bg-white px-3 py-2 outline-none placeholder:text-neutral-400 focus:border-stokker-blue focus:ring-1 focus:ring-stokker-blue aria-[invalid=true]:border-stokker-red"
+                class="block min-h-24 w-full resize-y border border-neutral-300 bg-white px-3 py-2 text-base outline-none placeholder:text-neutral-400 focus:border-stokker-blue focus:ring-1 focus:ring-stokker-blue sm:text-[13px] aria-[invalid=true]:border-stokker-red"
                 id="discount-reason"
                 name="discountReason"
                 minlength="10"
@@ -247,7 +247,7 @@
                 required
                 aria-required="true"
                 aria-describedby="reason-help reason-error"
-                placeholder="Näiteks: kliendiga kokkulepitud projektihind"
+                placeholder="Näiteks: K-Rautas oli hind odavam, 219 €"
               ></textarea>
               <div class="mt-1 flex justify-between gap-3 text-[11px] text-neutral-500">
                 <span id="reason-help">Vähemalt 10 tähemärki</span>
@@ -309,8 +309,11 @@
 
     const baseThreshold = 12;
     const minimumReasonLength = 10;
+    const orderNumber = 'MT11004567';
     const currentUser = 'Mari Müüja';
     const discountChangeHistory = [];
+    const reasonDrafts = new Map();
+    const savedSalesLines = new Map();
     window.discountChangeHistory = discountChangeHistory;
     const layer = document.querySelector('#discount-modal-layer');
     const form = document.querySelector('#discount-form');
@@ -351,8 +354,76 @@
     const discountedPrice = (unitPrice, discount) => unitPrice * (1 - discount / 100);
     const allowedThreshold = (input) => Math.max(baseThreshold, Number(input.dataset.systemDiscount));
 
+    function reasonDraftKey(input) {
+      return 'dev160:discount-reason:' + orderNumber + ':' + input.dataset.code;
+    }
+
+    function readReasonDraft(input) {
+      const key = reasonDraftKey(input);
+
+      if (reasonDrafts.has(key)) {
+        return reasonDrafts.get(key);
+      }
+
+      try {
+        const storedDraft = window.sessionStorage.getItem(key);
+        if (!storedDraft) return '';
+        const parsedDraft = JSON.parse(storedDraft);
+        const storedReason = typeof parsedDraft === 'string' ? parsedDraft : parsedDraft.reason;
+
+        if (typeof storedReason === 'string') {
+          reasonDrafts.set(key, storedReason);
+          return storedReason;
+        }
+      } catch (storageError) {
+        return '';
+      }
+
+      return '';
+    }
+
+    function rememberReasonDraft(input, reasonValue) {
+      const storedReason = reasonValue.trim();
+      if (!storedReason) return;
+      const key = reasonDraftKey(input);
+      reasonDrafts.set(key, storedReason);
+
+      try {
+        window.sessionStorage.setItem(key, JSON.stringify({
+          reason: storedReason,
+          savedAt: new Date().toISOString()
+        }));
+      } catch (storageError) {
+        // In-memory draft remains available if browser storage is unavailable.
+      }
+    }
+
     function productVariant(input) {
       return productVariants.find((product) => product.code === input.dataset.code);
+    }
+
+    function saveSalesLine(input, discountChange) {
+      const appliedDiscount = Number(input.dataset.applied);
+      const reasonIsRequired = appliedDiscount > allowedThreshold(input);
+      const activeReason = reasonIsRequired ? (input.dataset.reason || '').trim() : '';
+      const savedLine = {
+        orderNumber,
+        productCode: input.dataset.code,
+        appliedDiscount,
+        discountReason: activeReason,
+        savedAt: new Date().toISOString()
+      };
+
+      savedSalesLines.set(input.dataset.code, savedLine);
+
+      const variant = productVariant(input);
+      if (variant) {
+        variant.appliedDiscount = appliedDiscount;
+        variant.reason = activeReason;
+        variant.discountChange = discountChange || null;
+      }
+
+      return savedLine;
     }
 
     function saveDiscountChange(input, newDiscount, reasonValue, eventType) {
@@ -504,7 +575,7 @@
       document.querySelector('#discount-modal-description').textContent = systemDiscount > baseThreshold
         ? 'Süsteemi allahindlus on ' + formatDiscount(systemDiscount) + '. Suurem allahindlus vajab põhjendust.'
         : 'Allahindlus ületab ' + formatDiscount(rowThreshold) + ' piiri ja vajab põhjendust.';
-      reason.value = '';
+      reason.value = input.dataset.reason || readReasonDraft(input);
       error.hidden = true;
       reason.setAttribute('aria-invalid', 'false');
       updateFormState();
@@ -537,9 +608,9 @@
 
     function applyWithoutReason(input, value) {
       const hadReason = Boolean(input.dataset.reason);
-      const variant = productVariant(input);
 
       if (hadReason) {
+        rememberReasonDraft(input, input.dataset.reason);
         saveDiscountChange(input, value, '', 'reason_removed');
       }
 
@@ -547,12 +618,7 @@
       input.dataset.reason = '';
       delete input.dataset.discountChange;
       input.value = formatInputValue(value);
-
-      if (variant) {
-        variant.appliedDiscount = value;
-        variant.reason = '';
-        variant.discountChange = null;
-      }
+      saveSalesLine(input, null);
 
       updateRow(input);
       showToast(
@@ -631,17 +697,12 @@
       const input = activeInput;
       const appliedDiscount = pendingDiscount;
       const change = saveDiscountChange(input, appliedDiscount, value);
-      const variant = productVariant(input);
+      rememberReasonDraft(input, value);
       input.dataset.applied = String(appliedDiscount);
       input.dataset.reason = value;
       input.dataset.discountChange = JSON.stringify(change);
       input.value = formatInputValue(appliedDiscount);
-
-      if (variant) {
-        variant.appliedDiscount = appliedDiscount;
-        variant.reason = value;
-        variant.discountChange = change;
-      }
+      saveSalesLine(input, change);
 
       updateRow(input);
       closeModal({restore: false});

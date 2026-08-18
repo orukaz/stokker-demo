@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>DEV-160 – põhjendatud allahindluste raport</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -39,12 +40,13 @@
 
   <main class="mx-auto mb-20 mt-7 w-[calc(100%-2rem)] max-w-[1440px]">
     <div class="mb-2.5 text-xs text-neutral-500">Raportid / Allahindluste põhjendused</div>
-    <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-      <div>
-        <h1 class="text-[22px] font-semibold text-stokker-dark">Põhjendatud allahindlused</h1>
-        <p class="mt-1 text-neutral-500">Eesti, Läti ja Leedu müügitellimuste read, mille allahindlus ületas lubatud piiri.</p>
+    <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <h1 class="text-[22px] font-semibold text-stokker-dark">Põhjendatud allahindlused</h1>
+      <div class="flex flex-wrap items-center gap-3">
+        <button class="border border-stokker-green bg-white px-3 py-2 text-xs font-semibold uppercase text-stokker-green hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-stokker-dark disabled:border-neutral-300 disabled:text-neutral-400" id="export-excel" type="button">
+          Ekspordi Excelisse
+        </button>
       </div>
-      <div class="text-xs text-neutral-500">Andmed seisuga 18.08.2026 16:30</div>
     </div>
 
     <section class="mb-4 bg-white shadow-panel" aria-labelledby="filters-title">
@@ -94,20 +96,20 @@
 
     <section class="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4" aria-label="Raporti kokkuvõte">
       <div class="border-l-4 border-stokker-blue bg-white px-4 py-3 shadow-panel">
-        <div class="text-xs text-neutral-500">Leitud ridu</div>
+        <div class="text-xs text-neutral-500">Piiri ületanud ridu</div>
         <div class="mt-1 text-xl font-semibold text-stokker-dark" id="summary-count">0</div>
       </div>
       <div class="border-l-4 border-stokker-blue bg-white px-4 py-3 shadow-panel">
-        <div class="text-xs text-neutral-500">Allahindlus kokku</div>
+        <div class="text-xs text-neutral-500">Täiendav allahindlus</div>
         <div class="mt-1 text-xl font-semibold text-stokker-dark" id="summary-amount">0,00 €</div>
       </div>
       <div class="border-l-4 border-stokker-blue bg-white px-4 py-3 shadow-panel">
-        <div class="text-xs text-neutral-500">Keskmine allahindlus</div>
-        <div class="mt-1 text-xl font-semibold text-stokker-dark" id="summary-average">0,00%</div>
+        <div class="text-xs text-neutral-500">Keskmine vahe piirist</div>
+        <div class="mt-1 text-xl font-semibold text-stokker-dark" id="summary-average">+0,00%</div>
       </div>
       <div class="border-l-4 border-stokker-blue bg-white px-4 py-3 shadow-panel">
-        <div class="text-xs text-neutral-500">Esindatud riike</div>
-        <div class="mt-1 text-xl font-semibold text-stokker-dark" id="summary-countries">0</div>
+        <div class="text-xs text-neutral-500">Suurim vahe piirist</div>
+        <div class="mt-1 text-xl font-semibold text-stokker-dark" id="summary-maximum">+0,00%</div>
       </div>
     </section>
 
@@ -126,7 +128,7 @@
               <th class="border-b border-neutral-300 px-2 py-2.5">Klient</th>
               <th class="border-b border-neutral-300 px-2 py-2.5">Tootejuht</th>
               <th class="border-b border-neutral-300 px-2 py-2.5">Rea looja</th>
-              <th class="border-b border-neutral-300 px-2 py-2.5 text-right">Allahindlus</th>
+              <th class="border-b border-neutral-300 px-2 py-2.5 text-right">Allahindlus / ületus</th>
               <th class="border-b border-neutral-300 px-2 py-2.5">Põhjendus</th>
             </tr>
           </thead>
@@ -145,73 +147,73 @@
         orderDate: '2026-08-14', orderNumber: 'MT11005291', country: 'EE', department: 'Tallinn',
         productCode: '06019J4003', productName: 'Akulööktrell GSB 18V-55', brand: 'Bosch',
         productManager: 'Katrin Saar', lineCreator: 'Mari Müüja',
-        customerCode: '100245', customerName: 'Ehituspartner OÜ',
+        customerCode: '100245', customerName: 'Martin Kask',
         quantity: 2, unitPrice: 229, systemDiscount: 10, threshold: 12, appliedDiscount: 16,
-        reason: 'Objektipõhine projektihind vastavalt pakkumisele P-8042.'
+        reason: 'K-Rautas oli sama trell 199 €. Klient ostis kaks komplekti.'
       },
       {
         orderDate: '2026-08-13', orderNumber: 'MT11005264', country: 'LV', department: 'Rīga',
         productCode: '970559935', productName: 'Mootorsaag 450 II', brand: 'Husqvarna',
         productManager: 'Jānis Bērziņš', lineCreator: 'Ilze Ozola',
-        customerCode: 'LV00418', customerName: 'SIA Būvtehnika',
+        customerCode: 'LV00418', customerName: 'Andris Ozols',
         quantity: 1, unitPrice: 549, systemDiscount: 18, threshold: 18, appliedDiscount: 22,
-        reason: 'Konkurendi pakkumisega võrdsustatud hind.'
+        reason: 'DEPO poes oli sama saag 429 €. Klient soovis osta kohe Stokkerist.'
       },
       {
         orderDate: '2026-08-12', orderNumber: 'MT11005211', country: 'LT', department: 'Vilnius',
         productCode: 'DWE7492', productName: 'Lauasaag 250 mm', brand: 'DeWalt',
         productManager: 'Mantas Petrauskas', lineCreator: 'Rūta Kazlauskaitė',
-        customerCode: 'LT00892', customerName: 'UAB Statybų sprendimai',
+        customerCode: 'LT00892', customerName: 'Jonas Petrauskas',
         quantity: 1, unitPrice: 879, systemDiscount: 0, threshold: 12, appliedDiscount: 14.5,
-        reason: 'Suurema objekti tööriistakomplekti kokkuleppehind.'
+        reason: 'Senukai e-poes oli saag 759 €. Klient näitas telefonist kehtivat hinda.'
       },
       {
         orderDate: '2026-08-11', orderNumber: 'MT11005183', country: 'EE', department: 'Tartu',
         productCode: '4933478404', productName: 'Löökkruvikeeraja M18 FID3-502X', brand: 'Milwaukee',
         productManager: 'Katrin Saar', lineCreator: 'Priit Tamm',
-        customerCode: '102871', customerName: 'Lõunaehitus AS',
+        customerCode: '102871', customerName: 'Rasmus Tamm',
         quantity: 3, unitPrice: 449, systemDiscount: 12, threshold: 12, appliedDiscount: 17,
-        reason: 'Püsikliendi kvartalikokkulepe kolmele komplektile.'
+        reason: 'Klient ostis korraga kolm komplekti oma töömeeskonnale.'
       },
       {
         orderDate: '2026-08-08', orderNumber: 'MT11005097', country: 'LV', department: 'Daugavpils',
         productCode: '1.148-201.0', productName: 'Märg-kuivimur NT 30/1 Tact L', brand: 'Kärcher',
         productManager: 'Laura Kalniņa', lineCreator: 'Artūrs Liepa',
-        customerCode: 'LV00977', customerName: 'SIA Latgales Serviss',
+        customerCode: 'LV00977', customerName: 'Māris Liepa',
         quantity: 2, unitPrice: 635, systemDiscount: 15, threshold: 15, appliedDiscount: 19,
-        reason: 'Hoolduslepingu juurde kuuluv erihind.'
+        reason: 'Klient ostis kaks tolmuimejat ja lisatarvikud ühe ostuna.'
       },
       {
         orderDate: '2026-08-07', orderNumber: 'MT11005052', country: 'LT', department: 'Kaunas',
         productCode: '602358500', productName: 'Ketaslõikur WEV 17-125 Quick', brand: 'Metabo',
         productManager: 'Mantas Petrauskas', lineCreator: 'Tomas Vaitkus',
-        customerCode: 'LT00341', customerName: 'UAB Meistrų centras',
+        customerCode: 'LT00341', customerName: 'Tomas Jankauskas',
         quantity: 4, unitPrice: 259, systemDiscount: 8, threshold: 12, appliedDiscount: 15,
-        reason: 'Neljast seadmest koosneva komplekti projektihind.'
+        reason: 'Klient ostis neli ketaslõikurit. Ermita pakkumine oli 899 €.'
       },
       {
         orderDate: '2026-08-05', orderNumber: 'MT11004988', country: 'EE', department: 'Tallinn',
         productCode: 'MAK-DUC353Z', productName: 'Akukettsaag DUC353Z', brand: 'Makita',
         productManager: 'Toomas Kask', lineCreator: 'Liis Pärn',
-        customerCode: '104125', customerName: 'Roheline Hooldus OÜ',
+        customerCode: '104125', customerName: 'Peeter Saar',
         quantity: 2, unitPrice: 399, systemDiscount: 20, threshold: 20, appliedDiscount: 23,
-        reason: 'Raamlepingu aastamahu täitumise erihind.'
+        reason: 'Püsiklient ostis kaks saagi ja akukomplekti. Hind lepiti poes kokku.'
       },
       {
         orderDate: '2026-08-04', orderNumber: 'MT11004943', country: 'LV', department: 'Rīga',
         productCode: 'STI-RE130P', productName: 'Kõrgsurvepesur RE 130 PLUS', brand: 'STIHL',
         productManager: 'Laura Kalniņa', lineCreator: 'Ilze Ozola',
-        customerCode: 'LV00152', customerName: 'SIA Dārzu Pasaule',
+        customerCode: 'LV00152', customerName: 'Ilze Kalniņa',
         quantity: 1, unitPrice: 489, systemDiscount: 0, threshold: 12, appliedDiscount: 13,
-        reason: 'Näidistoote müük kliendile kokkulepitud hinnaga.'
+        reason: 'Müüdud oli kaupluse näidisseade, mille pakend oli avatud.'
       },
       {
         orderDate: '2026-08-01', orderNumber: 'MT11004861', country: 'LT', department: 'Vilnius',
         productCode: 'K12034-1', productName: 'Keevitusaparaat Powertec i250C', brand: 'Lincoln Electric',
         productManager: 'Aistė Jankauskaitė', lineCreator: 'Rūta Kazlauskaitė',
-        customerCode: 'LT00620', customerName: 'UAB Metalo darbai',
+        customerCode: 'LT00620', customerName: 'Marius Balčiūnas',
         quantity: 1, unitPrice: 2890, systemDiscount: 10, threshold: 12, appliedDiscount: 16,
-        reason: 'Keevitusseadmete hanke võitmiseks kinnitatud erihind.'
+        reason: 'Aircomis oli sama keevitusaparaat 2 450 €. Klient ostis lisaks maski ja traadi.'
       }
     ];
 
@@ -228,6 +230,7 @@
 
     const reportBody = document.querySelector('#report-body');
     const emptyState = document.querySelector('#empty-state');
+    const exportButton = document.querySelector('#export-excel');
 
     function formatPrice(value) {
       return new Intl.NumberFormat('et-EE', { style: 'currency', currency: 'EUR' }).format(value);
@@ -241,8 +244,25 @@
       return new Intl.DateTimeFormat('et-EE').format(new Date(value + 'T12:00:00'));
     }
 
-    function discountAmount(row) {
-      return row.quantity * row.unitPrice * row.appliedDiscount / 100;
+    function discountExcess(row) {
+      return Math.max(row.appliedDiscount - row.threshold, 0);
+    }
+
+    function roundCurrency(value) {
+      return Math.round((value + Number.EPSILON) * 100) / 100;
+    }
+
+    function totalDiscountAmount(row) {
+      return roundCurrency(row.quantity * row.unitPrice * row.appliedDiscount / 100);
+    }
+
+    function excessDiscountAmount(row) {
+      const amount = row.quantity * row.unitPrice * discountExcess(row) / 100;
+      return roundCurrency(amount);
+    }
+
+    function orderUrl(row) {
+      return 'https://pos.stokker.com/orders/item/' + encodeURIComponent(row.orderNumber);
     }
 
     function fillSelect(select, values, labelFormatter) {
@@ -286,7 +306,7 @@
         <tr class="align-top hover:bg-sky-50/50">
           <td class="border-b border-neutral-200 px-2 py-3">
             <div>${formatDate(row.orderDate)}</div>
-            <a class="mt-1 inline-block font-semibold text-stokker-blue underline hover:text-stokker-dark" href="#${row.orderNumber}">${row.orderNumber}</a>
+            <a class="mt-1 inline-block font-semibold text-stokker-blue underline hover:text-stokker-dark" href="${orderUrl(row)}" target="_blank" rel="noreferrer">${row.orderNumber}</a>
           </td>
           <td class="border-b border-neutral-200 px-2 py-3">
             <div class="font-medium">${countryNames[row.country]}</div>
@@ -294,7 +314,10 @@
           </td>
           <td class="border-b border-neutral-200 px-2 py-3">
             <div class="font-medium">${row.productName}</div>
-            <div class="mt-0.5 text-neutral-500">${row.productCode} · ${row.brand}</div>
+            <div class="mt-0.5 flex flex-wrap items-center gap-x-2 text-xs">
+              <span class="font-medium text-stokker-dark">${row.brand}</span>
+              <span class="text-neutral-500">${row.productCode}</span>
+            </div>
           </td>
           <td class="border-b border-neutral-200 px-2 py-3">
             <div class="font-medium">${row.customerName}</div>
@@ -303,13 +326,11 @@
           <td class="border-b border-neutral-200 px-2 py-3">${row.productManager}</td>
           <td class="border-b border-neutral-200 px-2 py-3">${row.lineCreator}</td>
           <td class="border-b border-neutral-200 px-2 py-3 text-right">
-            <div class="font-semibold text-stokker-dark">${formatDiscount(row.appliedDiscount)}</div>
-            <div class="text-neutral-500">Süsteemi ${formatDiscount(row.systemDiscount)}</div>
-            <div class="text-neutral-500">Piir ${formatDiscount(row.threshold)}</div>
-            <div class="mt-1 font-medium">−${formatPrice(discountAmount(row))}</div>
+            <div class="font-semibold text-stokker-dark">${formatDiscount(row.threshold)} → ${formatDiscount(row.appliedDiscount)}</div>
+            <div class="text-neutral-500">Vahe +${formatDiscount(discountExcess(row))}</div>
           </td>
           <td class="max-w-[300px] border-b border-neutral-200 px-2 py-3">
-            <span class="inline-flex items-start gap-1.5 bg-sky-50 px-2 py-1 text-stokker-dark ring-1 ring-inset ring-sky-200">
+            <span class="inline-flex items-start gap-1.5 text-stokker-dark">
               <span class="shrink-0 font-bold text-stokker-blue" aria-hidden="true">%</span>
               <span>${row.reason}</span>
             </span>
@@ -322,16 +343,89 @@
     }
 
     function renderSummary(rows) {
-      const totalAmount = rows.reduce((total, row) => total + discountAmount(row), 0);
-      const average = rows.length
-        ? rows.reduce((total, row) => total + row.appliedDiscount, 0) / rows.length
+      const totalAmount = rows.reduce((total, row) => total + excessDiscountAmount(row), 0);
+      const averageExcess = rows.length
+        ? rows.reduce((total, row) => total + discountExcess(row), 0) / rows.length
+        : 0;
+      const maximumExcess = rows.length
+        ? Math.max(...rows.map((row) => discountExcess(row)))
         : 0;
 
       document.querySelector('#summary-count').textContent = String(rows.length);
       document.querySelector('#summary-amount').textContent = formatPrice(totalAmount);
-      document.querySelector('#summary-average').textContent = formatDiscount(average);
-      document.querySelector('#summary-countries').textContent = String(new Set(rows.map((row) => row.country)).size);
+      document.querySelector('#summary-average').textContent = '+' + formatDiscount(averageExcess);
+      document.querySelector('#summary-maximum').textContent = '+' + formatDiscount(maximumExcess);
       document.querySelector('#results-label').textContent = rows.length + ' / ' + discountReportRows.length + ' rida';
+      exportButton.disabled = rows.length === 0;
+    }
+
+    function exportToExcel() {
+      const rows = visibleRows();
+      if (rows.length === 0 || typeof XLSX === 'undefined') return;
+
+      const headers = [
+        'Tootekood',
+        'Toote nimi',
+        'Kaubamärk',
+        'Allahindlus',
+        'Tootejuht',
+        'Osakond',
+        'Rea looja',
+        'Rakendatud allahindlus (%)',
+        'Sisestatud põhjendus',
+        'Kliendi kood',
+        'Kliendi nimi',
+        'Müügitellimuse number (link)'
+      ];
+
+      const data = rows.map((row) => [
+        row.productCode,
+        row.productName,
+        row.brand,
+        totalDiscountAmount(row),
+        row.productManager,
+        row.department,
+        row.lineCreator,
+        row.appliedDiscount / 100,
+        row.reason,
+        row.customerCode,
+        row.customerName,
+        row.orderNumber
+      ]);
+
+      const worksheet = XLSX.utils.aoa_to_sheet([headers, ...data]);
+      worksheet['!cols'] = [
+        { wch: 16 }, { wch: 34 }, { wch: 20 }, { wch: 16 },
+        { wch: 22 }, { wch: 18 }, { wch: 22 }, { wch: 28 },
+        { wch: 60 }, { wch: 16 }, { wch: 32 }, { wch: 30 }
+      ];
+      worksheet['!autofilter'] = { ref: worksheet['!ref'] };
+
+      rows.forEach((row, index) => {
+        const excelRow = index + 1;
+        const discountAmountCell = worksheet[XLSX.utils.encode_cell({ r: excelRow, c: 3 })];
+        const discountPercentCell = worksheet[XLSX.utils.encode_cell({ r: excelRow, c: 7 })];
+        const orderCell = worksheet[XLSX.utils.encode_cell({ r: excelRow, c: 11 })];
+
+        discountAmountCell.z = '#,##0.00 "€"';
+        discountPercentCell.z = '0.00%';
+        orderCell.l = {
+          Target: orderUrl(row),
+          Tooltip: 'Ava müügitellimus ' + row.orderNumber
+        };
+      });
+
+      const workbook = XLSX.utils.book_new();
+      workbook.Props = {
+        Title: 'Põhjendatud allahindlused',
+        Subject: 'DEV-160 allahindluste kontrollraport',
+        CreatedDate: new Date()
+      };
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Allahindlused');
+
+      const periodStart = filters.dateFrom.value || 'algus';
+      const periodEnd = filters.dateTo.value || 'tana';
+      XLSX.writeFile(workbook, 'allahindluste-pohjendused_' + periodStart + '_' + periodEnd + '.xlsx', { compression: true });
     }
 
     function renderReport() {
@@ -355,6 +449,8 @@
       renderReport();
       filters.search.focus();
     });
+
+    exportButton.addEventListener('click', exportToExcel);
 
     populateFilters();
     renderReport();
