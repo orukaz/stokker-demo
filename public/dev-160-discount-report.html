@@ -96,7 +96,7 @@
 
     <section class="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4" aria-label="Raporti kokkuvõte">
       <div class="border-l-4 border-stokker-blue bg-white px-4 py-3 shadow-panel">
-        <div class="text-xs text-neutral-500">Piiri ületanud ridu</div>
+        <div class="text-xs text-neutral-500">Põhjendusega ridu</div>
         <div class="mt-1 text-xl font-semibold text-stokker-dark" id="summary-count">0</div>
       </div>
       <div class="border-l-4 border-stokker-blue bg-white px-4 py-3 shadow-panel">
@@ -104,11 +104,11 @@
         <div class="mt-1 text-xl font-semibold text-stokker-dark" id="summary-amount">0,00 €</div>
       </div>
       <div class="border-l-4 border-stokker-blue bg-white px-4 py-3 shadow-panel">
-        <div class="text-xs text-neutral-500">Keskmine vahe piirist</div>
+        <div class="text-xs text-neutral-500">Keskmine vahe</div>
         <div class="mt-1 text-xl font-semibold text-stokker-dark" id="summary-average">+0,00%</div>
       </div>
       <div class="border-l-4 border-stokker-blue bg-white px-4 py-3 shadow-panel">
-        <div class="text-xs text-neutral-500">Suurim vahe piirist</div>
+        <div class="text-xs text-neutral-500">Suurim vahe</div>
         <div class="mt-1 text-xl font-semibold text-stokker-dark" id="summary-maximum">+0,00%</div>
       </div>
     </section>
@@ -149,7 +149,7 @@
         productManager: 'Katrin Saar', lineCreator: 'Mari Müüja',
         customerCode: '100245', customerName: 'Martin Kask',
         quantity: 2, unitPrice: 229, systemDiscount: 10, threshold: 12, appliedDiscount: 16,
-        reason: 'K-Rautas oli sama trell 199 €. Klient ostis kaks komplekti.'
+        reason: 'K-Rautas oli sama trell soodsam.'
       },
       {
         orderDate: '2026-08-13', orderNumber: 'MT11005264', country: 'LV', department: 'Rīga',
@@ -157,7 +157,7 @@
         productManager: 'Jānis Bērziņš', lineCreator: 'Ilze Ozola',
         customerCode: 'LV00418', customerName: 'Andris Ozols',
         quantity: 1, unitPrice: 549, systemDiscount: 18, threshold: 18, appliedDiscount: 22,
-        reason: 'DEPO poes oli sama saag 429 €. Klient soovis osta kohe Stokkerist.'
+        reason: 'DEPO piedāvāja tādu pašu zāģi par zemāku cenu.'
       },
       {
         orderDate: '2026-08-12', orderNumber: 'MT11005211', country: 'LT', department: 'Vilnius',
@@ -165,15 +165,15 @@
         productManager: 'Mantas Petrauskas', lineCreator: 'Rūta Kazlauskaitė',
         customerCode: 'LT00892', customerName: 'Jonas Petrauskas',
         quantity: 1, unitPrice: 879, systemDiscount: 0, threshold: 12, appliedDiscount: 14.5,
-        reason: 'Senukai e-poes oli saag 759 €. Klient näitas telefonist kehtivat hinda.'
+        reason: 'Klientas parodė mažesnę kainą „Senukai“ el. parduotuvėje.'
       },
       {
         orderDate: '2026-08-11', orderNumber: 'MT11005183', country: 'EE', department: 'Tartu',
         productCode: '4933478404', productName: 'Löökkruvikeeraja M18 FID3-502X', brand: 'Milwaukee',
         productManager: 'Katrin Saar', lineCreator: 'Priit Tamm',
-        customerCode: '102871', customerName: 'Rasmus Tamm',
+        customerCode: '102871', customerName: 'Tammepuit OÜ',
         quantity: 3, unitPrice: 449, systemDiscount: 12, threshold: 12, appliedDiscount: 17,
-        reason: 'Klient ostis korraga kolm komplekti oma töömeeskonnale.'
+        reason: 'Bauhofis oli sama komplekt kampaanias.'
       },
       {
         orderDate: '2026-08-08', orderNumber: 'MT11005097', country: 'LV', department: 'Daugavpils',
@@ -181,7 +181,7 @@
         productManager: 'Laura Kalniņa', lineCreator: 'Artūrs Liepa',
         customerCode: 'LV00977', customerName: 'Māris Liepa',
         quantity: 2, unitPrice: 635, systemDiscount: 15, threshold: 15, appliedDiscount: 19,
-        reason: 'Klient ostis kaks tolmuimejat ja lisatarvikud ühe ostuna.'
+        reason: '1a.lv piedāvājums bija lētāks.'
       },
       {
         orderDate: '2026-08-07', orderNumber: 'MT11005052', country: 'LT', department: 'Kaunas',
@@ -189,15 +189,15 @@
         productManager: 'Mantas Petrauskas', lineCreator: 'Tomas Vaitkus',
         customerCode: 'LT00341', customerName: 'Tomas Jankauskas',
         quantity: 4, unitPrice: 259, systemDiscount: 8, threshold: 12, appliedDiscount: 15,
-        reason: 'Klient ostis neli ketaslõikurit. Ermita pakkumine oli 899 €.'
+        reason: '„Ermitažas“ parduotuvėje toks pats kampinis šlifuoklis kainavo 229 €.'
       },
       {
         orderDate: '2026-08-05', orderNumber: 'MT11004988', country: 'EE', department: 'Tallinn',
         productCode: 'MAK-DUC353Z', productName: 'Akukettsaag DUC353Z', brand: 'Makita',
         productManager: 'Toomas Kask', lineCreator: 'Liis Pärn',
-        customerCode: '104125', customerName: 'Peeter Saar',
+        customerCode: '104125', customerName: 'Saemeister OÜ',
         quantity: 2, unitPrice: 399, systemDiscount: 20, threshold: 20, appliedDiscount: 23,
-        reason: 'Püsiklient ostis kaks saagi ja akukomplekti. Hind lepiti poes kokku.'
+        reason: 'Klient leidis Hansapostist sama sae odavamalt.'
       },
       {
         orderDate: '2026-08-04', orderNumber: 'MT11004943', country: 'LV', department: 'Rīga',
@@ -205,7 +205,7 @@
         productManager: 'Laura Kalniņa', lineCreator: 'Ilze Ozola',
         customerCode: 'LV00152', customerName: 'Ilze Kalniņa',
         quantity: 1, unitPrice: 489, systemDiscount: 0, threshold: 12, appliedDiscount: 13,
-        reason: 'Müüdud oli kaupluse näidisseade, mille pakend oli avatud.'
+        reason: 'Ksenukai.lv cena bija 429 €.'
       },
       {
         orderDate: '2026-08-01', orderNumber: 'MT11004861', country: 'LT', department: 'Vilnius',
@@ -213,7 +213,7 @@
         productManager: 'Aistė Jankauskaitė', lineCreator: 'Rūta Kazlauskaitė',
         customerCode: 'LT00620', customerName: 'Marius Balčiūnas',
         quantity: 1, unitPrice: 2890, systemDiscount: 10, threshold: 12, appliedDiscount: 16,
-        reason: 'Aircomis oli sama keevitusaparaat 2 450 €. Klient ostis lisaks maski ja traadi.'
+        reason: '„Aircom“ pateikė geresnį pasiūlymą tam pačiam suvirinimo aparatui.'
       }
     ];
 
