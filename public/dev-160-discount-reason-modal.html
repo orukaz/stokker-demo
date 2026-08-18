@@ -190,7 +190,7 @@
 
   <div class="fixed inset-0 z-50 hidden items-start justify-items-center overflow-y-auto bg-black/20 p-2 pt-3 sm:items-center sm:p-4" id="discount-modal-layer">
     <section
-      class="flex max-h-[calc(100dvh-1.5rem)] w-full max-w-[620px] flex-col overflow-hidden bg-white shadow-modal sm:max-h-[calc(100dvh-2rem)]"
+      class="flex max-h-[calc(100dvh-1.5rem)] w-full max-w-2xl flex-col overflow-hidden bg-white shadow-modal sm:max-h-[calc(100dvh-2rem)]"
       role="alertdialog"
       aria-modal="true"
       aria-labelledby="discount-modal-title"
@@ -212,21 +212,21 @@
               <div class="truncate text-base font-semibold" id="modal-product-name"></div>
               <div class="text-xs text-neutral-500" id="modal-product-code"></div>
             </div>
-            <div class="grid grid-cols-1 gap-2 sm:grid-cols-3">
-              <div class="border border-neutral-200 bg-white px-3 py-2.5">
+            <div class="grid grid-cols-1 gap-2 sm:grid-cols-[1.2fr_1fr_1fr]">
+              <div class="min-w-0 border border-neutral-200 bg-white px-3 py-2.5">
                 <span class="block text-xs text-neutral-500">Allahindlus</span>
-                <div class="mt-1 flex min-h-7 items-baseline gap-2 whitespace-nowrap font-bold tabular-nums text-stokker-dark">
-                  <span class="text-sm font-normal text-neutral-500 line-through" id="previous-discount"></span>
-                  <span class="text-sm" aria-hidden="true">→</span>
-                  <span class="text-xl text-stokker-blue" id="pending-discount"></span>
+                <div class="mt-1 flex min-h-7 items-baseline gap-1.5 whitespace-nowrap text-xl font-bold tabular-nums text-stokker-dark">
+                  <span class="font-normal text-neutral-500" id="previous-discount"></span>
+                  <span class="text-base text-stokker-dark" aria-hidden="true">→</span>
+                  <span class="text-stokker-blue" id="pending-discount"></span>
                 </div>
               </div>
-              <div class="border border-neutral-200 bg-white px-3 py-2.5">
+              <div class="min-w-0 border border-neutral-200 bg-white px-3 py-2.5">
                 <span class="block text-xs text-neutral-500">Hind enne</span>
                 <strong class="mt-1 block text-xl tabular-nums" id="price-before"></strong>
               </div>
-              <div class="border border-neutral-200 bg-white px-3 py-2.5">
-                <span class="block text-xs text-neutral-500">Uus hind (eelvaade)</span>
+              <div class="min-w-0 border border-neutral-200 bg-white px-3 py-2.5">
+                <span class="block text-xs text-neutral-500">Uus hind</span>
                 <strong class="mt-1 block text-xl tabular-nums text-stokker-blue" id="price-after"></strong>
               </div>
             </div>
@@ -498,7 +498,10 @@
         ? JSON.parse(input.dataset.discountChange)
         : null;
 
-      row.querySelector('.row-final-price').textContent = formatPrice(currentLinePrice);
+      const finalPrice = row.querySelector('.row-final-price');
+      finalPrice.textContent = formatPrice(currentLinePrice);
+      finalPrice.classList.remove('text-stokker-blue');
+      finalPrice.removeAttribute('title');
 
       priceMarker.classList.toggle('hidden', !priceDiffers);
 
@@ -522,6 +525,23 @@
       }
 
       updateSummary();
+    }
+
+    function previewRowPrice(input) {
+      const value = Number(String(input.value).replace(',', '.'));
+      const applied = Number(input.dataset.applied);
+
+      if (!Number.isFinite(value) || value < 0 || value > 100 || value === applied) {
+        updateRow(input);
+        return;
+      }
+
+      const row = input.closest('.product-row');
+      const unitPrice = Number(input.dataset.unitPrice);
+      const finalPrice = row.querySelector('.row-final-price');
+      finalPrice.textContent = formatPrice(discountedPrice(unitPrice, value));
+      finalPrice.classList.add('text-stokker-blue');
+      finalPrice.title = 'Eelvaade – muudatus ei ole veel salvestatud';
     }
 
     function updateFormState() {
@@ -569,7 +589,7 @@
       productCode.textContent = 'Tootekood ' + input.dataset.code;
       previousDiscount.textContent = formatDiscount(Number(input.dataset.applied));
       pendingDiscountLabel.textContent = formatDiscount(value);
-      priceBefore.textContent = formatPrice(unitPrice);
+      priceBefore.textContent = formatPrice(discountedPrice(unitPrice, Number(input.dataset.applied)));
       priceAfter.textContent = formatPrice(discountedPrice(unitPrice, value));
       document.querySelector('#discount-modal-description').textContent = systemDiscount > baseThreshold
         ? 'Süsteemi allahindlus on ' + formatDiscount(systemDiscount) + '. Suurem allahindlus vajab põhjendust.'
@@ -592,6 +612,7 @@
 
       if (restore && activeInput) {
         activeInput.value = formatInputValue(Number(activeInput.dataset.applied));
+        updateRow(activeInput);
       }
 
       highlightSourceRow(activeInput, false);
@@ -634,11 +655,15 @@
 
       if (!Number.isFinite(value) || value < 0 || value > 100) {
         input.value = formatInputValue(applied);
+        updateRow(input);
         showToast('Vigane allahindlus', 'Sisesta väärtus vahemikus 0–100%.');
         return;
       }
 
-      if (value === applied) return;
+      if (value === applied) {
+        updateRow(input);
+        return;
+      }
 
       if (value > allowedThreshold(input)) {
         openModal(input, value);
@@ -657,6 +682,7 @@
         }
       });
 
+      input.addEventListener('input', () => previewRowPrice(input));
       input.addEventListener('blur', () => commitDiscount(input));
 
       updateRow(input);
