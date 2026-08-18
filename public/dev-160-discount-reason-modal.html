@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="et">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DEV-160 – allahindluse põhjendamine</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            stokker: {
+              blue: '#007ac2',
+              dark: '#135782',
+              red: '#e40046',
+              green: '#00a651'
+            }
+          },
+          boxShadow: {
+            panel: '0 12px 44px rgba(86, 97, 104, 0.12)',
+            modal: '0 12px 44px rgba(86, 97, 104, 0.32)'
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="min-h-screen bg-slate-50 font-sans text-[13px] leading-[1.35] text-black">
+  <header class="flex min-h-[54px] items-center bg-stokker-blue px-6 text-white shadow-md shadow-stokker-dark/20">
+    <div class="text-[19px] font-extrabold tracking-[0.08em]">STOKKER</div>
+    <nav class="ml-10 hidden gap-6 font-semibold md:flex" aria-label="POS-i peamenüü">
+      <span class="opacity-80">Müük</span>
+      <span>Tellimused</span>
+      <span class="opacity-80">Kliendid</span>
+      <span class="opacity-80">Raportid</span>
+    </nav>
+    <div class="ml-auto opacity-90">Mari Müüja · SET</div>
+  </header>
+
+  <main class="mx-auto mb-20 mt-7 w-[calc(100%-2rem)] max-w-[1180px]" id="page-content">
+    <div class="mb-2.5 text-xs text-neutral-500">Tellimused / MT11004567</div>
+    <h1 class="mb-5 text-[22px] font-semibold text-stokker-dark">Müügitellimus MT11004567</h1>
+
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,1fr)_320px]">
+      <section class="overflow-hidden bg-white shadow-panel">
+        <div class="flex min-h-10 items-center bg-stokker-blue px-4 font-semibold text-white">
+          <span>Tooted</span>
+        </div>
+
+        <div class="overflow-x-auto p-4">
+          <table class="w-full min-w-[760px] border-collapse text-xs">
+            <thead>
+              <tr class="bg-neutral-100 text-left font-semibold">
+                <th class="border-b border-neutral-300 px-2 py-2.5">Toode</th>
+                <th class="border-b border-neutral-300 px-2 py-2.5">Kogus</th>
+                <th class="border-b border-neutral-300 px-2 py-2.5 text-right">Ühiku hind</th>
+                <th class="border-b border-neutral-300 px-2 py-2.5 text-right">Allahindlus</th>
+                <th class="border-b border-neutral-300 px-2 py-2.5 text-right">Hind pärast</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="product-row" data-code="123456">
+                <td class="border-b border-neutral-200 px-2 py-3">
+                  <div class="font-medium">123456 · Akutrell Makita DDF484RTJ</div>
+                  <div class="row-threshold-status mt-1.5 hidden items-center gap-1 rounded-full bg-sky-50 px-2 py-0.5 text-[11px] font-semibold text-stokker-dark ring-1 ring-inset ring-sky-200">
+                    <span class="font-bold text-stokker-blue" aria-hidden="true">%</span>
+                    <span class="row-threshold-status-text"></span>
+                  </div>
+                </td>
+                <td class="border-b border-neutral-200 px-2 py-3">1 tk</td>
+                <td class="border-b border-neutral-200 px-2 py-3 text-right font-medium">289,00 €</td>
+                <td class="border-b border-neutral-200 px-2 py-3 text-right">
+                  <div class="inline-flex items-start">
+                    <label class="inline-flex overflow-hidden rounded border border-neutral-300 bg-white transition focus-within:border-stokker-blue focus-within:ring-2 focus-within:ring-stokker-blue/15">
+                      <span class="sr-only">Akutrelli allahindlus protsentides</span>
+                      <input
+                        class="discount-input w-[70px] border-0 bg-transparent py-1.5 pl-2 pr-1 text-right outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="0.01"
+                        value="20"
+                        inputmode="decimal"
+                        data-applied="20"
+                        data-system-discount="20"
+                        data-reason=""
+                        data-code="123456"
+                        data-name="Akutrell Makita DDF484RTJ"
+                        data-unit-price="289"
+                      >
+                      <span class="py-1.5 pl-0.5 pr-2 font-semibold text-neutral-500" aria-hidden="true">%</span>
+                    </label>
+                    <span class="row-price-marker ml-1 hidden text-sm font-bold leading-none text-neutral-500" title="Arvutatud kliendihind erineb müügitellimuse rea hinnast" aria-label="Arvutatud kliendihind erineb müügitellimuse rea hinnast">*</span>
+                  </div>
+                </td>
+                <td class="row-final-price border-b border-neutral-200 px-2 py-3 text-right font-semibold">231,20 €</td>
+              </tr>
+
+              <tr class="product-row" data-code="654321">
+                <td class="border-b border-neutral-200 px-2 py-3">
+                  <div class="font-medium">654321 · Otsikute komplekt 31 osa</div>
+                  <div class="row-threshold-status mt-1.5 hidden items-center gap-1 rounded-full bg-sky-50 px-2 py-0.5 text-[11px] font-semibold text-stokker-dark ring-1 ring-inset ring-sky-200">
+                    <span class="font-bold text-stokker-blue" aria-hidden="true">%</span>
+                    <span class="row-threshold-status-text"></span>
+                  </div>
+                </td>
+                <td class="border-b border-neutral-200 px-2 py-3">1 tk</td>
+                <td class="border-b border-neutral-200 px-2 py-3 text-right font-medium">34,90 €</td>
+                <td class="border-b border-neutral-200 px-2 py-3 text-right">
+                  <label class="inline-flex overflow-hidden rounded border border-neutral-300 bg-white transition focus-within:border-stokker-blue focus-within:ring-2 focus-within:ring-stokker-blue/15">
+                    <span class="sr-only">Otsikute komplekti allahindlus protsentides</span>
+                    <input
+                      class="discount-input w-[70px] border-0 bg-transparent py-1.5 pl-2 pr-1 text-right outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                      type="number"
+                      min="0"
+                      max="100"
+                      step="0.01"
+                      value="0"
+                      inputmode="decimal"
+                      data-applied="0"
+                      data-system-discount="0"
+                      data-reason=""
+                      data-code="654321"
+                      data-name="Otsikute komplekt 31 osa"
+                      data-unit-price="34.9"
+                    >
+                    <span class="py-1.5 pl-0.5 pr-2 font-semibold text-neutral-500" aria-hidden="true">%</span>
+                  </label>
+                  <span class="row-price-marker ml-1 hidden text-sm font-bold leading-none text-neutral-500" title="Arvutatud kliendihind erineb müügitellimuse rea hinnast" aria-label="Arvutatud kliendihind erineb müügitellimuse rea hinnast">*</span>
+                </td>
+                <td class="row-final-price border-b border-neutral-200 px-2 py-3 text-right font-semibold">34,90 €</td>
+              </tr>
+
+              <tr class="product-row" data-code="789012">
+                <td class="border-b border-neutral-200 px-2 py-3">
+                  <div class="font-medium">789012 · Survepesur Kärcher K5 Premium</div>
+                  <div class="row-threshold-status mt-1.5 hidden items-center gap-1 rounded-full bg-sky-50 px-2 py-0.5 text-[11px] font-semibold text-stokker-dark ring-1 ring-inset ring-sky-200">
+                    <span class="font-bold text-stokker-blue" aria-hidden="true">%</span>
+                    <span class="row-threshold-status-text"></span>
+                  </div>
+                </td>
+                <td class="border-b border-neutral-200 px-2 py-3">1 tk</td>
+                <td class="border-b border-neutral-200 px-2 py-3 text-right font-medium">499,00 €</td>
+                <td class="border-b border-neutral-200 px-2 py-3 text-right">
+                  <label class="inline-flex overflow-hidden rounded border border-neutral-300 bg-white transition focus-within:border-stokker-blue focus-within:ring-2 focus-within:ring-stokker-blue/15">
+                    <span class="sr-only">Survepesuri allahindlus protsentides</span>
+                    <input
+                      class="discount-input w-[70px] border-0 bg-transparent py-1.5 pl-2 pr-1 text-right outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                      type="number"
+                      min="0"
+                      max="100"
+                      step="0.01"
+                      value="10"
+                      inputmode="decimal"
+                      data-applied="10"
+                      data-system-discount="10"
+                      data-reason=""
+                      data-code="789012"
+                      data-name="Survepesur Kärcher K5 Premium"
+                      data-unit-price="499"
+                    >
+                    <span class="py-1.5 pl-0.5 pr-2 font-semibold text-neutral-500" aria-hidden="true">%</span>
+                  </label>
+                  <span class="row-price-marker ml-1 hidden text-sm font-bold leading-none text-neutral-500" title="Arvutatud kliendihind erineb müügitellimuse rea hinnast" aria-label="Arvutatud kliendihind erineb müügitellimuse rea hinnast">*</span>
+                </td>
+                <td class="row-final-price border-b border-neutral-200 px-2 py-3 text-right font-semibold">449,10 €</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="mt-3 flex items-start gap-1.5 text-[11px] text-neutral-500">
+            <span class="font-bold">*</span>
+            <span>Arvutatud kliendihind erineb müügitellimuse rea hinnast.</span>
+          </div>
+        </div>
+      </section>
+
+      <aside class="hidden overflow-hidden bg-white shadow-panel md:block">
+        <div class="flex min-h-10 items-center bg-stokker-blue px-4 font-semibold text-white">Kokkuvõte</div>
+        <div class="p-4">
+          <div class="flex justify-between border-b border-neutral-200 py-2.5"><span>Summa enne</span><span id="summary-before">822,90 €</span></div>
+          <div class="flex justify-between border-b border-neutral-200 py-2.5"><span>Allahindlus</span><span id="summary-discount">107,70 €</span></div>
+          <div class="flex justify-between py-2.5 font-bold"><span>Kokku pärast</span><span id="summary-total">715,20 €</span></div>
+        </div>
+      </aside>
+    </div>
+
+  </main>
+
+  <div class="fixed inset-0 z-50 hidden place-items-center bg-black/20 p-4" id="discount-modal-layer">
+    <section
+      class="flex max-h-[calc(100vh-2rem)] w-full max-w-[620px] flex-col overflow-hidden bg-white shadow-modal"
+      role="alertdialog"
+      aria-modal="true"
+      aria-labelledby="discount-modal-title"
+      aria-describedby="discount-modal-description"
+    >
+      <header class="flex min-h-10 shrink-0 items-center bg-stokker-blue px-4 text-white">
+        <h2 class="text-sm font-semibold" id="discount-modal-title">Allahindluse põhjendus</h2>
+        <button class="ml-auto grid size-8 place-items-center bg-transparent text-xl leading-none hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" id="close-modal" type="button" aria-label="Sulge modaal">×</button>
+      </header>
+
+      <form id="discount-form" novalidate>
+        <div class="overflow-auto p-4">
+          <p class="mb-4" id="discount-modal-description">
+            Allahindlus ületab tooterea lubatud piiri ja vajab põhjendust.
+          </p>
+
+          <div class="border-l-4 border-stokker-blue bg-neutral-100 p-4" aria-label="Muudetav tooterida">
+            <div class="mb-3 min-w-0">
+              <div class="truncate font-semibold" id="modal-product-name"></div>
+              <div class="text-xs text-neutral-500" id="modal-product-code"></div>
+            </div>
+            <div class="grid grid-cols-1 gap-2 text-xs sm:grid-cols-3">
+              <div class="border border-neutral-200 bg-white px-3 py-2">
+                <span class="block text-neutral-500">Allahindlus</span>
+                <div class="mt-1 flex items-center gap-1.5 font-bold text-stokker-dark">
+                  <span class="font-normal text-neutral-500 line-through" id="previous-discount"></span>
+                  <span aria-hidden="true">→</span>
+                  <span class="text-stokker-blue" id="pending-discount"></span>
+                </div>
+              </div>
+              <div class="border border-neutral-200 bg-white px-3 py-2">
+                <span class="block text-neutral-500">Hind enne</span>
+                <strong class="mt-1 block" id="price-before"></strong>
+              </div>
+              <div class="border border-neutral-200 bg-white px-3 py-2">
+                <span class="block text-neutral-500">Hind pärast</span>
+                <strong class="mt-1 block text-stokker-blue" id="price-after"></strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <label class="mb-2 block font-semibold" for="discount-reason">
+              Põhjendus <span class="text-stokker-red">*</span>
+            </label>
+            <div>
+              <textarea
+                class="block min-h-24 w-full resize-y border border-neutral-300 bg-white px-3 py-2 outline-none placeholder:text-neutral-400 focus:border-stokker-blue focus:ring-1 focus:ring-stokker-blue aria-[invalid=true]:border-stokker-red"
+                id="discount-reason"
+                name="discountReason"
+                minlength="10"
+                maxlength="250"
+                rows="3"
+                required
+                aria-required="true"
+                aria-describedby="reason-help reason-error"
+                placeholder="Näiteks: kliendiga kokkulepitud projektihind"
+              ></textarea>
+              <div class="mt-1 flex justify-between gap-3 text-[11px] text-neutral-500">
+                <span id="reason-help">Vähemalt 10 tähemärki</span>
+                <span><span id="character-count">0</span>/250</span>
+              </div>
+              <div class="mt-1 text-stokker-red" id="reason-error" hidden>Põhjendus peab sisaldama vähemalt 10 tähemärki.</div>
+            </div>
+          </div>
+        </div>
+
+        <footer class="shrink-0 border-t border-neutral-200 bg-neutral-50 px-4 py-3">
+          <div class="grid grid-cols-2 gap-4">
+            <button class="border border-stokker-red bg-white px-4 py-2 text-xs font-semibold uppercase text-stokker-red hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-stokker-dark" id="cancel-modal" type="button">Katkesta</button>
+            <button class="border border-stokker-green bg-white px-4 py-2 text-xs font-semibold uppercase text-stokker-green hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-stokker-dark disabled:border-neutral-300 disabled:text-neutral-400 disabled:hover:bg-white" id="apply-discount" type="submit" disabled>Rakenda allahindlus</button>
+          </div>
+        </footer>
+      </form>
+    </section>
+  </div>
+
+  <div class="fixed bottom-5 right-5 z-40 hidden max-w-[calc(100vw-2.5rem)] border-l-4 border-stokker-green bg-white px-4 py-3 shadow-modal" id="success-toast" role="status">
+    <strong class="mb-1 block text-stokker-green" id="toast-title">Põhjendus salvestatud</strong>
+    <span id="toast-message"></span>
+  </div>
+
+  <script>
+    const productVariants = [
+      {
+        variant: 'default_above_base_limit',
+        code: '123456',
+        name: 'Akutrell Makita DDF484RTJ',
+        quantity: 1,
+        unitPrice: 289,
+        systemDiscount: 20,
+        appliedDiscount: 20,
+        reason: ''
+      },
+      {
+        variant: 'without_default_discount',
+        code: '654321',
+        name: 'Otsikute komplekt 31 osa',
+        quantity: 1,
+        unitPrice: 34.9,
+        systemDiscount: 0,
+        appliedDiscount: 0,
+        reason: ''
+      },
+      {
+        variant: 'default_below_base_limit',
+        code: '789012',
+        name: 'Survepesur Kärcher K5 Premium',
+        quantity: 1,
+        unitPrice: 499,
+        systemDiscount: 10,
+        appliedDiscount: 10,
+        reason: ''
+      }
+    ];
+
+    const baseThreshold = 12;
+    const minimumReasonLength = 10;
+    const currentUser = 'Mari Müüja';
+    const discountChangeHistory = [];
+    window.discountChangeHistory = discountChangeHistory;
+    const layer = document.querySelector('#discount-modal-layer');
+    const form = document.querySelector('#discount-form');
+    const reason = document.querySelector('#discount-reason');
+    const applyButton = document.querySelector('#apply-discount');
+    const count = document.querySelector('#character-count');
+    const reasonHelp = document.querySelector('#reason-help');
+    const error = document.querySelector('#reason-error');
+    const toast = document.querySelector('#success-toast');
+    const toastTitle = document.querySelector('#toast-title');
+    const toastMessage = document.querySelector('#toast-message');
+    const pageContent = document.querySelector('#page-content');
+    const productName = document.querySelector('#modal-product-name');
+    const productCode = document.querySelector('#modal-product-code');
+    const previousDiscount = document.querySelector('#previous-discount');
+    const pendingDiscountLabel = document.querySelector('#pending-discount');
+    const priceBefore = document.querySelector('#price-before');
+    const priceAfter = document.querySelector('#price-after');
+    const summaryBefore = document.querySelector('#summary-before');
+    const summaryDiscount = document.querySelector('#summary-discount');
+    const summaryTotal = document.querySelector('#summary-total');
+    let activeInput = null;
+    let pendingDiscount = null;
+    let toastTimer;
+    const inputTimers = new WeakMap();
+
+    const formatDiscount = (value) => new Intl.NumberFormat('et-EE', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(value) + '%';
+
+    const formatPrice = (value) => new Intl.NumberFormat('et-EE', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(value) + ' €';
+
+    const formatInputValue = (value) => Number.isInteger(value) ? String(value) : value.toFixed(2);
+    const discountedPrice = (unitPrice, discount) => unitPrice * (1 - discount / 100);
+    const allowedThreshold = (input) => Math.max(baseThreshold, Number(input.dataset.systemDiscount));
+
+    function productVariant(input) {
+      return productVariants.find((product) => product.code === input.dataset.code);
+    }
+
+    function saveDiscountChange(input, newDiscount, reasonValue, eventType) {
+      const change = {
+        eventType: eventType || 'reason_saved',
+        productCode: input.dataset.code,
+        systemDiscount: Number(input.dataset.systemDiscount),
+        previousDiscount: Number(input.dataset.applied),
+        newDiscount,
+        threshold: allowedThreshold(input),
+        reason: reasonValue,
+        changedBy: currentUser,
+        changedAt: new Date().toISOString()
+      };
+
+      discountChangeHistory.push(change);
+      return change;
+    }
+
+    function hydrateProductVariants() {
+      productVariants.forEach((product) => {
+        const row = document.querySelector('.product-row[data-code="' + product.code + '"]');
+        const input = row.querySelector('.discount-input');
+
+        input.value = formatInputValue(product.appliedDiscount);
+        input.dataset.applied = String(product.appliedDiscount);
+        input.dataset.systemDiscount = String(product.systemDiscount);
+        input.dataset.reason = product.reason;
+        input.dataset.code = product.code;
+        input.dataset.name = product.name;
+        input.dataset.unitPrice = String(product.unitPrice);
+        input.dataset.variant = product.variant;
+      });
+    }
+
+    function showToast(title, message) {
+      toastTitle.textContent = title;
+      toastMessage.textContent = message;
+      toast.classList.remove('hidden');
+      window.clearTimeout(toastTimer);
+      toastTimer = window.setTimeout(() => toast.classList.add('hidden'), 5000);
+    }
+
+    function updateSummary() {
+      let originalTotal = 0;
+      let finalTotal = 0;
+
+      document.querySelectorAll('.discount-input').forEach((input) => {
+        const unitPrice = Number(input.dataset.unitPrice);
+        const discount = Number(input.dataset.applied);
+        originalTotal += unitPrice;
+        finalTotal += discountedPrice(unitPrice, discount);
+      });
+
+      summaryBefore.textContent = formatPrice(originalTotal);
+      summaryDiscount.textContent = formatPrice(originalTotal - finalTotal);
+      summaryTotal.textContent = formatPrice(finalTotal);
+    }
+
+    function updateRow(input) {
+      const row = input.closest('.product-row');
+      const discount = Number(input.dataset.applied);
+      const systemDiscount = Number(input.dataset.systemDiscount);
+      const unitPrice = Number(input.dataset.unitPrice);
+      const savedReason = input.dataset.reason || '';
+      const status = row.querySelector('.row-threshold-status');
+      const statusText = row.querySelector('.row-threshold-status-text');
+      const priceMarker = row.querySelector('.row-price-marker');
+      const systemCustomerPrice = discountedPrice(unitPrice, systemDiscount);
+      const currentLinePrice = discountedPrice(unitPrice, discount);
+      const priceDiffers = Math.round(systemCustomerPrice * 10) !== Math.round(currentLinePrice * 10);
+      const savedChange = input.dataset.discountChange
+        ? JSON.parse(input.dataset.discountChange)
+        : null;
+
+      row.querySelector('.row-final-price').textContent = formatPrice(currentLinePrice);
+
+      priceMarker.classList.toggle('hidden', !priceDiffers);
+
+      const rowThreshold = allowedThreshold(input);
+
+      if (discount > rowThreshold && savedReason) {
+        statusText.textContent = 'Allahindluse põhjus: ' + savedReason;
+        status.title = savedChange
+          ? 'Vaikimisi ' + formatDiscount(savedChange.systemDiscount)
+            + ' · enne ' + formatDiscount(savedChange.previousDiscount)
+            + ' · uus ' + formatDiscount(savedChange.newDiscount)
+          : formatDiscount(discount) + ' allahindlus ületab ' + formatDiscount(rowThreshold) + ' piirmäära';
+        status.setAttribute('aria-label', status.title + '. Allahindluse põhjus: ' + savedReason);
+        status.classList.remove('hidden');
+        status.classList.add('inline-flex');
+      } else {
+        status.removeAttribute('title');
+        status.removeAttribute('aria-label');
+        status.classList.add('hidden');
+        status.classList.remove('inline-flex');
+      }
+
+      updateSummary();
+    }
+
+    function updateFormState() {
+      const reasonLength = reason.value.trim().length;
+      const remainingCharacters = Math.max(minimumReasonLength - reasonLength, 0);
+      const hasValidReason = remainingCharacters === 0;
+      count.textContent = String(reason.value.length);
+      applyButton.disabled = !hasValidReason;
+      reasonHelp.textContent = reasonLength === 0
+        ? 'Vähemalt ' + minimumReasonLength + ' tähemärki'
+        : remainingCharacters > 0
+          ? 'Veel ' + remainingCharacters + ' tähemärki'
+          : 'Põhjendus on piisava pikkusega';
+
+      if (hasValidReason) {
+        error.hidden = true;
+        reason.setAttribute('aria-invalid', 'false');
+      }
+    }
+
+    function highlightSourceRow(input, highlighted) {
+      const row = input && input.closest('.product-row');
+      if (!row) return;
+
+      row.querySelectorAll('td').forEach((cell) => {
+        cell.classList.toggle('bg-sky-100', highlighted);
+      });
+      row.firstElementChild.classList.toggle('border-l-4', highlighted);
+      row.firstElementChild.classList.toggle('border-l-stokker-blue', highlighted);
+
+      if (highlighted) {
+        row.setAttribute('aria-current', 'true');
+      } else {
+        row.removeAttribute('aria-current');
+      }
+    }
+
+    function openModal(input, value) {
+      const unitPrice = Number(input.dataset.unitPrice);
+      const systemDiscount = Number(input.dataset.systemDiscount);
+      const rowThreshold = allowedThreshold(input);
+      activeInput = input;
+      pendingDiscount = value;
+      productName.textContent = input.dataset.name;
+      productCode.textContent = 'Tootekood ' + input.dataset.code;
+      previousDiscount.textContent = formatDiscount(Number(input.dataset.applied));
+      pendingDiscountLabel.textContent = formatDiscount(value);
+      priceBefore.textContent = formatPrice(unitPrice);
+      priceAfter.textContent = formatPrice(discountedPrice(unitPrice, value));
+      document.querySelector('#discount-modal-description').textContent = systemDiscount > baseThreshold
+        ? 'Süsteemi allahindlus on ' + formatDiscount(systemDiscount) + '. Suurem allahindlus vajab põhjendust.'
+        : 'Allahindlus ületab ' + formatDiscount(rowThreshold) + ' piiri ja vajab põhjendust.';
+      reason.value = '';
+      error.hidden = true;
+      reason.setAttribute('aria-invalid', 'false');
+      updateFormState();
+      highlightSourceRow(input, true);
+      layer.classList.remove('hidden');
+      layer.classList.add('grid');
+      pageContent.setAttribute('aria-hidden', 'true');
+      document.body.classList.add('overflow-hidden');
+      window.setTimeout(() => reason.focus(), 0);
+    }
+
+    function closeModal(options) {
+      const restore = !options || options.restore !== false;
+      const inputToFocus = activeInput;
+
+      if (restore && activeInput) {
+        activeInput.value = formatInputValue(Number(activeInput.dataset.applied));
+      }
+
+      highlightSourceRow(activeInput, false);
+
+      layer.classList.add('hidden');
+      layer.classList.remove('grid');
+      pageContent.removeAttribute('aria-hidden');
+      document.body.classList.remove('overflow-hidden');
+      activeInput = null;
+      pendingDiscount = null;
+      inputToFocus && inputToFocus.focus();
+    }
+
+    function applyWithoutReason(input, value) {
+      const hadReason = Boolean(input.dataset.reason);
+      const variant = productVariant(input);
+
+      if (hadReason) {
+        saveDiscountChange(input, value, '', 'reason_removed');
+      }
+
+      input.dataset.applied = String(value);
+      input.dataset.reason = '';
+      delete input.dataset.discountChange;
+      input.value = formatInputValue(value);
+
+      if (variant) {
+        variant.appliedDiscount = value;
+        variant.reason = '';
+        variant.discountChange = null;
+      }
+
+      updateRow(input);
+      showToast(
+        'Allahindlus uuendatud',
+        hadReason ? 'Allahindluse põhjendus eemaldati tooterealt.' : 'Rakendatud allahindlus: ' + formatDiscount(value)
+      );
+    }
+
+    function commitDiscount(input) {
+      window.clearTimeout(inputTimers.get(input));
+      inputTimers.delete(input);
+
+      if (activeInput || !layer.classList.contains('hidden')) return;
+
+      const value = Number(String(input.value).replace(',', '.'));
+      const applied = Number(input.dataset.applied);
+
+      if (!Number.isFinite(value) || value < 0 || value > 100) {
+        input.value = formatInputValue(applied);
+        showToast('Vigane allahindlus', 'Sisesta väärtus vahemikus 0–100%.');
+        return;
+      }
+
+      if (value === applied) return;
+
+      if (value > allowedThreshold(input)) {
+        openModal(input, value);
+      } else {
+        applyWithoutReason(input, value);
+      }
+    }
+
+    hydrateProductVariants();
+
+    document.querySelectorAll('.discount-input').forEach((input) => {
+      input.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          commitDiscount(input);
+        }
+      });
+
+      input.addEventListener('input', () => {
+        window.clearTimeout(inputTimers.get(input));
+        inputTimers.set(input, window.setTimeout(() => commitDiscount(input), 500));
+      });
+
+      input.addEventListener('blur', () => commitDiscount(input));
+
+      updateRow(input);
+    });
+
+    reason.addEventListener('input', updateFormState);
+    document.querySelector('#close-modal').addEventListener('click', () => closeModal());
+    document.querySelector('#cancel-modal').addEventListener('click', () => closeModal());
+
+    layer.addEventListener('click', (event) => {
+      if (event.target === layer) closeModal();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !layer.classList.contains('hidden')) closeModal();
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const value = reason.value.trim();
+
+      if (value.length < minimumReasonLength) {
+        error.hidden = false;
+        reason.setAttribute('aria-invalid', 'true');
+        reason.focus();
+        return;
+      }
+
+      const input = activeInput;
+      const appliedDiscount = pendingDiscount;
+      const change = saveDiscountChange(input, appliedDiscount, value);
+      const variant = productVariant(input);
+      input.dataset.applied = String(appliedDiscount);
+      input.dataset.reason = value;
+      input.dataset.discountChange = JSON.stringify(change);
+      input.value = formatInputValue(appliedDiscount);
+
+      if (variant) {
+        variant.appliedDiscount = appliedDiscount;
+        variant.reason = value;
+        variant.discountChange = change;
+      }
+
+      updateRow(input);
+      closeModal({restore: false});
+      showToast(
+        'Põhjendus salvestatud',
+        'Vaikimisi ' + formatDiscount(change.systemDiscount)
+          + ' · ' + formatDiscount(change.previousDiscount)
+          + ' → ' + formatDiscount(change.newDiscount)
+      );
+    });
+
+    updateFormState();
+  </script>
+</body>
+</html>

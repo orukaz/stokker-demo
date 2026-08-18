@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="et">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DEV-160 – põhjendatud allahindluste raport</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            stokker: {
+              blue: '#007ac2',
+              dark: '#135782',
+              red: '#e40046',
+              green: '#00a651'
+            }
+          },
+          boxShadow: {
+            panel: '0 12px 44px rgba(86, 97, 104, 0.12)'
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="min-h-screen bg-slate-50 font-sans text-[13px] leading-[1.35] text-black">
+  <header class="flex min-h-[54px] items-center bg-stokker-blue px-6 text-white shadow-md shadow-stokker-dark/20">
+    <div class="text-[19px] font-extrabold tracking-[0.08em]">STOKKER</div>
+    <nav class="ml-10 hidden gap-6 font-semibold md:flex" aria-label="POS-i peamenüü">
+      <span class="opacity-80">Müük</span>
+      <span class="opacity-80">Tellimused</span>
+      <span class="opacity-80">Kliendid</span>
+      <span>Raportid</span>
+    </nav>
+    <div class="ml-auto opacity-90">Mari Müüja · SET</div>
+  </header>
+
+  <main class="mx-auto mb-20 mt-7 w-[calc(100%-2rem)] max-w-[1440px]">
+    <div class="mb-2.5 text-xs text-neutral-500">Raportid / Allahindluste põhjendused</div>
+    <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+      <div>
+        <h1 class="text-[22px] font-semibold text-stokker-dark">Põhjendatud allahindlused</h1>
+        <p class="mt-1 text-neutral-500">Eesti, Läti ja Leedu müügitellimuste read, mille allahindlus ületas lubatud piiri.</p>
+      </div>
+      <div class="text-xs text-neutral-500">Andmed seisuga 18.08.2026 16:30</div>
+    </div>
+
+    <section class="mb-4 bg-white shadow-panel" aria-labelledby="filters-title">
+      <div class="flex min-h-10 items-center bg-stokker-blue px-4 text-white">
+        <h2 class="font-semibold" id="filters-title">Filtrid</h2>
+        <button class="ml-auto border border-white/50 px-3 py-1 text-[11px] font-semibold uppercase hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" id="reset-filters" type="button">Tühjenda filtrid</button>
+      </div>
+      <div class="grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-8">
+        <label class="block xl:col-span-2">
+          <span class="mb-1 block text-xs font-semibold">Otsing</span>
+          <input class="w-full border border-neutral-300 px-3 py-2 outline-none placeholder:text-neutral-400 focus:border-stokker-blue focus:ring-1 focus:ring-stokker-blue" id="search-filter" type="search" placeholder="Toode, klient või MT number">
+        </label>
+        <label class="block">
+          <span class="mb-1 block text-xs font-semibold">Alates</span>
+          <input class="w-full border border-neutral-300 px-3 py-2 outline-none focus:border-stokker-blue focus:ring-1 focus:ring-stokker-blue" id="date-from-filter" type="date" value="2026-08-01">
+        </label>
+        <label class="block">
+          <span class="mb-1 block text-xs font-semibold">Kuni</span>
+          <input class="w-full border border-neutral-300 px-3 py-2 outline-none focus:border-stokker-blue focus:ring-1 focus:ring-stokker-blue" id="date-to-filter" type="date" value="2026-08-18">
+        </label>
+        <label class="block">
+          <span class="mb-1 block text-xs font-semibold">Riik</span>
+          <select class="w-full border border-neutral-300 bg-white px-3 py-2 outline-none focus:border-stokker-blue focus:ring-1 focus:ring-stokker-blue" id="country-filter">
+            <option value="">Kõik riigid</option>
+          </select>
+        </label>
+        <label class="block">
+          <span class="mb-1 block text-xs font-semibold">Osakond</span>
+          <select class="w-full border border-neutral-300 bg-white px-3 py-2 outline-none focus:border-stokker-blue focus:ring-1 focus:ring-stokker-blue" id="department-filter">
+            <option value="">Kõik osakonnad</option>
+          </select>
+        </label>
+        <label class="block">
+          <span class="mb-1 block text-xs font-semibold">Tootejuht</span>
+          <select class="w-full border border-neutral-300 bg-white px-3 py-2 outline-none focus:border-stokker-blue focus:ring-1 focus:ring-stokker-blue" id="manager-filter">
+            <option value="">Kõik tootejuhid</option>
+          </select>
+        </label>
+        <label class="block">
+          <span class="mb-1 block text-xs font-semibold">Kaubamärk</span>
+          <select class="w-full border border-neutral-300 bg-white px-3 py-2 outline-none focus:border-stokker-blue focus:ring-1 focus:ring-stokker-blue" id="brand-filter">
+            <option value="">Kõik kaubamärgid</option>
+          </select>
+        </label>
+      </div>
+    </section>
+
+    <section class="mb-4 grid grid-cols-2 gap-3 lg:grid-cols-4" aria-label="Raporti kokkuvõte">
+      <div class="border-l-4 border-stokker-blue bg-white px-4 py-3 shadow-panel">
+        <div class="text-xs text-neutral-500">Leitud ridu</div>
+        <div class="mt-1 text-xl font-semibold text-stokker-dark" id="summary-count">0</div>
+      </div>
+      <div class="border-l-4 border-stokker-blue bg-white px-4 py-3 shadow-panel">
+        <div class="text-xs text-neutral-500">Allahindlus kokku</div>
+        <div class="mt-1 text-xl font-semibold text-stokker-dark" id="summary-amount">0,00 €</div>
+      </div>
+      <div class="border-l-4 border-stokker-blue bg-white px-4 py-3 shadow-panel">
+        <div class="text-xs text-neutral-500">Keskmine allahindlus</div>
+        <div class="mt-1 text-xl font-semibold text-stokker-dark" id="summary-average">0,00%</div>
+      </div>
+      <div class="border-l-4 border-stokker-blue bg-white px-4 py-3 shadow-panel">
+        <div class="text-xs text-neutral-500">Esindatud riike</div>
+        <div class="mt-1 text-xl font-semibold text-stokker-dark" id="summary-countries">0</div>
+      </div>
+    </section>
+
+    <section class="overflow-hidden bg-white shadow-panel" aria-labelledby="results-title">
+      <div class="flex min-h-10 items-center bg-stokker-blue px-4 text-white">
+        <h2 class="font-semibold" id="results-title">Raporti read</h2>
+        <span class="ml-auto text-xs opacity-80" id="results-label"></span>
+      </div>
+      <div class="overflow-x-auto p-4">
+        <table class="w-full min-w-[1380px] border-collapse text-xs">
+          <thead>
+            <tr class="bg-neutral-100 text-left font-semibold">
+              <th class="border-b border-neutral-300 px-2 py-2.5">Kuupäev / tellimus</th>
+              <th class="border-b border-neutral-300 px-2 py-2.5">Riik / osakond</th>
+              <th class="border-b border-neutral-300 px-2 py-2.5">Toode</th>
+              <th class="border-b border-neutral-300 px-2 py-2.5">Klient</th>
+              <th class="border-b border-neutral-300 px-2 py-2.5">Tootejuht</th>
+              <th class="border-b border-neutral-300 px-2 py-2.5">Rea looja</th>
+              <th class="border-b border-neutral-300 px-2 py-2.5 text-right">Allahindlus</th>
+              <th class="border-b border-neutral-300 px-2 py-2.5">Põhjendus</th>
+            </tr>
+          </thead>
+          <tbody id="report-body"></tbody>
+        </table>
+        <div class="hidden border border-neutral-200 bg-neutral-50 px-4 py-10 text-center text-neutral-500" id="empty-state">
+          Valitud filtritele vastavaid ridu ei leitud.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const discountReportRows = [
+      {
+        orderDate: '2026-08-14', orderNumber: 'MT11005291', country: 'EE', department: 'Tallinn',
+        productCode: '06019J4003', productName: 'Akulööktrell GSB 18V-55', brand: 'Bosch',
+        productManager: 'Katrin Saar', lineCreator: 'Mari Müüja',
+        customerCode: '100245', customerName: 'Ehituspartner OÜ',
+        quantity: 2, unitPrice: 229, systemDiscount: 10, threshold: 12, appliedDiscount: 16,
+        reason: 'Objektipõhine projektihind vastavalt pakkumisele P-8042.'
+      },
+      {
+        orderDate: '2026-08-13', orderNumber: 'MT11005264', country: 'LV', department: 'Rīga',
+        productCode: '970559935', productName: 'Mootorsaag 450 II', brand: 'Husqvarna',
+        productManager: 'Jānis Bērziņš', lineCreator: 'Ilze Ozola',
+        customerCode: 'LV00418', customerName: 'SIA Būvtehnika',
+        quantity: 1, unitPrice: 549, systemDiscount: 18, threshold: 18, appliedDiscount: 22,
+        reason: 'Konkurendi pakkumisega võrdsustatud hind.'
+      },
+      {
+        orderDate: '2026-08-12', orderNumber: 'MT11005211', country: 'LT', department: 'Vilnius',
+        productCode: 'DWE7492', productName: 'Lauasaag 250 mm', brand: 'DeWalt',
+        productManager: 'Mantas Petrauskas', lineCreator: 'Rūta Kazlauskaitė',
+        customerCode: 'LT00892', customerName: 'UAB Statybų sprendimai',
+        quantity: 1, unitPrice: 879, systemDiscount: 0, threshold: 12, appliedDiscount: 14.5,
+        reason: 'Suurema objekti tööriistakomplekti kokkuleppehind.'
+      },
+      {
+        orderDate: '2026-08-11', orderNumber: 'MT11005183', country: 'EE', department: 'Tartu',
+        productCode: '4933478404', productName: 'Löökkruvikeeraja M18 FID3-502X', brand: 'Milwaukee',
+        productManager: 'Katrin Saar', lineCreator: 'Priit Tamm',
+        customerCode: '102871', customerName: 'Lõunaehitus AS',
+        quantity: 3, unitPrice: 449, systemDiscount: 12, threshold: 12, appliedDiscount: 17,
+        reason: 'Püsikliendi kvartalikokkulepe kolmele komplektile.'
+      },
+      {
+        orderDate: '2026-08-08', orderNumber: 'MT11005097', country: 'LV', department: 'Daugavpils',
+        productCode: '1.148-201.0', productName: 'Märg-kuivimur NT 30/1 Tact L', brand: 'Kärcher',
+        productManager: 'Laura Kalniņa', lineCreator: 'Artūrs Liepa',
+        customerCode: 'LV00977', customerName: 'SIA Latgales Serviss',
+        quantity: 2, unitPrice: 635, systemDiscount: 15, threshold: 15, appliedDiscount: 19,
+        reason: 'Hoolduslepingu juurde kuuluv erihind.'
+      },
+      {
+        orderDate: '2026-08-07', orderNumber: 'MT11005052', country: 'LT', department: 'Kaunas',
+        productCode: '602358500', productName: 'Ketaslõikur WEV 17-125 Quick', brand: 'Metabo',
+        productManager: 'Mantas Petrauskas', lineCreator: 'Tomas Vaitkus',
+        customerCode: 'LT00341', customerName: 'UAB Meistrų centras',
+        quantity: 4, unitPrice: 259, systemDiscount: 8, threshold: 12, appliedDiscount: 15,
+        reason: 'Neljast seadmest koosneva komplekti projektihind.'
+      },
+      {
+        orderDate: '2026-08-05', orderNumber: 'MT11004988', country: 'EE', department: 'Tallinn',
+        productCode: 'MAK-DUC353Z', productName: 'Akukettsaag DUC353Z', brand: 'Makita',
+        productManager: 'Toomas Kask', lineCreator: 'Liis Pärn',
+        customerCode: '104125', customerName: 'Roheline Hooldus OÜ',
+        quantity: 2, unitPrice: 399, systemDiscount: 20, threshold: 20, appliedDiscount: 23,
+        reason: 'Raamlepingu aastamahu täitumise erihind.'
+      },
+      {
+        orderDate: '2026-08-04', orderNumber: 'MT11004943', country: 'LV', department: 'Rīga',
+        productCode: 'STI-RE130P', productName: 'Kõrgsurvepesur RE 130 PLUS', brand: 'STIHL',
+        productManager: 'Laura Kalniņa', lineCreator: 'Ilze Ozola',
+        customerCode: 'LV00152', customerName: 'SIA Dārzu Pasaule',
+        quantity: 1, unitPrice: 489, systemDiscount: 0, threshold: 12, appliedDiscount: 13,
+        reason: 'Näidistoote müük kliendile kokkulepitud hinnaga.'
+      },
+      {
+        orderDate: '2026-08-01', orderNumber: 'MT11004861', country: 'LT', department: 'Vilnius',
+        productCode: 'K12034-1', productName: 'Keevitusaparaat Powertec i250C', brand: 'Lincoln Electric',
+        productManager: 'Aistė Jankauskaitė', lineCreator: 'Rūta Kazlauskaitė',
+        customerCode: 'LT00620', customerName: 'UAB Metalo darbai',
+        quantity: 1, unitPrice: 2890, systemDiscount: 10, threshold: 12, appliedDiscount: 16,
+        reason: 'Keevitusseadmete hanke võitmiseks kinnitatud erihind.'
+      }
+    ];
+
+    const countryNames = { EE: 'Eesti', LV: 'Läti', LT: 'Leedu' };
+    const filters = {
+      search: document.querySelector('#search-filter'),
+      dateFrom: document.querySelector('#date-from-filter'),
+      dateTo: document.querySelector('#date-to-filter'),
+      country: document.querySelector('#country-filter'),
+      department: document.querySelector('#department-filter'),
+      manager: document.querySelector('#manager-filter'),
+      brand: document.querySelector('#brand-filter')
+    };
+
+    const reportBody = document.querySelector('#report-body');
+    const emptyState = document.querySelector('#empty-state');
+
+    function formatPrice(value) {
+      return new Intl.NumberFormat('et-EE', { style: 'currency', currency: 'EUR' }).format(value);
+    }
+
+    function formatDiscount(value) {
+      return new Intl.NumberFormat('et-EE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value) + '%';
+    }
+
+    function formatDate(value) {
+      return new Intl.DateTimeFormat('et-EE').format(new Date(value + 'T12:00:00'));
+    }
+
+    function discountAmount(row) {
+      return row.quantity * row.unitPrice * row.appliedDiscount / 100;
+    }
+
+    function fillSelect(select, values, labelFormatter) {
+      values.sort((a, b) => a.localeCompare(b, 'et')).forEach((value) => {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = labelFormatter ? labelFormatter(value) : value;
+        select.appendChild(option);
+      });
+    }
+
+    function populateFilters() {
+      fillSelect(filters.country, [...new Set(discountReportRows.map((row) => row.country))], (value) => countryNames[value]);
+      fillSelect(filters.department, [...new Set(discountReportRows.map((row) => row.department))]);
+      fillSelect(filters.manager, [...new Set(discountReportRows.map((row) => row.productManager))]);
+      fillSelect(filters.brand, [...new Set(discountReportRows.map((row) => row.brand))]);
+    }
+
+    function visibleRows() {
+      const query = filters.search.value.trim().toLocaleLowerCase('et');
+
+      return discountReportRows.filter((row) => {
+        const searchable = [
+          row.orderNumber, row.productCode, row.productName, row.brand,
+          row.customerCode, row.customerName, row.productManager,
+          row.lineCreator, row.reason
+        ].join(' ').toLocaleLowerCase('et');
+
+        return (!query || searchable.includes(query))
+          && (!filters.dateFrom.value || row.orderDate >= filters.dateFrom.value)
+          && (!filters.dateTo.value || row.orderDate <= filters.dateTo.value)
+          && (!filters.country.value || row.country === filters.country.value)
+          && (!filters.department.value || row.department === filters.department.value)
+          && (!filters.manager.value || row.productManager === filters.manager.value)
+          && (!filters.brand.value || row.brand === filters.brand.value);
+      });
+    }
+
+    function renderRows(rows) {
+      reportBody.innerHTML = rows.map((row) => `
+        <tr class="align-top hover:bg-sky-50/50">
+          <td class="border-b border-neutral-200 px-2 py-3">
+            <div>${formatDate(row.orderDate)}</div>
+            <a class="mt-1 inline-block font-semibold text-stokker-blue underline hover:text-stokker-dark" href="#${row.orderNumber}">${row.orderNumber}</a>
+          </td>
+          <td class="border-b border-neutral-200 px-2 py-3">
+            <div class="font-medium">${countryNames[row.country]}</div>
+            <div class="text-neutral-500">${row.department}</div>
+          </td>
+          <td class="border-b border-neutral-200 px-2 py-3">
+            <div class="font-medium">${row.productName}</div>
+            <div class="mt-0.5 text-neutral-500">${row.productCode} · ${row.brand}</div>
+          </td>
+          <td class="border-b border-neutral-200 px-2 py-3">
+            <div class="font-medium">${row.customerName}</div>
+            <div class="text-neutral-500">${row.customerCode}</div>
+          </td>
+          <td class="border-b border-neutral-200 px-2 py-3">${row.productManager}</td>
+          <td class="border-b border-neutral-200 px-2 py-3">${row.lineCreator}</td>
+          <td class="border-b border-neutral-200 px-2 py-3 text-right">
+            <div class="font-semibold text-stokker-dark">${formatDiscount(row.appliedDiscount)}</div>
+            <div class="text-neutral-500">Süsteemi ${formatDiscount(row.systemDiscount)}</div>
+            <div class="text-neutral-500">Piir ${formatDiscount(row.threshold)}</div>
+            <div class="mt-1 font-medium">−${formatPrice(discountAmount(row))}</div>
+          </td>
+          <td class="max-w-[300px] border-b border-neutral-200 px-2 py-3">
+            <span class="inline-flex items-start gap-1.5 bg-sky-50 px-2 py-1 text-stokker-dark ring-1 ring-inset ring-sky-200">
+              <span class="shrink-0 font-bold text-stokker-blue" aria-hidden="true">%</span>
+              <span>${row.reason}</span>
+            </span>
+          </td>
+        </tr>
+      `).join('');
+
+      reportBody.classList.toggle('hidden', rows.length === 0);
+      emptyState.classList.toggle('hidden', rows.length !== 0);
+    }
+
+    function renderSummary(rows) {
+      const totalAmount = rows.reduce((total, row) => total + discountAmount(row), 0);
+      const average = rows.length
+        ? rows.reduce((total, row) => total + row.appliedDiscount, 0) / rows.length
+        : 0;
+
+      document.querySelector('#summary-count').textContent = String(rows.length);
+      document.querySelector('#summary-amount').textContent = formatPrice(totalAmount);
+      document.querySelector('#summary-average').textContent = formatDiscount(average);
+      document.querySelector('#summary-countries').textContent = String(new Set(rows.map((row) => row.country)).size);
+      document.querySelector('#results-label').textContent = rows.length + ' / ' + discountReportRows.length + ' rida';
+    }
+
+    function renderReport() {
+      const rows = visibleRows();
+      renderRows(rows);
+      renderSummary(rows);
+    }
+
+    Object.values(filters).forEach((filter) => {
+      filter.addEventListener(filter.type === 'search' ? 'input' : 'change', renderReport);
+    });
+
+    document.querySelector('#reset-filters').addEventListener('click', () => {
+      filters.search.value = '';
+      filters.dateFrom.value = '2026-08-01';
+      filters.dateTo.value = '2026-08-18';
+      filters.country.value = '';
+      filters.department.value = '';
+      filters.manager.value = '';
+      filters.brand.value = '';
+      renderReport();
+      filters.search.focus();
+    });
+
+    populateFilters();
+    renderReport();
+  </script>
+</body>
+</html>
