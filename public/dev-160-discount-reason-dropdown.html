@@ -1,0 +1,654 @@
+<!doctype html>
+<html lang="et">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DEV-160 – allahindluse põhjenduse dropdown</title>
+  <style>
+    :root {
+      --blue: #007ac2;
+      --dark-blue: #135782;
+      --red: #e40046;
+      --green: #00a651;
+      --border: #d4d4d4;
+      --muted: #6b7280;
+      --page: #f8fafc;
+      --soft-blue: #eaf6fd;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #111;
+      font-size: 14px;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; background: var(--page); }
+    button, input, textarea { font: inherit; }
+    button { cursor: pointer; }
+
+    .topbar {
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      background: var(--blue);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(19, 87, 130, .2);
+    }
+
+    .brand { font-size: 20px; font-weight: 800; letter-spacing: .12em; }
+    .nav { display: flex; gap: 24px; margin-left: 40px; font-weight: 700; }
+    .nav span:not(.active) { opacity: .75; }
+    .user { margin-left: auto; opacity: .9; }
+
+    main { width: calc(100% - 32px); max-width: 1180px; margin: 28px auto 80px; }
+    .breadcrumb { margin-bottom: 10px; color: var(--muted); font-size: 12px; }
+    h1 { margin: 0 0 20px; color: var(--dark-blue); font-size: 24px; font-weight: 600; }
+
+    .layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 16px; }
+    .panel { background: #fff; box-shadow: 0 12px 44px rgba(86, 97, 104, .12); }
+    .panel-title {
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      background: var(--blue);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .table-wrap { overflow-x: auto; padding: 16px; }
+    table { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 12px; }
+    th { padding: 10px 8px; background: #f5f5f5; border-bottom: 1px solid var(--border); text-align: left; }
+    td { padding: 12px 8px; border-bottom: 1px solid #e5e5e5; transition: background .15s; }
+    th.number, td.number { text-align: right; }
+    .product-name { font-weight: 600; }
+    .product-row.is-active td { background: var(--soft-blue); }
+    .product-row.is-active td:first-child { box-shadow: inset 4px 0 0 var(--blue); }
+
+    .discount-control { display: inline-flex; align-items: flex-start; }
+    .discount-field {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      background: #fff;
+    }
+    .discount-field:focus-within { border-color: var(--blue); box-shadow: 0 0 0 2px rgba(0, 122, 194, .15); }
+    .discount-input {
+      width: 66px;
+      padding: 6px 3px 6px 8px;
+      border: 0;
+      outline: 0;
+      text-align: right;
+      background: transparent;
+      -moz-appearance: textfield;
+    }
+    .discount-input::-webkit-inner-spin-button,
+    .discount-input::-webkit-outer-spin-button { margin: 0; -webkit-appearance: none; }
+    .percent { padding-right: 8px; color: #666; font-weight: 700; }
+    .price-marker { margin-left: 4px; color: var(--muted); font-weight: 800; }
+    .pending-price { color: var(--blue); }
+
+    .reason-badge {
+      display: none;
+      width: fit-content;
+      max-width: 420px;
+      align-items: center;
+      gap: 5px;
+      margin-top: 6px;
+      padding: 3px 8px;
+      border: 1px solid #bae1f7;
+      border-radius: 999px;
+      background: #f0f9ff;
+      color: var(--dark-blue);
+      font-weight: 700;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .reason-badge.is-visible { display: flex; }
+    .reason-badge strong { color: var(--blue); }
+
+    .note { display: flex; gap: 6px; margin-top: 12px; color: var(--muted); font-size: 12px; }
+    .summary { padding: 16px; }
+    .summary-row { display: flex; justify-content: space-between; padding: 11px 0; border-bottom: 1px solid #e5e5e5; }
+    .summary-row:last-child { border: 0; font-weight: 800; }
+
+    .dropdown {
+      position: fixed;
+      z-index: 100;
+      display: none;
+      width: min(390px, calc(100vw - 32px));
+      background: #fff;
+      border: 1px solid #b8c3ca;
+      box-shadow: 0 16px 48px rgba(50, 62, 69, .28);
+    }
+    .dropdown.is-open { display: block; }
+    .dropdown::before,
+    .dropdown::after {
+      position: absolute;
+      right: var(--arrow-right, 36px);
+      width: 0;
+      height: 0;
+      border-style: solid;
+      content: "";
+    }
+    .dropdown[data-placement="bottom"]::before {
+      top: -10px;
+      border-width: 0 10px 10px;
+      border-color: transparent transparent #b8c3ca;
+    }
+    .dropdown[data-placement="bottom"]::after {
+      top: -8px;
+      right: calc(var(--arrow-right, 36px) + 1px);
+      border-width: 0 9px 9px;
+      border-color: transparent transparent var(--blue);
+    }
+    .dropdown[data-placement="top"]::before {
+      bottom: -10px;
+      border-width: 10px 10px 0;
+      border-color: #b8c3ca transparent transparent;
+    }
+    .dropdown[data-placement="top"]::after {
+      bottom: -8px;
+      right: calc(var(--arrow-right, 36px) + 1px);
+      border-width: 9px 9px 0;
+      border-color: #f7f7f7 transparent transparent;
+    }
+    .dropdown[data-placement="side-left"]::before {
+      top: var(--arrow-top, 80px);
+      right: -10px;
+      border-width: 10px 0 10px 10px;
+      border-color: transparent transparent transparent #b8c3ca;
+    }
+    .dropdown[data-placement="side-left"]::after {
+      top: calc(var(--arrow-top, 80px) + 1px);
+      right: -8px;
+      border-width: 9px 0 9px 9px;
+      border-color: transparent transparent transparent #fff;
+    }
+
+    .dropdown-header {
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px 0 16px;
+      background: var(--blue);
+      color: #fff;
+    }
+    .dropdown-header h2 { margin: 0; font-size: 14px; }
+    .close {
+      width: 30px;
+      height: 30px;
+      margin-left: auto;
+      border: 0;
+      background: transparent;
+      color: #fff;
+      font-size: 22px;
+      line-height: 1;
+    }
+    .close:hover, .close:focus { background: rgba(255,255,255,.12); outline: 2px solid rgba(255,255,255,.65); }
+    .dropdown-body { padding: 14px 16px 12px; }
+    .explanation { margin: 0 0 12px; line-height: 1.45; }
+    .field { margin-top: 13px; }
+    .field label { display: block; margin-bottom: 6px; font-weight: 700; }
+    .required { color: var(--red); }
+    textarea {
+      display: block;
+      width: 100%;
+      min-height: 76px;
+      resize: vertical;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      outline: 0;
+      line-height: 1.4;
+    }
+    textarea:focus { border-color: var(--blue); box-shadow: 0 0 0 1px var(--blue); }
+    textarea[aria-invalid="true"] { border-color: var(--red); }
+    .field-meta { display: flex; justify-content: space-between; gap: 10px; margin-top: 5px; color: var(--muted); font-size: 11px; }
+    .error { margin-top: 5px; color: var(--red); font-size: 12px; }
+
+    .dropdown-footer { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 10px 16px; border-top: 1px solid #ddd; background: #f7f7f7; }
+    .action { padding: 8px 12px; border: 1px solid currentColor; background: #fff; font-size: 11px; font-weight: 800; text-transform: uppercase; }
+    .cancel { color: var(--red); }
+    .apply { color: var(--green); }
+    .apply:disabled { cursor: not-allowed; color: #aaa; }
+
+    .toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 120;
+      display: none;
+      max-width: min(430px, calc(100vw - 40px));
+      padding: 12px 16px;
+      border-left: 4px solid var(--green);
+      background: #fff;
+      box-shadow: 0 12px 36px rgba(50, 62, 69, .25);
+    }
+    .toast.is-visible { display: block; }
+    .toast strong { display: block; margin-bottom: 3px; color: var(--green); }
+
+    @media (max-width: 800px) {
+      .nav { display: none; }
+      .layout { grid-template-columns: 1fr; }
+      aside { display: none; }
+    }
+
+    @media (max-width: 560px) {
+      .topbar { padding: 0 16px; }
+      .user { font-size: 12px; }
+      main { width: calc(100% - 20px); margin-top: 18px; }
+      h1 { font-size: 20px; }
+      .dropdown {
+        position: fixed;
+        top: auto !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        left: 0 !important;
+        width: 100%;
+        max-height: calc(100dvh - 16px);
+        overflow-y: auto;
+        border-width: 1px 0 0;
+      }
+      .dropdown::before, .dropdown::after { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">STOKKER</div>
+    <nav class="nav" aria-label="POS-i peamenüü">
+      <span>Müük</span>
+      <span class="active">Tellimused</span>
+      <span>Kliendid</span>
+      <span>Raportid</span>
+    </nav>
+    <div class="user">Mari Müüja · SET</div>
+  </header>
+
+  <main>
+    <div class="breadcrumb">Tellimused / MT11004567</div>
+    <h1>Müügitellimus MT11004567</h1>
+
+    <div class="layout">
+      <section class="panel">
+        <div class="panel-title">Tooted</div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Toode</th>
+                <th>Kogus</th>
+                <th class="number">Ühiku hind</th>
+                <th class="number">Allahindlus</th>
+                <th class="number">Hind pärast</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="product-row" data-code="123456">
+                <td>
+                  <div class="product-name">123456 · Akutrell Makita DDF484RTJ</div>
+                  <div class="reason-badge"><strong>%</strong><span class="reason-badge-text"></span></div>
+                </td>
+                <td>1 tk</td>
+                <td class="number">289,00 €</td>
+                <td class="number">
+                  <div class="discount-control">
+                    <label class="discount-field">
+                      <span class="sr-only" hidden>Akutrelli allahindlus protsentides</span>
+                      <input class="discount-input" type="number" min="0" max="100" step="0.01" value="18" data-applied="12" data-system-discount="12" data-reason="" data-code="123456" data-name="Akutrell Makita DDF484RTJ" data-price="289">
+                      <span class="percent">%</span>
+                    </label>
+                    <span class="price-marker" title="Arvutatud kliendihind erineb müügitellimuse rea hinnast">*</span>
+                  </div>
+                </td>
+                <td class="number final-price pending-price">236,98 €</td>
+              </tr>
+
+              <tr class="product-row" data-code="654321">
+                <td>
+                  <div class="product-name">654321 · Otsikute komplekt 31 osa</div>
+                  <div class="reason-badge"><strong>%</strong><span class="reason-badge-text"></span></div>
+                </td>
+                <td>1 tk</td>
+                <td class="number">34,90 €</td>
+                <td class="number">
+                  <div class="discount-control">
+                    <label class="discount-field">
+                      <span class="sr-only" hidden>Otsikute komplekti allahindlus protsentides</span>
+                      <input class="discount-input" type="number" min="0" max="100" step="0.01" value="0" data-applied="0" data-system-discount="0" data-reason="" data-code="654321" data-name="Otsikute komplekt 31 osa" data-price="34.9">
+                      <span class="percent">%</span>
+                    </label>
+                    <span class="price-marker" hidden>*</span>
+                  </div>
+                </td>
+                <td class="number final-price">34,90 €</td>
+              </tr>
+
+              <tr class="product-row" data-code="789012">
+                <td>
+                  <div class="product-name">789012 · Survepesur Kärcher K5 Premium</div>
+                  <div class="reason-badge"><strong>%</strong><span class="reason-badge-text"></span></div>
+                </td>
+                <td>1 tk</td>
+                <td class="number">499,00 €</td>
+                <td class="number">
+                  <div class="discount-control">
+                    <label class="discount-field">
+                      <span class="sr-only" hidden>Survepesuri allahindlus protsentides</span>
+                      <input class="discount-input" type="number" min="0" max="100" step="0.01" value="10" data-applied="10" data-system-discount="10" data-reason="" data-code="789012" data-name="Survepesur Kärcher K5 Premium" data-price="499">
+                      <span class="percent">%</span>
+                    </label>
+                    <span class="price-marker" hidden>*</span>
+                  </div>
+                </td>
+                <td class="number final-price">449,10 €</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="note"><strong>*</strong><span>Arvutatud kliendihind erineb müügitellimuse rea hinnast.</span></div>
+        </div>
+      </section>
+
+      <aside class="panel">
+        <div class="panel-title">Kokkuvõte</div>
+        <div class="summary">
+          <div class="summary-row"><span>Summa enne</span><span id="summary-before">822,90 €</span></div>
+          <div class="summary-row"><span>Allahindlus</span><span id="summary-discount">91,82 €</span></div>
+          <div class="summary-row"><span>Kokku pärast</span><span id="summary-total">731,08 €</span></div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <section class="dropdown" id="reason-dropdown" role="dialog" aria-labelledby="dropdown-title" aria-describedby="dropdown-explanation" data-placement="bottom">
+    <header class="dropdown-header">
+      <h2 id="dropdown-title">Allahindluse põhjendus</h2>
+      <button class="close" id="close-dropdown" type="button" aria-label="Sulge põhjenduse aken">×</button>
+    </header>
+    <form id="reason-form" novalidate>
+      <div class="dropdown-body">
+        <p class="explanation" id="dropdown-explanation">Allahindlus ületab lubatud piiri ja vajab põhjendust.</p>
+        <div class="field">
+          <label for="discount-reason">Põhjendus <span class="required">*</span></label>
+          <textarea id="discount-reason" maxlength="250" minlength="10" rows="3" required aria-describedby="reason-help reason-error" placeholder="Näiteks: K-Rautas oli hind odavam, 219 €"></textarea>
+          <div class="field-meta">
+            <span id="reason-help">Vähemalt 10 tähemärki</span>
+            <span><span id="character-count">0</span>/250</span>
+          </div>
+          <div class="error" id="reason-error" hidden>Põhjendus peab sisaldama vähemalt 10 tähemärki.</div>
+        </div>
+      </div>
+
+      <footer class="dropdown-footer">
+        <button class="action cancel" id="cancel-dropdown" type="button">Katkesta</button>
+        <button class="action apply" id="apply-discount" type="submit" disabled>Rakenda allahindlus</button>
+      </footer>
+    </form>
+  </section>
+
+  <div class="toast" id="toast" role="status">
+    <strong id="toast-title">Põhjendus salvestatud</strong>
+    <span id="toast-message"></span>
+  </div>
+
+  <script>
+    const threshold = 12;
+    const minimumReasonLength = 10;
+    const dropdown = document.querySelector('#reason-dropdown');
+    const reason = document.querySelector('#discount-reason');
+    const form = document.querySelector('#reason-form');
+    const applyButton = document.querySelector('#apply-discount');
+    const help = document.querySelector('#reason-help');
+    const error = document.querySelector('#reason-error');
+    const count = document.querySelector('#character-count');
+    const toast = document.querySelector('#toast');
+    let activeInput = null;
+    let pendingDiscount = null;
+    let toastTimer = null;
+
+    const formatDiscount = (value) => new Intl.NumberFormat('et-EE', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(value) + '%';
+
+    const formatPrice = (value) => new Intl.NumberFormat('et-EE', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(value) + ' €';
+
+    const finalPrice = (input, discount) => Number(input.dataset.price) * (1 - discount / 100);
+    const allowedThreshold = (input) => Math.max(threshold, Number(input.dataset.systemDiscount));
+
+    function updateSummary() {
+      let before = 0;
+      let after = 0;
+
+      document.querySelectorAll('.discount-input').forEach((input) => {
+        const price = Number(input.dataset.price);
+        before += price;
+        after += finalPrice(input, Number(input.dataset.applied));
+      });
+
+      document.querySelector('#summary-before').textContent = formatPrice(before);
+      document.querySelector('#summary-discount').textContent = formatPrice(before - after);
+      document.querySelector('#summary-total').textContent = formatPrice(after);
+    }
+
+    function updateRow(input, previewValue) {
+      const row = input.closest('.product-row');
+      const applied = Number(input.dataset.applied);
+      const visibleDiscount = Number.isFinite(previewValue) ? previewValue : applied;
+      const reasonValue = input.dataset.reason || '';
+      const rowPrice = row.querySelector('.final-price');
+      const marker = row.querySelector('.price-marker');
+      const badge = row.querySelector('.reason-badge');
+
+      rowPrice.textContent = formatPrice(finalPrice(input, visibleDiscount));
+      rowPrice.classList.toggle('pending-price', visibleDiscount !== applied);
+      marker.hidden = visibleDiscount === Number(input.dataset.systemDiscount);
+
+      badge.classList.toggle('is-visible', applied > allowedThreshold(input) && Boolean(reasonValue));
+      row.querySelector('.reason-badge-text').textContent = reasonValue ? 'Allahindluse põhjus: ' + reasonValue : '';
+      updateSummary();
+    }
+
+    function positionDropdown() {
+      if (!activeInput || !dropdown.classList.contains('is-open') || window.innerWidth <= 560) return;
+
+      const anchor = activeInput.closest('.discount-field').getBoundingClientRect();
+      const gap = 12;
+      const pageGap = 16;
+      const width = dropdown.offsetWidth;
+      const height = dropdown.offsetHeight;
+      const spaceBelow = window.innerHeight - anchor.bottom - gap - pageGap;
+      const spaceAbove = anchor.top - gap - pageGap;
+      const fitsLeft = anchor.left - gap - pageGap >= width;
+      let placement = 'bottom';
+      let top = anchor.bottom + gap;
+      let left = Math.min(
+          Math.max(pageGap, anchor.right - width),
+          window.innerWidth - width - pageGap
+        );
+
+      if (spaceBelow < height && spaceAbove >= height) {
+        placement = 'top';
+        top = anchor.top - height - gap;
+      } else if (spaceBelow < height && spaceAbove < height && fitsLeft) {
+        placement = 'side-left';
+        top = Math.max(pageGap, Math.min(
+          anchor.top + anchor.height / 2 - height / 2,
+          window.innerHeight - height - pageGap
+        ));
+        left = anchor.left - width - gap;
+      }
+
+      const arrowCenter = anchor.left + anchor.width / 2;
+      const arrowRight = Math.max(18, Math.min(width - 28, left + width - arrowCenter - 10));
+      const arrowTop = Math.max(18, Math.min(height - 28, anchor.top + anchor.height / 2 - top - 10));
+
+      dropdown.dataset.placement = placement;
+      dropdown.style.top = Math.round(top) + 'px';
+      dropdown.style.left = Math.round(left) + 'px';
+      dropdown.style.setProperty('--arrow-right', Math.round(arrowRight) + 'px');
+      dropdown.style.setProperty('--arrow-top', Math.round(arrowTop) + 'px');
+    }
+
+    function updateFormState() {
+      const length = reason.value.trim().length;
+      const missing = Math.max(minimumReasonLength - length, 0);
+      count.textContent = String(reason.value.length);
+      applyButton.disabled = missing > 0;
+      help.textContent = length === 0
+        ? 'Vähemalt ' + minimumReasonLength + ' tähemärki'
+        : missing > 0
+          ? 'Veel ' + missing + ' tähemärki'
+          : 'Põhjendus on piisava pikkusega';
+
+      if (missing === 0) {
+        error.hidden = true;
+        reason.setAttribute('aria-invalid', 'false');
+      }
+    }
+
+    function openDropdown(input, value, focusReason) {
+      if (activeInput && activeInput !== input) closeDropdown(true);
+
+      activeInput = input;
+      pendingDiscount = value;
+      const row = input.closest('.product-row');
+      row.classList.add('is-active');
+      input.setAttribute('aria-expanded', 'true');
+      input.setAttribute('aria-controls', 'reason-dropdown');
+      document.querySelector('#dropdown-explanation').textContent = 'Allahindlus ületab ' + formatDiscount(allowedThreshold(input)) + ' piiri ja vajab põhjendust.';
+      reason.value = input.dataset.reason || '';
+      error.hidden = true;
+      reason.setAttribute('aria-invalid', 'false');
+      dropdown.classList.add('is-open');
+      updateFormState();
+      positionDropdown();
+
+      if (focusReason !== false) requestAnimationFrame(() => reason.focus());
+    }
+
+    function closeDropdown(restore) {
+      if (!activeInput) return;
+      const input = activeInput;
+      input.closest('.product-row').classList.remove('is-active');
+      input.setAttribute('aria-expanded', 'false');
+
+      if (restore !== false) {
+        input.value = String(Number(input.dataset.applied));
+        updateRow(input);
+      }
+
+      dropdown.classList.remove('is-open');
+      activeInput = null;
+      pendingDiscount = null;
+    }
+
+    function showToast(title, message) {
+      document.querySelector('#toast-title').textContent = title;
+      document.querySelector('#toast-message').textContent = message;
+      toast.classList.add('is-visible');
+      window.clearTimeout(toastTimer);
+      toastTimer = window.setTimeout(() => toast.classList.remove('is-visible'), 4500);
+    }
+
+    function commit(input) {
+      if (activeInput === input) return;
+      const value = Number(String(input.value).replace(',', '.'));
+      const applied = Number(input.dataset.applied);
+
+      if (!Number.isFinite(value) || value < 0 || value > 100) {
+        input.value = String(applied);
+        updateRow(input);
+        showToast('Vigane allahindlus', 'Sisesta väärtus vahemikus 0–100%.');
+        return;
+      }
+
+      if (value === applied) {
+        updateRow(input);
+        return;
+      }
+
+      if (value > allowedThreshold(input)) {
+        openDropdown(input, value);
+        return;
+      }
+
+      input.dataset.applied = String(value);
+      input.dataset.reason = '';
+      input.value = String(value);
+      updateRow(input);
+      showToast('Allahindlus uuendatud', 'Rakendatud allahindlus: ' + formatDiscount(value));
+    }
+
+    document.querySelectorAll('.discount-input').forEach((input) => {
+      input.setAttribute('aria-expanded', 'false');
+      input.addEventListener('input', () => {
+        const value = Number(String(input.value).replace(',', '.'));
+        updateRow(input, Number.isFinite(value) ? value : undefined);
+      });
+      input.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          commit(input);
+        }
+      });
+      input.addEventListener('blur', () => {
+        window.setTimeout(() => {
+          if (!dropdown.contains(document.activeElement)) commit(input);
+        }, 0);
+      });
+      updateRow(input, Number(input.value));
+    });
+
+    reason.addEventListener('input', updateFormState);
+    document.querySelector('#close-dropdown').addEventListener('click', () => closeDropdown(true));
+    document.querySelector('#cancel-dropdown').addEventListener('click', () => closeDropdown(true));
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const value = reason.value.trim();
+
+      if (value.length < minimumReasonLength) {
+        error.hidden = false;
+        reason.setAttribute('aria-invalid', 'true');
+        reason.focus();
+        return;
+      }
+
+      const input = activeInput;
+      const oldDiscount = Number(input.dataset.applied);
+      input.dataset.applied = String(pendingDiscount);
+      input.dataset.reason = value;
+      input.value = String(pendingDiscount);
+      updateRow(input);
+      closeDropdown(false);
+      showToast('Põhjendus salvestatud', formatDiscount(oldDiscount) + ' → ' + formatDiscount(Number(input.dataset.applied)));
+      input.focus();
+    });
+
+    document.addEventListener('pointerdown', (event) => {
+      if (!activeInput || dropdown.contains(event.target) || activeInput.closest('.discount-field').contains(event.target)) return;
+      closeDropdown(true);
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && activeInput) {
+        closeDropdown(true);
+        activeInput?.focus();
+      }
+    });
+
+    window.addEventListener('resize', positionDropdown);
+    window.addEventListener('scroll', positionDropdown, true);
+    updateSummary();
+
+    const exampleInput = document.querySelector('.discount-input[data-code="123456"]');
+    requestAnimationFrame(() => openDropdown(exampleInput, 18, false));
+  </script>
+</body>
+</html>

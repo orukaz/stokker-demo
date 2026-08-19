@@ -10,6 +10,9 @@ Route::prefix('demos/dev-160')->name('demos.dev_160.')->group(function () {
     Route::get('/discount-reason-modal', fn () => response()->file(
         public_path('dev-160-discount-reason-modal.html'),
     ))->name('discount_reason_modal');
+    Route::get('/discount-reason-dropdown', fn () => response()->file(
+        public_path('dev-160-discount-reason-dropdown.html'),
+    ))->name('discount_reason_dropdown');
     Route::get('/discount-report', fn () => response()->file(
         public_path('dev-160-discount-report.html'),
     ))->name('discount_report');

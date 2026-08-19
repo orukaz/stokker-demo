@@ -20,6 +20,12 @@ test('a DEV-160 demo page is available', function (
         'DEV-160 – allahindluse põhjendamine',
         'id="discount-form"',
     ],
+    'discount reason dropdown' => [
+        'demos.dev_160.discount_reason_dropdown',
+        'dev-160-discount-reason-dropdown.html',
+        'DEV-160 – allahindluse põhjenduse dropdown',
+        'id="reason-form"',
+    ],
     'discount report' => [
         'demos.dev_160.discount_report',
         'dev-160-discount-report.html',
