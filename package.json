@@ -50,6 +50,7 @@
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "laravel-vite-plugin": "^3.0.0",
+        "libphonenumber-js": "^1.13.12",
         "lucide-svelte": "^0.468.0",
         "reka-ui": "^2.10.3",
         "svelte": "^5.16.0",

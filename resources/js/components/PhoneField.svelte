@@ -6,13 +6,8 @@
         NativeSelect,
         NativeSelectOption,
     } from '@/components/ui/native-select';
-    import {
-        formatPhoneNumber,
-        getPhoneCountry,
-        isValidPhoneNumber,
-        normalizePhoneNumber,
-        PHONE_COUNTRIES,
-    } from '@/lib/phone';
+    import { orderPhoneCountries } from '@/lib/phone';
+    import { phoneFieldState } from '@/lib/phone-field.svelte';
     import { cn } from '@/lib/utils';
 
     type Props = {
@@ -26,6 +21,7 @@
         disabled?: boolean;
         error?: string;
         helpText?: string;
+        preferredCountryIsos?: string[];
         class?: string;
     };
 
@@ -40,101 +36,43 @@
         disabled = false,
         error = '',
         helpText = '',
+        preferredCountryIsos = [],
         class: className = '',
     }: Props = $props();
 
-    const initialPhoneNumber = normalizePhoneNumber(value, countryIso);
+    const phoneCountries = $derived(orderPhoneCountries(preferredCountryIsos));
 
-    value = initialPhoneNumber.canonical;
-    countryIso = initialPhoneNumber.countryIso;
-
-    let inputValue = $state(
-        untrack(() => formatPhoneNumber(initialPhoneNumber, showCountryCode)),
-    );
-    let touched = $state(false);
-
-    const countrySelectId = $derived(`${id}-country`);
-    const helpTextId = $derived(`${id}-help`);
-    const errorId = $derived(`${id}-error`);
-    const activeCountry = $derived(getPhoneCountry(countryIso || 'EE'));
-    const internalError = $derived.by(() => {
-        if (!touched || error) {
-            return '';
-        }
-
-        const phoneNumber = normalizePhoneNumber(
-            inputValue,
-            countryIso || 'EE',
-        );
-
-        if (!phoneNumber.nationalDigits) {
-            return required ? 'Sisesta telefoninumber.' : '';
-        }
-
-        if (!isValidPhoneNumber(phoneNumber)) {
-            return `Sisesta telefoninumber koos riigikoodiga, näiteks ${activeCountry.example}.`;
-        }
-
-        return '';
+    const phoneField = phoneFieldState({
+        getId: () => id,
+        getValue: () => value,
+        setValue: (nextValue) => (value = nextValue),
+        getCountryIso: () => countryIso,
+        setCountryIso: (nextCountryIso) => (countryIso = nextCountryIso),
+        getShowCountryCode: () => showCountryCode,
+        getRequired: () => required,
+        getError: () => error,
+        getHelpText: () => helpText,
     });
-    const resolvedError = $derived(error || internalError);
-    const describedBy = $derived(
-        [helpText ? helpTextId : '', resolvedError ? errorId : '']
-            .filter(Boolean)
-            .join(' ') || undefined,
-    );
-
-    function syncCanonicalValue(formatInput: boolean): void {
-        const phoneNumber = normalizePhoneNumber(
-            inputValue,
-            countryIso || 'EE',
-        );
-
-        value = phoneNumber.canonical;
-        countryIso = phoneNumber.countryIso;
-
-        if (formatInput) {
-            inputValue = formatPhoneNumber(phoneNumber, showCountryCode);
-        }
-    }
-
-    function handleInput(): void {
-        syncCanonicalValue(false);
-    }
-
-    function handleBlur(): void {
-        touched = true;
-        syncCanonicalValue(true);
-    }
-
-    function handleFocus(): void {
-        if (!showCountryCode && !inputValue) {
-            inputValue = `${activeCountry.dialCode} `;
-        }
-    }
 
     function handleCountryChange(event: Event): void {
-        const nextCountryIso = (event.currentTarget as HTMLSelectElement).value;
-        const currentPhoneNumber = normalizePhoneNumber(
-            inputValue,
-            countryIso || 'EE',
+        phoneField.handleCountryChange(
+            (event.currentTarget as HTMLSelectElement).value,
         );
-
-        countryIso = nextCountryIso;
-        touched = false;
-
-        if (!nextCountryIso) {
-            return;
-        }
-
-        const nextPhoneNumber = normalizePhoneNumber(
-            currentPhoneNumber.nationalDigits,
-            nextCountryIso,
-        );
-
-        value = nextPhoneNumber.canonical;
-        inputValue = formatPhoneNumber(nextPhoneNumber, showCountryCode);
     }
+
+    $effect(() => {
+        const nextValue = value;
+        const nextCountryIso = countryIso;
+        const nextShowCountryCode = showCountryCode;
+
+        untrack(() =>
+            phoneField.syncExternalValue(
+                nextValue,
+                nextCountryIso,
+                nextShowCountryCode,
+            ),
+        );
+    });
 </script>
 
 <div class={cn('grid gap-2', className)}>
@@ -153,9 +91,11 @@
     >
         {#if showCountryCode}
             <div class="sm:w-40 sm:shrink-0">
-                <label for={countrySelectId} class="sr-only">Riigikood</label>
+                <label for={phoneField.countrySelectId} class="sr-only">
+                    Riigikood
+                </label>
                 <NativeSelect
-                    id={countrySelectId}
+                    id={phoneField.countrySelectId}
                     name={`${name}_country`}
                     value={countryIso}
                     onchange={handleCountryChange}
@@ -168,10 +108,11 @@
                             Muu riik
                         </NativeSelectOption>
                     {/if}
-                    {#each PHONE_COUNTRIES as country (country.iso2)}
+                    {#each phoneCountries as country (country.iso2)}
                         <NativeSelectOption value={country.iso2}>
                             {country.iso2}
                             {country.dialCode}
+                            - {country.name}
                         </NativeSelectOption>
                     {/each}
                 </NativeSelect>
@@ -184,21 +125,15 @@
             type="tel"
             inputmode="tel"
             autocomplete="tel"
-            bind:value={inputValue}
-            oninput={handleInput}
-            onblur={handleBlur}
-            onfocus={handleFocus}
-            aria-invalid={resolvedError ? 'true' : undefined}
-            aria-describedby={describedBy}
-            placeholder={showCountryCode
-                ? activeCountry.example.replace(
-                      `${activeCountry.dialCode} `,
-                      '',
-                  )
-                : activeCountry.example}
+            bind:value={phoneField.values.inputValue}
+            oninput={phoneField.handleInput}
+            onblur={phoneField.handleBlur}
+            aria-invalid={phoneField.resolvedError ? 'true' : undefined}
+            aria-describedby={phoneField.describedBy}
+            placeholder={phoneField.placeholder}
             class={cn(
                 'flex h-11 w-full rounded-md border border-input bg-white px-3 py-1 text-base shadow-none transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stokker-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-background',
-                resolvedError &&
+                phoneField.resolvedError &&
                     'border-destructive focus-visible:ring-destructive',
             )}
             {required}
@@ -207,12 +142,12 @@
     </div>
 
     {#if helpText}
-        <p id={helpTextId} class="text-sm text-muted-foreground">
+        <p id={phoneField.helpTextId} class="text-sm text-muted-foreground">
             {helpText}
         </p>
     {/if}
 
-    <div id={errorId}>
-        <InputError message={resolvedError} />
+    <div id={phoneField.errorId}>
+        <InputError message={phoneField.resolvedError} />
     </div>
 </div>

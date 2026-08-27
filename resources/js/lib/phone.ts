@@ -1,12 +1,18 @@
+import parsePhoneNumber, {
+    AsYouType,
+    getCountries,
+    getCountryCallingCode,
+    getExampleNumber,
+    isSupportedCountry,
+} from 'libphonenumber-js';
+import type { CountryCode } from 'libphonenumber-js';
+import phoneExamples from 'libphonenumber-js/mobile/examples';
+
 export type PhoneCountry = {
-    iso2: string;
+    iso2: CountryCode;
     name: string;
     dialCode: string;
     example: string;
-    formatGroups: number[];
-    minNationalLength: number;
-    maxNationalLength: number;
-    trunkPrefix?: string;
 };
 
 export type NormalizedPhoneNumber = {
@@ -15,130 +21,70 @@ export type NormalizedPhoneNumber = {
     nationalDigits: string;
 };
 
-export const PHONE_COUNTRIES: PhoneCountry[] = [
-    {
-        iso2: 'EE',
-        name: 'Eesti',
-        dialCode: '+372',
-        example: '+372 5123 4567',
-        formatGroups: [4, 4],
-        minNationalLength: 7,
-        maxNationalLength: 8,
-    },
-    {
-        iso2: 'LV',
-        name: 'Läti',
-        dialCode: '+371',
-        example: '+371 20 123 456',
-        formatGroups: [2, 3, 3],
-        minNationalLength: 8,
-        maxNationalLength: 8,
-    },
-    {
-        iso2: 'LT',
-        name: 'Leedu',
-        dialCode: '+370',
-        example: '+370 612 34567',
-        formatGroups: [3, 5],
-        minNationalLength: 8,
-        maxNationalLength: 8,
-        trunkPrefix: '0',
-    },
-    {
-        iso2: 'FI',
-        name: 'Soome',
-        dialCode: '+358',
-        example: '+358 40 123 4567',
-        formatGroups: [2, 3, 4],
-        minNationalLength: 5,
-        maxNationalLength: 12,
-        trunkPrefix: '0',
-    },
-    {
-        iso2: 'SE',
-        name: 'Rootsi',
-        dialCode: '+46',
-        example: '+46 70 123 45 67',
-        formatGroups: [2, 3, 2, 2],
-        minNationalLength: 7,
-        maxNationalLength: 10,
-        trunkPrefix: '0',
-    },
-];
+const countryDisplayNames = new Intl.DisplayNames(['et'], {
+    type: 'region',
+});
 
-const fallbackCountry = PHONE_COUNTRIES[0];
+function getCountryName(countryIso: CountryCode): string {
+    const countryName = countryDisplayNames.of(countryIso);
 
-function countryForCallingCode(digits: string): PhoneCountry | undefined {
-    return [...PHONE_COUNTRIES]
-        .sort((first, second) => second.dialCode.length - first.dialCode.length)
-        .find((country) => digits.startsWith(country.dialCode.slice(1)));
+    return countryName && countryName !== countryIso ? countryName : countryIso;
 }
 
-function hasValidNationalLength(
-    country: PhoneCountry,
-    nationalDigits: string,
-): boolean {
-    return (
-        nationalDigits.length >= country.minNationalLength &&
-        nationalDigits.length <= country.maxNationalLength
+export const PHONE_COUNTRIES: PhoneCountry[] = getCountries()
+    .map((countryIso) => {
+        const dialCode = `+${getCountryCallingCode(countryIso)}`;
+        const example = getExampleNumber(countryIso, phoneExamples);
+
+        return {
+            iso2: countryIso,
+            name: getCountryName(countryIso),
+            dialCode,
+            example: example?.formatInternational() ?? dialCode,
+        };
+    })
+    .sort((first, second) => first.name.localeCompare(second.name, 'et'));
+
+const fallbackCountry = PHONE_COUNTRIES.find(
+    (country) => country.iso2 === 'EE',
+) as PhoneCountry;
+
+export function hasValidPhoneInputCharacters(input: string): boolean {
+    return /^\+?[\d\s().-]*$/.test(input.trim());
+}
+
+export function findPhoneCountry(countryIso: string): PhoneCountry | undefined {
+    const normalizedCountryIso = countryIso.trim().toUpperCase();
+
+    return PHONE_COUNTRIES.find(
+        (country) => country.iso2 === normalizedCountryIso,
     );
-}
-
-function stripTrunkPrefix(
-    nationalDigits: string,
-    country: PhoneCountry,
-): string {
-    if (country.trunkPrefix && nationalDigits.startsWith(country.trunkPrefix)) {
-        return nationalDigits.slice(country.trunkPrefix.length);
-    }
-
-    return nationalDigits;
-}
-
-function formatDigitGroups(digits: string, groups: number[]): string {
-    if (!digits) {
-        return '';
-    }
-
-    const expectedLength = groups.reduce((sum, group) => sum + group, 0);
-    const adjustedGroups = [...groups];
-
-    if (digits.length < expectedLength) {
-        adjustedGroups[0] = Math.max(
-            1,
-            adjustedGroups[0] - (expectedLength - digits.length),
-        );
-    }
-
-    const formattedGroups: string[] = [];
-    let offset = 0;
-
-    for (const groupLength of adjustedGroups) {
-        const group = digits.slice(offset, offset + groupLength);
-
-        if (!group) {
-            break;
-        }
-
-        formattedGroups.push(group);
-        offset += groupLength;
-    }
-
-    if (offset < digits.length) {
-        formattedGroups.push(digits.slice(offset));
-    }
-
-    return formattedGroups.join(' ');
 }
 
 export function getPhoneCountry(countryIso: string): PhoneCountry {
-    const normalizedCountryIso = countryIso.trim().toUpperCase();
+    return findPhoneCountry(countryIso) ?? fallbackCountry;
+}
 
-    return (
-        PHONE_COUNTRIES.find(
-            (country) => country.iso2 === normalizedCountryIso,
-        ) ?? fallbackCountry
+export function getPhoneCountries(countryIsos: string[]): PhoneCountry[] {
+    return countryIsos
+        .map(findPhoneCountry)
+        .filter((country): country is PhoneCountry => country !== undefined);
+}
+
+export function orderPhoneCountries(
+    preferredCountryIsos: string[],
+): PhoneCountry[] {
+    const preferredCountries = getPhoneCountries(preferredCountryIsos);
+    const preferredCountrySet = new Set(
+        preferredCountries.map((country) => country.iso2),
     );
+
+    return [
+        ...preferredCountries,
+        ...PHONE_COUNTRIES.filter(
+            (country) => !preferredCountrySet.has(country.iso2),
+        ),
+    ];
 }
 
 export function normalizePhoneNumber(
@@ -146,56 +92,50 @@ export function normalizePhoneNumber(
     defaultCountryIso: string,
 ): NormalizedPhoneNumber {
     const trimmedInput = input.trim();
-    const defaultCountry = getPhoneCountry(defaultCountryIso);
+    const normalizedDefaultCountryIso = defaultCountryIso.trim().toUpperCase();
+    const defaultCountry = isSupportedCountry(normalizedDefaultCountryIso)
+        ? normalizedDefaultCountryIso
+        : undefined;
 
     if (!trimmedInput) {
         return {
             canonical: '',
-            countryIso: defaultCountry.iso2,
+            countryIso: defaultCountry ?? normalizedDefaultCountryIso,
             nationalDigits: '',
         };
     }
 
-    const startsWithInternationalPrefix =
-        trimmedInput.startsWith('+') || trimmedInput.startsWith('00');
-    let digits = trimmedInput.replace(/\D/g, '');
-
-    if (trimmedInput.startsWith('00')) {
-        digits = digits.slice(2);
-    }
-
-    let detectedCountry = countryForCallingCode(digits);
-
-    if (detectedCountry && !startsWithInternationalPrefix) {
-        const possibleNationalDigits = digits.slice(
-            detectedCountry.dialCode.length - 1,
-        );
-
-        if (!hasValidNationalLength(detectedCountry, possibleNationalDigits)) {
-            detectedCountry = undefined;
-        }
-    }
-
-    if (startsWithInternationalPrefix || detectedCountry) {
-        const nationalDigits = detectedCountry
-            ? digits.slice(detectedCountry.dialCode.length - 1)
-            : digits;
-
+    if (!hasValidPhoneInputCharacters(trimmedInput)) {
         return {
-            canonical: nationalDigits ? `+${digits}` : '',
-            countryIso: detectedCountry?.iso2 ?? '',
-            nationalDigits,
+            canonical: '',
+            countryIso: defaultCountry ?? normalizedDefaultCountryIso,
+            nationalDigits: '',
         };
     }
 
-    const nationalDigits = stripTrunkPrefix(digits, defaultCountry);
+    const normalizedInput = trimmedInput.startsWith('00')
+        ? `+${trimmedInput.slice(2)}`
+        : trimmedInput;
+    const isInternational = normalizedInput.startsWith('+');
+    const phoneNumber = parsePhoneNumber(normalizedInput, {
+        defaultCountry,
+        extract: false,
+    });
+
+    if (!phoneNumber) {
+        return {
+            canonical: '',
+            countryIso: isInternational ? '' : (defaultCountry ?? ''),
+            nationalDigits: normalizedInput.replace(/\D/g, ''),
+        };
+    }
 
     return {
-        canonical: nationalDigits
-            ? `${defaultCountry.dialCode}${nationalDigits}`
-            : '',
-        countryIso: defaultCountry.iso2,
-        nationalDigits,
+        canonical: phoneNumber.number,
+        countryIso:
+            phoneNumber.country ??
+            (isInternational ? '' : (defaultCountry ?? '')),
+        nationalDigits: phoneNumber.nationalNumber,
     };
 }
 
@@ -207,22 +147,21 @@ export function formatPhoneNumber(
         return '';
     }
 
-    const country = PHONE_COUNTRIES.find(
-        (option) => option.iso2 === phoneNumber.countryIso,
-    );
+    const formattedPhoneNumber = new AsYouType().input(phoneNumber.canonical);
 
-    if (!country) {
-        return phoneNumber.canonical;
+    if (!separateCountryCode) {
+        return formattedPhoneNumber;
     }
 
-    const formattedNationalNumber = formatDigitGroups(
-        phoneNumber.nationalDigits,
-        country.formatGroups,
-    );
+    const country = findPhoneCountry(phoneNumber.countryIso);
 
-    return separateCountryCode
-        ? formattedNationalNumber
-        : `${country.dialCode} ${formattedNationalNumber}`;
+    if (!country) {
+        return formattedPhoneNumber;
+    }
+
+    return formattedPhoneNumber
+        .replace(new RegExp(`^\\${country.dialCode}\\s?`), '')
+        .trimStart();
 }
 
 export function isValidPhoneNumber(
@@ -232,17 +171,9 @@ export function isValidPhoneNumber(
         return false;
     }
 
-    const totalDigits = phoneNumber.canonical.replace(/\D/g, '').length;
-
-    if (totalDigits < 8 || totalDigits > 15) {
-        return false;
-    }
-
-    const country = PHONE_COUNTRIES.find(
-        (option) => option.iso2 === phoneNumber.countryIso,
+    return (
+        parsePhoneNumber(phoneNumber.canonical, {
+            extract: false,
+        })?.isPossible() ?? false
     );
-
-    return country
-        ? hasValidNationalLength(country, phoneNumber.nationalDigits)
-        : true;
 }

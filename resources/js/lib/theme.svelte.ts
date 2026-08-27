@@ -13,6 +13,7 @@ export type ThemeState = {
 const appearance = $state<{ value: Appearance }>({ value: 'system' });
 
 let themeChangeMediaQuery: MediaQueryList | null = null;
+let lightThemeLockCount = 0;
 
 const prefersDark = (): boolean => {
     if (typeof window === 'undefined') {
@@ -44,7 +45,7 @@ const applyTheme = (value: Appearance): void => {
         return;
     }
 
-    const isDark = isDarkMode(value);
+    const isDark = lightThemeLockCount === 0 && isDarkMode(value);
     document.documentElement.classList.toggle('dark', isDark);
     document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
 };
@@ -106,6 +107,20 @@ export function updateAppearance(value: Appearance): void {
 
     setCookie('appearance', value);
     applyTheme(value);
+}
+
+export function forceLightTheme(): () => void {
+    if (typeof document === 'undefined') {
+        return () => {};
+    }
+
+    lightThemeLockCount += 1;
+    applyTheme('light');
+
+    return () => {
+        lightThemeLockCount = Math.max(0, lightThemeLockCount - 1);
+        applyTheme(appearance.value);
+    };
 }
 
 export function themeState(): ThemeState {

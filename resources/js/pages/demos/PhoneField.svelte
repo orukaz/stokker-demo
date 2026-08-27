@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { onMount } from 'svelte';
     import AppHead from '@/components/AppHead.svelte';
     import PhoneField from '@/components/PhoneField.svelte';
     import { Button } from '@/components/ui/button';
@@ -14,8 +15,16 @@
         NativeSelectOption,
     } from '@/components/ui/native-select';
     import SiteLayout from '@/layouts/SiteLayout.svelte';
-    import { PHONE_COUNTRIES } from '@/lib/phone';
+    import { getPhoneCountries } from '@/lib/phone';
+    import { forceLightTheme } from '@/lib/theme.svelte';
 
+    type Props = {
+        siteCountryIsos: string[];
+    };
+
+    let { siteCountryIsos }: Props = $props();
+
+    const siteCountries = $derived(getPhoneCountries(siteCountryIsos));
     let defaultCountryIso = $state('EE');
     let defaultPhoneValue = $state('51234567');
     let separateCountryIso = $state('EE');
@@ -23,6 +32,8 @@
     let inlineCountryIso = $state('EE');
     let inlinePhoneValue = $state('51234567');
     let demoRevision = $state(0);
+
+    onMount(forceLightTheme);
 
     function applyDefaults(event: SubmitEvent): void {
         event.preventDefault();
@@ -77,7 +88,7 @@
                             bind:value={defaultCountryIso}
                             class="w-full [&_[data-slot=native-select]]:h-11 [&_[data-slot=native-select]]:bg-white [&_[data-slot=native-select]]:text-base dark:[&_[data-slot=native-select]]:bg-background"
                         >
-                            {#each PHONE_COUNTRIES as country (country.iso2)}
+                            {#each siteCountries as country (country.iso2)}
                                 <NativeSelectOption value={country.iso2}>
                                     {country.iso2} - {country.name}
                                 </NativeSelectOption>
@@ -130,6 +141,7 @@
                             label="Telefoninumber"
                             bind:value={separatePhoneValue}
                             bind:countryIso={separateCountryIso}
+                            preferredCountryIsos={siteCountryIsos}
                             showCountryCode
                             required
                         />
@@ -161,6 +173,7 @@
                             label="Telefoninumber"
                             bind:value={inlinePhoneValue}
                             bind:countryIso={inlineCountryIso}
+                            preferredCountryIsos={siteCountryIsos}
                             showCountryCode={false}
                             required
                         />
