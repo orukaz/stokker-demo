@@ -38,7 +38,7 @@
 <AppHead title="DEV-193 telefoninumbri komponent">
     <meta
         name="description"
-        content="Telefoninumbri komponendi demo riigikoodi, ISO-2 vaikeväärtuse ja E.164 normaliseerimisega."
+        content="Telefoninumbri komponendi demo vaikeväärtuste ja numbri normaliseerimisega."
     />
 </AppHead>
 
@@ -68,9 +68,9 @@
                     onsubmit={applyDefaults}
                 >
                     <div class="grid gap-2">
-                        <Label for="default-country-iso"
-                            >Vaikeriik (ISO-2)</Label
-                        >
+                        <Label for="default-country-iso">
+                            Kodulehe või kliendi riik
+                        </Label>
                         <NativeSelect
                             id="default-country-iso"
                             name="default_country_iso"
@@ -79,7 +79,7 @@
                         >
                             {#each PHONE_COUNTRIES as country (country.iso2)}
                                 <NativeSelectOption value={country.iso2}>
-                                    {country.iso2} — {country.name}
+                                    {country.iso2} - {country.name}
                                 </NativeSelectOption>
                             {/each}
                         </NativeSelect>
@@ -87,7 +87,7 @@
 
                     <div class="grid gap-2">
                         <Label for="default-phone-value">
-                            Telefoni vaikeväärtus
+                            Telefoni vaikeväärtus baasist
                         </Label>
                         <input
                             id="default-phone-value"
@@ -143,7 +143,7 @@
                             Salvestatav väärtus
                         </span>
                         <code class="break-all text-base font-semibold">
-                            {separatePhoneValue || '—'}
+                            {separatePhoneValue || '-'}
                         </code>
                     </div>
                 </CardContent>
@@ -174,7 +174,7 @@
                             Salvestatav väärtus
                         </span>
                         <code class="break-all text-base font-semibold">
-                            {inlinePhoneValue || '—'}
+                            {inlinePhoneValue || '-'}
                         </code>
                     </div>
                 </CardContent>
