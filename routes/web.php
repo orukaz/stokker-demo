@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => to_route('products.index'))->name('home');
 Route::inertia('/welcome', 'Welcome')->name('welcome');
+Route::inertia('/demos/dev-193/phone-field', 'demos/PhoneField')
+    ->name('demos.dev_193.phone_field');
 Route::prefix('demos/dev-160')->name('demos.dev_160.')->group(function () {
     Route::get('/discount-reason-modal', fn () => response()->file(
         public_path('dev-160-discount-reason-modal.html'),
