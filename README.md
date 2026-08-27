@@ -2,6 +2,10 @@
 
 Demo URL: https://stokker-demo.orumets.ee/
 
+## DEV-193
+
+[DEV-193 telefonivälja demo](https://stokker-demo.orumets.ee/demos/dev-193/phone-field) näitab korduvkasutatavat Svelte telefoninumbri komponenti, otsitavat riigivalikut, rahvusvahelisse formaati normaliseerimist ja konfiguratsiooniga piiratud avalikku lähtekoodivaadet.
+
 ## Autor
 
 Raido Orumets  
@@ -65,6 +69,7 @@ Serveri haldust ja automaatset deploy protsessi juhib Laravel Forge ([forge.lara
 - **Tailwind CSS 4** - Kiire ja praktiline viis responsive kasutajaliideste loomiseks. - https://tailwindcss.com
 - **shadcn-svelte** - Valmis UI komponendid, tagavad ligipääsetavuse ja on kiiresti edasi arendatavad. - https://www.shadcn-svelte.com
 - **Lucide** (`lucide-svelte`) - Lihtne viis lisada ühtse stiiliga ikoone. - https://lucide.dev
+- **Shiki** - PHP, Svelte, JSON-i ja JavaScripti lähtekoodi värvimine avalikus koodivaates. - https://shiki.style
 - **MySQL** - Relatsiooniline andmebaas toodete ja lemmikute salvestamiseks. - https://www.mysql.com
 
 ### Miks selline stack
@@ -235,6 +240,36 @@ See aitas hoida frontend koodi lihtsa ja kiirelt muudetavana.
    - Scheduler käivitab käsu `php artisan stokker:sync-products` iga tund (`hourly()`).
    - `withoutOverlapping()` väldib sama käsu paralleelset käivitust.
    - Nii püsivad tooted ajakohased ilma käsitsi sekkumiseta, kuid vajadusel saab sama käsu alati käsitsi käivitada.
+
+6. **Avalik lähtekoodivaade**
+   - Korduvkasutatav Svelte komponent `<SourceCodeFiles sourceSet="phone-field" />` kuvab kokkupandava faililoendi.
+   - Fail avaneb shadcn-svelte Sheetis mustal taustal ning Shiki värvib PHP, Svelte, JSON-i, JavaScripti ja TypeScripti süntaksi.
+   - Avalik `GET /source-code/{sourceSet}` endpoint ei vaja autentimist, kuid tagastab ainult `config/source_code.php` failis täpselt lubatud komplekte ja faile.
+   - Backend kontrollib enne faili lugemist selle tegelikku asukohta (`realpath`), lubatud juurkausta, faililaiendit ja maksimaalset suurust. URL-i kaudu suvalist failiteed edastada ei saa.
+   - Frontend kuvab värvitud tokenid tekstina ega sisesta lähtekoodi töötlemata HTML-ina.
+
+   Uue lähtekoodikomplekti lisamiseks defineeri see konfiguratsioonis:
+
+   ```php
+   'source_sets' => [
+       'example' => [
+           'title' => 'Näite lähtekood',
+           'files' => [
+               'component' => [
+                   'label' => 'resources/js/components/Example.svelte',
+                   'language' => 'svelte',
+                   'path' => 'resources/js/components/Example.svelte',
+               ],
+           ],
+       ],
+   ],
+   ```
+
+   Seejärel kasuta soovitud lehel sama võtit:
+
+   ```svelte
+   <SourceCodeFiles sourceSet="example" />
+   ```
 
 ## Kuidas käivitada
 
