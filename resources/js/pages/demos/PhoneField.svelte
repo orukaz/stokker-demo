@@ -2,6 +2,7 @@
     import { onMount } from 'svelte';
     import AppHead from '@/components/AppHead.svelte';
     import PhoneField from '@/components/PhoneField.svelte';
+    import SourceCodeFiles from '@/components/SourceCodeFiles.svelte';
     import { Button } from '@/components/ui/button';
     import {
         Card,
@@ -10,10 +11,8 @@
         CardTitle,
     } from '@/components/ui/card';
     import { Label } from '@/components/ui/label';
-    import {
-        NativeSelect,
-        NativeSelectOption,
-    } from '@/components/ui/native-select';
+    import { SearchableSelect } from '@/components/ui/searchable-select';
+    import type { SearchableSelectOption } from '@/components/ui/searchable-select';
     import SiteLayout from '@/layouts/SiteLayout.svelte';
     import { getPhoneCountries } from '@/lib/phone';
     import { forceLightTheme } from '@/lib/theme.svelte';
@@ -25,6 +24,12 @@
     let { siteCountryIsos }: Props = $props();
 
     const siteCountries = $derived(getPhoneCountries(siteCountryIsos));
+    const siteCountryOptions = $derived<SearchableSelectOption[]>(
+        siteCountries.map((country) => ({
+            value: country.iso2,
+            label: `${country.iso2} - ${country.name}`,
+        })),
+    );
     let defaultCountryIso = $state('EE');
     let defaultPhoneValue = $state('51234567');
     let separateCountryIso = $state('EE');
@@ -82,18 +87,15 @@
                         <Label for="default-country-iso">
                             Kodulehe või kliendi riik
                         </Label>
-                        <NativeSelect
+                        <SearchableSelect
                             id="default-country-iso"
                             name="default_country_iso"
                             bind:value={defaultCountryIso}
-                            class="w-full [&_[data-slot=native-select]]:h-11 [&_[data-slot=native-select]]:bg-white [&_[data-slot=native-select]]:text-base dark:[&_[data-slot=native-select]]:bg-background"
-                        >
-                            {#each siteCountries as country (country.iso2)}
-                                <NativeSelectOption value={country.iso2}>
-                                    {country.iso2} - {country.name}
-                                </NativeSelectOption>
-                            {/each}
-                        </NativeSelect>
+                            options={siteCountryOptions}
+                            placeholder="Vali riik"
+                            searchPlaceholder="Otsi riiki..."
+                            emptyText="Riiki ei leitud."
+                        />
                     </div>
 
                     <div class="grid gap-2">
@@ -193,5 +195,7 @@
                 </CardContent>
             </Card>
         </section>
+
+        <SourceCodeFiles sourceSet="phone-field" />
     </div>
 </SiteLayout>

@@ -2,10 +2,14 @@
 
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductFavoriteController;
+use App\Http\Controllers\SourceCodeController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => to_route('products.index'))->name('home');
 Route::inertia('/welcome', 'Welcome')->name('welcome');
+Route::get('/source-code/{sourceSet}', [SourceCodeController::class, 'show'])
+    ->middleware('cache.headers:public;max_age=3600;etag')
+    ->name('source_code.show');
 Route::inertia('/demos/dev-193/phone-field', 'demos/PhoneField', [
     'siteCountryIsos' => config('phone.site_country_isos'),
 ])

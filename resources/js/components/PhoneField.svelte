@@ -2,10 +2,8 @@
     import { untrack } from 'svelte';
     import InputError from '@/components/InputError.svelte';
     import { Label } from '@/components/ui/label';
-    import {
-        NativeSelect,
-        NativeSelectOption,
-    } from '@/components/ui/native-select';
+    import { SearchableSelect } from '@/components/ui/searchable-select';
+    import type { SearchableSelectOption } from '@/components/ui/searchable-select';
     import { orderPhoneCountries } from '@/lib/phone';
     import { phoneFieldState } from '@/lib/phone-field.svelte';
     import { cn } from '@/lib/utils';
@@ -41,6 +39,12 @@
     }: Props = $props();
 
     const phoneCountries = $derived(orderPhoneCountries(preferredCountryIsos));
+    const phoneCountryOptions = $derived<SearchableSelectOption[]>(
+        phoneCountries.map((country) => ({
+            value: country.iso2,
+            label: `${country.iso2} ${country.dialCode} - ${country.name}`,
+        })),
+    );
 
     const phoneField = phoneFieldState({
         getId: () => id,
@@ -54,10 +58,8 @@
         getHelpText: () => helpText,
     });
 
-    function handleCountryChange(event: Event): void {
-        phoneField.handleCountryChange(
-            (event.currentTarget as HTMLSelectElement).value,
-        );
+    function handleCountryChange(nextCountryIso: string): void {
+        phoneField.handleCountryChange(nextCountryIso);
     }
 
     $effect(() => {
@@ -94,28 +96,18 @@
                 <label for={phoneField.countrySelectId} class="sr-only">
                     Riigikood
                 </label>
-                <NativeSelect
+                <SearchableSelect
                     id={phoneField.countrySelectId}
                     name={`${name}_country`}
                     value={countryIso}
-                    onchange={handleCountryChange}
-                    class="w-full [&_[data-slot=native-select]]:h-11 [&_[data-slot=native-select]]:bg-white [&_[data-slot=native-select]]:text-base dark:[&_[data-slot=native-select]]:bg-background"
-                    aria-label="Riigikood"
+                    options={phoneCountryOptions}
+                    placeholder="Vali riik"
+                    searchPlaceholder="Otsi riiki või koodi..."
+                    emptyText="Riiki ei leitud."
+                    ariaLabel="Riigikood"
+                    onValueChange={handleCountryChange}
                     {disabled}
-                >
-                    {#if !countryIso}
-                        <NativeSelectOption value="">
-                            Muu riik
-                        </NativeSelectOption>
-                    {/if}
-                    {#each phoneCountries as country (country.iso2)}
-                        <NativeSelectOption value={country.iso2}>
-                            {country.iso2}
-                            {country.dialCode}
-                            - {country.name}
-                        </NativeSelectOption>
-                    {/each}
-                </NativeSelect>
+                />
             </div>
         {/if}
 
