@@ -141,6 +141,12 @@
         'relative pl-5 before:absolute before:left-0 before:top-[0.7em] before:size-1.5 before:rounded-full before:bg-stokker-primary';
     const externalLinkClass =
         'inline-flex items-center gap-1.5 font-semibold text-stokker-primary underline decoration-stokker-primary/30 underline-offset-4 hover:decoration-stokker-primary';
+    const sectionHeadingClass =
+        'text-3xl! leading-tight! font-semibold! sm:text-4xl!';
+    const subsectionHeadingClass =
+        'pt-2 text-2xl! leading-tight! font-semibold! text-slate-900';
+    const tableScrollClass =
+        'overflow-x-auto overscroll-x-contain rounded-lg border border-slate-200';
 
     const openSection = (href: string): void => {
         const section = document.querySelector<HTMLDetailsElement>(href);
@@ -170,13 +176,13 @@
 <SiteLayout>
     <main class="bg-white text-slate-900">
         <article
-            class="mx-auto max-w-5xl px-5 pt-12 pb-32 lg:px-8 lg:pt-16 lg:pb-32"
+            class="mx-auto max-w-5xl px-5 pt-6 pb-32 sm:pt-10 lg:px-8 lg:pt-16 lg:pb-32"
         >
             <header class="border-b border-slate-200 pb-10">
                 <img
                     src={itTeamHeaderImage}
                     alt="Stokkeri IT-tiim"
-                    class="mb-10 aspect-[2560/533] w-full rounded-lg object-cover"
+                    class="mb-8 aspect-[2560/533] w-full rounded-lg object-cover sm:mb-10"
                 />
                 <h1 class="text-4xl font-semibold tracking-tight sm:text-5xl">
                     IT-tiimi uus töökorraldus
@@ -223,13 +229,15 @@
                 aria-label="Lehe sisukord"
                 class="fixed inset-x-4 bottom-4 z-50 mx-auto max-w-6xl rounded-2xl border border-stokker-primary bg-stokker-primary p-2 shadow-lg shadow-slate-900/15"
             >
-                <ol class="flex gap-1 overflow-x-auto">
+                <ol
+                    class="flex snap-x scroll-px-2 gap-1 overflow-x-auto overscroll-x-contain"
+                >
                     {#each tableOfContents as item (item.href)}
-                        <li class="min-w-max flex-1">
+                        <li class="min-w-max flex-1 snap-start">
                             <a
                                 href={item.href}
                                 onclick={() => openSection(item.href)}
-                                class="flex items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-sm whitespace-nowrap text-white transition-colors hover:bg-white/15 hover:text-white"
+                                class="flex items-center justify-center gap-2 rounded-xl px-2 py-2.5 text-sm whitespace-nowrap text-white transition-colors hover:bg-white/15 hover:text-white sm:px-3"
                             >
                                 <span class="font-semibold text-white/70"
                                     >{item.number}</span
@@ -247,7 +255,7 @@
                         onclick={scrollToSection}
                         class="flex cursor-pointer list-none items-center justify-between gap-6 py-7 marker:hidden"
                     >
-                        <h2 class="text-4xl! leading-tight! font-semibold!">
+                        <h2 class={sectionHeadingClass}>
                             1. Miks ja kuidas töötame?
                         </h2>
                         <ChevronDown
@@ -276,9 +284,7 @@
                         </ul>
 
                         <section>
-                            <h3
-                                class="text-2xl! leading-tight! font-semibold! text-slate-900"
-                            >
+                            <h3 class={subsectionHeadingClass}>
                                 Scrum ja Kanban
                             </h3>
                             <ul class="mt-4 space-y-2">
@@ -316,9 +322,7 @@
                         onclick={scrollToSection}
                         class="flex cursor-pointer list-none items-center justify-between gap-6 py-7 marker:hidden"
                     >
-                        <h2 class="text-4xl! leading-tight! font-semibold!">
-                            2. Arendusprotsess
-                        </h2>
+                        <h2 class={sectionHeadingClass}>2. Arendusprotsess</h2>
                         <ChevronDown
                             class="size-5 shrink-0 text-slate-400 transition-transform group-open:rotate-180"
                             aria-hidden="true"
@@ -342,7 +346,7 @@
                         onclick={scrollToSection}
                         class="flex cursor-pointer list-none items-center justify-between gap-6 py-7 marker:hidden"
                     >
-                        <h2 class="text-4xl! leading-tight! font-semibold!">
+                        <h2 class={sectionHeadingClass}>
                             3. Töö korraldamine Jiras
                         </h2>
                         <ChevronDown
@@ -352,9 +356,7 @@
                     </summary>
                     <div class="space-y-8 pb-10 leading-7 text-slate-700">
                         <section>
-                            <h3
-                                class="text-2xl! leading-tight! font-semibold! text-slate-900"
-                            >
+                            <h3 class={subsectionHeadingClass}>
                                 DEV space ja backlog
                             </h3>
                             <ul class="mt-4 space-y-3">
@@ -406,9 +408,7 @@
                         </section>
 
                         <section>
-                            <h3
-                                class="text-2xl! leading-tight! font-semibold! text-slate-900"
-                            >
+                            <h3 class={subsectionHeadingClass}>
                                 Tööde ületoomine teistest space'idest
                             </h3>
                             <ul class="mt-4 space-y-3">
@@ -428,17 +428,13 @@
                         </section>
 
                         <section>
-                            <h3
-                                class="text-2xl! leading-tight! font-semibold! text-slate-900"
-                            >
-                                Tööde tüübid
-                            </h3>
-                            <div class="mt-4 overflow-x-auto">
+                            <h3 class={subsectionHeadingClass}>Tööde tüübid</h3>
+                            <div class="mt-4 {tableScrollClass}">
                                 <table
                                     class="w-full min-w-150 text-left text-sm"
                                 >
                                     <thead
-                                        class="border-y border-slate-200 bg-slate-50"
+                                        class="border-b border-slate-200 bg-slate-50"
                                     >
                                         <tr>
                                             <th class="px-4 py-3 font-semibold"
@@ -467,9 +463,7 @@
                         </section>
 
                         <section>
-                            <h3
-                                class="text-2xl! leading-tight! font-semibold! text-slate-900"
-                            >
+                            <h3 class={subsectionHeadingClass}>
                                 Sub-taski eripära
                             </h3>
                             <ul class="mt-4 space-y-3">
@@ -491,17 +485,15 @@
                         </section>
 
                         <section>
-                            <h3
-                                class="text-2xl! leading-tight! font-semibold! text-slate-900"
-                            >
+                            <h3 class={subsectionHeadingClass}>
                                 Tööde staatused
                             </h3>
-                            <div class="mt-4 overflow-x-auto">
+                            <div class="mt-4 {tableScrollClass}">
                                 <table
                                     class="w-full min-w-180 text-left text-sm"
                                 >
                                     <thead
-                                        class="border-y border-slate-200 bg-slate-50"
+                                        class="border-b border-slate-200 bg-slate-50"
                                     >
                                         <tr>
                                             <th class="px-4 py-3 font-semibold"
@@ -548,7 +540,7 @@
                         onclick={scrollToSection}
                         class="flex cursor-pointer list-none items-center justify-between gap-6 py-7 marker:hidden"
                     >
-                        <h2 class="text-4xl! leading-tight! font-semibold!">
+                        <h2 class={sectionHeadingClass}>
                             4. IT Portfolio Category ja Epicu protsess
                         </h2>
                         <ChevronDown
@@ -566,10 +558,10 @@
                             >.
                         </p>
 
-                        <div class="overflow-x-auto">
+                        <div class={tableScrollClass}>
                             <table class="w-full min-w-180 text-left text-sm">
                                 <thead
-                                    class="border-y border-slate-200 bg-slate-50"
+                                    class="border-b border-slate-200 bg-slate-50"
                                 >
                                     <tr>
                                         <th class="px-4 py-3 font-semibold"
@@ -605,9 +597,7 @@
                         </p>
 
                         <section>
-                            <h3
-                                class="text-2xl! leading-tight! font-semibold! text-slate-900"
-                            >
+                            <h3 class={subsectionHeadingClass}>
                                 Epicu eelanalüüs ja tööplaan
                             </h3>
                             <ul class="mt-4 space-y-3">
@@ -657,9 +647,7 @@
                         </section>
 
                         <section>
-                            <h3
-                                class="text-2xl! leading-tight! font-semibold! text-slate-900"
-                            >
+                            <h3 class={subsectionHeadingClass}>
                                 Epicu kinnitamine ja arendusvoog
                             </h3>
                             <ul class="mt-4 space-y-3">
@@ -698,7 +686,7 @@
                         onclick={scrollToSection}
                         class="flex cursor-pointer list-none items-center justify-between gap-6 py-7 marker:hidden"
                     >
-                        <h2 class="text-4xl! leading-tight! font-semibold!">
+                        <h2 class={sectionHeadingClass}>
                             5. Scrum: töölaud ja sprindi rütm
                         </h2>
                         <ChevronDown
@@ -708,9 +696,7 @@
                     </summary>
                     <div class="space-y-8 pb-10 leading-7 text-slate-700">
                         <section>
-                            <h3
-                                class="text-2xl! leading-tight! font-semibold! text-slate-900"
-                            >
+                            <h3 class={subsectionHeadingClass}>
                                 Töövaated ja juhendid
                             </h3>
                             <ul class="mt-4 space-y-3">
@@ -762,17 +748,15 @@
                         </section>
 
                         <section>
-                            <h3
-                                class="text-2xl! leading-tight! font-semibold! text-slate-900"
-                            >
+                            <h3 class={subsectionHeadingClass}>
                                 Kohtumiste rütm
                             </h3>
-                            <div class="mt-4 overflow-x-auto">
+                            <div class="mt-4 {tableScrollClass}">
                                 <table
                                     class="w-full min-w-180 text-left text-sm"
                                 >
                                     <thead
-                                        class="border-y border-slate-200 bg-slate-50"
+                                        class="border-b border-slate-200 bg-slate-50"
                                     >
                                         <tr>
                                             <th class="px-4 py-3 font-semibold"
@@ -808,9 +792,7 @@
                         </section>
 
                         <section>
-                            <h3
-                                class="text-2xl! leading-tight! font-semibold! text-slate-900"
-                            >
+                            <h3 class={subsectionHeadingClass}>
                                 Sprindi alustamine ja lõpetamine
                             </h3>
                             <ul class="mt-4 space-y-3">
@@ -853,7 +835,7 @@
                         onclick={scrollToSection}
                         class="flex cursor-pointer list-none items-center justify-between gap-6 py-7 marker:hidden"
                     >
-                        <h2 class="text-4xl! leading-tight! font-semibold!">
+                        <h2 class={sectionHeadingClass}>
                             6. Igapäevased kokkulepped
                         </h2>
                         <ChevronDown
@@ -863,17 +845,13 @@
                     </summary>
                     <div class="space-y-8 pb-10 leading-7 text-slate-700">
                         <section>
-                            <h3
-                                class="text-2xl! leading-tight! font-semibold! text-slate-900"
-                            >
-                                Vastutus
-                            </h3>
-                            <div class="mt-4 overflow-x-auto">
+                            <h3 class={subsectionHeadingClass}>Vastutus</h3>
+                            <div class="mt-4 {tableScrollClass}">
                                 <table
                                     class="w-full min-w-150 text-left text-sm"
                                 >
                                     <thead
-                                        class="border-y border-slate-200 bg-slate-50"
+                                        class="border-b border-slate-200 bg-slate-50"
                                     >
                                         <tr>
                                             <th class="px-4 py-3 font-semibold"
@@ -902,9 +880,7 @@
                         </section>
 
                         <section>
-                            <h3
-                                class="text-2xl! leading-tight! font-semibold! text-slate-900"
-                            >
+                            <h3 class={subsectionHeadingClass}>
                                 Töö tegemine ja ajalogimine
                             </h3>
                             <ul class="mt-4 space-y-3">

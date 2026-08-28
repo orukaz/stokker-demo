@@ -32,3 +32,16 @@ test('it work organization page includes the Epic work template', function () {
         'kirjeldus** (N MD)',
     );
 });
+
+test('it work organization page uses responsive headings and scrollable content', function () {
+    $pageSource = file_get_contents(
+        resource_path('js/pages/docs/ItWorkOrganization.svelte'),
+    );
+
+    expect($pageSource)->toContain(
+        "'text-3xl! leading-tight! font-semibold! sm:text-4xl!'",
+        "'pt-2 text-2xl! leading-tight! font-semibold! text-slate-900'",
+        "'overflow-x-auto overscroll-x-contain rounded-lg border border-slate-200'",
+        'snap-x scroll-px-2',
+    );
+});
