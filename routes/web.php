@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => to_route('products.index'))->name('home');
 Route::inertia('/welcome', 'Welcome')->name('welcome');
+Route::inertia('/it-tiimi-uus-tookorraldus', 'docs/ItWorkOrganization')
+    ->name('docs.it_work_organization');
 Route::get('/source-code/{sourceSet}', [SourceCodeController::class, 'show'])
     ->middleware('cache.headers:public;max_age=3600;etag')
     ->name('source_code.show');

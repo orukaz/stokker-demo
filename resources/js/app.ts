@@ -15,6 +15,8 @@ createInertiaApp({
                 return null;
             case name.startsWith('demos/'):
                 return null;
+            case name.startsWith('docs/'):
+                return null;
             case name.startsWith('products/'):
                 return null;
             case name.startsWith('auth/'):
