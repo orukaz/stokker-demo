@@ -59,3 +59,41 @@ test('it work organization page groups time logging guidance by topic', function
         '1 SP = 1 MD = 5 h',
     );
 });
+
+test('it work organization page uses Jira style issue badges', function () {
+    $pageSource = file_get_contents(
+        resource_path('js/pages/docs/ItWorkOrganization.svelte'),
+    );
+    $badgeSource = file_get_contents(
+        resource_path('js/components/JiraIssueBadge.svelte'),
+    );
+
+    expect($pageSource)
+        ->toContain('JiraIssueBadge', 'status.types as type')
+        ->and($badgeSource)
+        ->toContain(
+            'lucide-svelte/icons/square-check',
+            'lucide-svelte/icons/bookmark',
+            'lucide-svelte/icons/bug',
+            'lucide-svelte/icons/zap',
+            'border-blue-200 bg-blue-50',
+            'border-green-200 bg-green-50',
+            'border-red-200 bg-red-50',
+            'border-violet-200 bg-violet-50',
+        );
+});
+
+test('it work organization guidance uses scan friendly labels', function () {
+    $pageSource = file_get_contents(
+        resource_path('js/pages/docs/ItWorkOrganization.svelte'),
+    );
+
+    expect($pageSource)->toContain(
+        '<strong>Fookus:</strong>',
+        '<strong>Sprinti valmis töö:</strong>',
+        '<strong>Mida tuuakse:</strong>',
+        '<strong>Eelanalüüsi Task:</strong>',
+        '<strong>Pärast kinnitamist:</strong>',
+        '<strong>Pärimine:</strong>',
+    );
+});

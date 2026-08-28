@@ -2,6 +2,7 @@
     import ChevronDown from 'lucide-svelte/icons/chevron-down';
     import ExternalLink from 'lucide-svelte/icons/external-link';
     import AppHead from '@/components/AppHead.svelte';
+    import JiraIssueBadge from '@/components/JiraIssueBadge.svelte';
     import MermaidDiagram from '@/components/MermaidDiagram.svelte';
     import SiteLayout from '@/layouts/SiteLayout.svelte';
     import itTeamHeaderImage from '../../../images/it-team-header.png';
@@ -35,40 +36,50 @@
         R1 --> R2`;
 
     const issueTypes = [
-        [
-            'Epic',
-            'Suurem teema või projekt, mis koosneb seotud arendustöödest.',
-        ],
-        [
-            'Story / Lugu',
-            'Arendustöö, millega luuakse uus funktsionaalsus või parendus.',
-        ],
-        [
-            'Bug / Viga',
-            'Arendustöö, millega parandatakse olemasoleva lahenduse viga.',
-        ],
-        [
-            'Task / Ülesanne',
-            'Analüüsi-, seadistus-, tehniline või muu sisemine töö.',
-        ],
-        [
-            'Sub-task / Alamülesanne',
-            'Story, Taski või Bugi väiksem teostussamm.',
-        ],
-    ];
+        {
+            type: 'epic',
+            description:
+                'Suurem teema või projekt, mis koosneb seotud arendustöödest.',
+        },
+        {
+            type: 'story',
+            description:
+                'Arendustöö, millega luuakse uus funktsionaalsus või parendus.',
+        },
+        {
+            type: 'bug',
+            description:
+                'Arendustöö, millega parandatakse olemasoleva lahenduse viga.',
+        },
+        {
+            type: 'task',
+            description:
+                'Analüüsi-, seadistus-, tehniline või muu sisemine töö.',
+        },
+        {
+            type: 'subtask',
+            description: 'Loo, ülesande või vea väiksem teostussamm.',
+        },
+    ] as const;
 
     const statuses = [
-        [
-            'Epic',
-            'Vaja teha → In Analysis → Waiting for Approval → Approved → Lahendamisel → Ready for Release → Tehtud',
-        ],
-        [
-            'Story / Lugu ja Bug / Viga',
-            'Vaja teha → Lahendamisel → In Review → Testing → Ready for Release → Tehtud',
-        ],
-        ['Task / Ülesanne', 'Vaja teha → Lahendamisel → In Review → Tehtud'],
-        ['Sub-task / Alamülesanne', 'Vaja teha → Lahendamisel → Tehtud'],
-    ];
+        {
+            types: ['epic'],
+            flow: 'Vaja teha → In Analysis → Waiting for Approval → Approved → Lahendamisel → Ready for Release → Tehtud',
+        },
+        {
+            types: ['story', 'bug'],
+            flow: 'Vaja teha → Lahendamisel → In Review → Testing → Ready for Release → Tehtud',
+        },
+        {
+            types: ['task'],
+            flow: 'Vaja teha → Lahendamisel → In Review → Tehtud',
+        },
+        {
+            types: ['subtask'],
+            flow: 'Vaja teha → Lahendamisel → Tehtud',
+        },
+    ] as const;
 
     const portfolioCategories = [
         [
@@ -267,19 +278,20 @@
                         <p>Uus töökorraldus aitab:</p>
                         <ul class="space-y-2">
                             <li class={bulletClass}>
-                                suunata tiimi võimekuse kõige olulisematele
-                                töödele;
+                                <strong>Fookus:</strong> suunata tiimi võimekus kõige
+                                olulisematele töödele;
                             </li>
                             <li class={bulletClass}>
-                                vähendada korraga pooleliolevate tööde hulka;
+                                <strong>Vähem pooleliolevat:</strong> vähendada korraga
+                                pooleliolevate tööde hulka;
                             </li>
                             <li class={bulletClass}>
-                                muuta prioriteedid, vastutus ja tööde seis
-                                arusaadavaks;
+                                <strong>Selgus:</strong> muuta prioriteedid, vastutus
+                                ja tööde seis arusaadavaks;
                             </li>
                             <li class={bulletClass}>
-                                tuua takistused, sõltuvused ja riskid varem
-                                nähtavale.
+                                <strong>Riskid nähtavaks:</strong> tuua takistused,
+                                sõltuvused ja riskid varem nähtavale.
                             </li>
                         </ul>
 
@@ -298,14 +310,16 @@
                                     tekkimisel.
                                 </li>
                                 <li class={bulletClass}>
-                                    Mõlemas hoitakse tööde seis, prioriteedid,
-                                    vastutajad ja takistused nähtavana.
+                                    <strong>Ühine põhimõte:</strong> mõlemas hoitakse
+                                    tööde seis, prioriteedid, vastutajad ja takistused
+                                    nähtavana.
                                 </li>
                             </ul>
                         </section>
 
                         <p>
-                            Vajadus esitatakse üldjuhul
+                            <strong>Vajaduse esitamine:</strong> vajadus
+                            esitatakse üldjuhul
                             <a
                                 href="https://stokker365.sharepoint.com/sites/IRONMANEE2/SitePages/ITHelpdeskHome.aspx"
                                 target="_blank"
@@ -333,10 +347,12 @@
                             definition={developmentProcessDiagram}
                             label="Arendusprotsessi kümme sammu"
                         />
-                        <p>
-                            Sprinti võetakse töö, mille soovitud tulemus,
-                            Acceptance Criteria, sõltuvused, töömaht, vastutus
-                            ja vajalik kinnitus on piisavalt selged.
+                        <p
+                            class="rounded-xl border border-slate-200 bg-slate-50 p-5"
+                        >
+                            <strong>Sprinti valmis töö:</strong> soovitud tulemus,
+                            Acceptance Criteria, sõltuvused, töömaht, vastutus ja
+                            vajalik kinnitus on piisavalt selged.
                         </p>
                     </div>
                 </details>
@@ -413,16 +429,16 @@
                             </h3>
                             <ul class="mt-4 space-y-3">
                                 <li class={bulletClass}>
-                                    DEV space'i tuuakse korrastatud tööd,
-                                    millega jätkatakse.
+                                    <strong>Mida tuuakse:</strong> DEV space'i tuuakse
+                                    korrastatud tööd, millega jätkatakse.
                                 </li>
                                 <li class={bulletClass}>
-                                    Töid tuuakse üle jooksvalt ning eraldi
-                                    üleviimise tähtaega ei ole.
+                                    <strong>Millal:</strong> töid tuuakse üle jooksvalt
+                                    ning eraldi üleviimise tähtaega ei ole.
                                 </li>
                                 <li class={bulletClass}>
-                                    Üleviimisel säilitatakse töö hierarhia,
-                                    staatus, lingid ja ajalugu.
+                                    <strong>Mis säilib:</strong> töö hierarhia, staatus,
+                                    lingid ja ajalugu.
                                 </li>
                             </ul>
                         </section>
@@ -446,14 +462,15 @@
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-slate-200">
-                                        {#each issueTypes as issue (issue[0])}
+                                        {#each issueTypes as issue (issue.type)}
                                             <tr>
-                                                <td
-                                                    class="px-4 py-3 font-semibold text-slate-900"
-                                                    >{issue[0]}</td
-                                                >
+                                                <td class="px-4 py-3">
+                                                    <JiraIssueBadge
+                                                        type={issue.type}
+                                                    />
+                                                </td>
                                                 <td class="px-4 py-3"
-                                                    >{issue[1]}</td
+                                                    >{issue.description}</td
                                                 >
                                             </tr>
                                         {/each}
@@ -468,18 +485,17 @@
                             </h3>
                             <ul class="mt-4 space-y-3">
                                 <li class={bulletClass}>
-                                    Sub-taski otsene parent on Story, Task või
-                                    Bug, mitte Epic.
+                                    <strong>Parent:</strong> Sub-taski otsene parent
+                                    on Story, Task või Bug, mitte Epic.
                                 </li>
                                 <li class={bulletClass}>
-                                    Sub-taski ei lisata eraldi sprinti; see
-                                    järgib oma põhitöö sprinti ja peab valmima
-                                    koos põhitööga.
+                                    <strong>Sprint:</strong> Sub-taski ei lisata eraldi
+                                    sprinti; see järgib oma põhitöö sprinti ja peab
+                                    valmima koos põhitööga.
                                 </li>
                                 <li class={bulletClass}>
-                                    Kui töö on iseseisev või vajab eraldi
-                                    sprinti, luuakse see Story, Taski või
-                                    Bugina.
+                                    <strong>Iseseisev töö:</strong> kui töö vajab
+                                    eraldi sprinti, luuakse see Story, Taski või Bugina.
                                 </li>
                             </ul>
                         </section>
@@ -505,14 +521,21 @@
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-slate-200">
-                                        {#each statuses as status (status[0])}
+                                        {#each statuses as status (status.flow)}
                                             <tr>
-                                                <td
-                                                    class="px-4 py-3 font-semibold text-slate-900"
-                                                    >{status[0]}</td
-                                                >
+                                                <td class="px-4 py-3">
+                                                    <div
+                                                        class="flex flex-wrap gap-2"
+                                                    >
+                                                        {#each status.types as type (type)}
+                                                            <JiraIssueBadge
+                                                                {type}
+                                                            />
+                                                        {/each}
+                                                    </div>
+                                                </td>
                                                 <td class="px-4 py-3"
-                                                    >{status[1]}</td
+                                                    >{status.flow}</td
                                                 >
                                             </tr>
                                         {/each}
@@ -602,20 +625,19 @@
                             </h3>
                             <ul class="mt-4 space-y-3">
                                 <li class={bulletClass}>
-                                    Kinnitamist vajavat Epicut ennast ei lisata
-                                    eelanalüüsi tegemiseks sprinti.
+                                    <strong>Epic:</strong> kinnitamist vajavat Epicut
+                                    ennast eelanalüüsi tegemiseks sprinti ei lisata.
                                 </li>
                                 <li class={bulletClass}>
-                                    Eelanalüüsiks luuakse Epicu alla Task, mis
-                                    planeeritakse sprinti. Selle käigus
-                                    täpsustatakse Epicu eesmärk, skoop,
-                                    sõltuvused, riskid ja võimalikud
+                                    <strong>Eelanalüüsi Task:</strong> luuakse Epicu
+                                    alla ja planeeritakse sprinti. Selle käigus täpsustatakse
+                                    Epicu eesmärk, skoop, sõltuvused, riskid ja võimalikud
                                     arendustööd.
                                 </li>
                                 <li class={bulletClass}>
-                                    Võimalikud arendustööd lisatakse Epicu
-                                    kirjelduse lõppu jaotisesse järgmise malli
-                                    järgi:
+                                    <strong>Tööplaan:</strong> võimalikud
+                                    arendustööd lisatakse Epicu kirjelduse lõppu
+                                    järgmise malli järgi:
                                     <div
                                         class="mt-3 overflow-x-auto rounded-lg border border-slate-200 bg-slate-50 p-4 font-mono text-sm leading-6"
                                     >
@@ -631,17 +653,16 @@
                                     </div>
                                 </li>
                                 <li class={bulletClass}>
-                                    Loend on esialgne tööplaan, mitte Jira
-                                    backlog. Epicu eelanalüüsi Task on erand;
-                                    teisi töid enne vajaliku kinnituse saamist
-                                    ei looda.
+                                    <strong>Enne kinnitamist:</strong> loend on esialgne
+                                    tööplaan, mitte Jira backlog. Epicu eelanalüüsi
+                                    Task on erand; teisi töid veel ei looda.
                                 </li>
                                 <li class={bulletClass}>
-                                    Jira tööd luuakse pärast IT-komitee
-                                    ülevaatust ja Epicule vajaliku kinnituse
-                                    saamist. Seejärel täpsustatakse need
-                                    Refinementis ning planeeritakse backlogi või
-                                    sprinti.
+                                    <strong>Pärast kinnitamist:</strong> Jira tööd
+                                    luuakse pärast IT-komitee ülevaatust ja Epicule
+                                    vajaliku kinnituse saamist. Seejärel täpsustatakse
+                                    need Refinementis ning planeeritakse backlogi
+                                    või sprinti.
                                 </li>
                             </ul>
                         </section>
@@ -662,19 +683,19 @@
                                     valmimisaeg.
                                 </li>
                                 <li class={bulletClass}>
-                                    Kinnitamata IT Improvement või IT Project
-                                    algatust sprinti ei võeta.
+                                    <strong>Sprint:</strong> kinnitamata IT Improvement
+                                    või IT Project algatust sprinti ei võeta.
                                 </li>
                                 <li class={bulletClass}>
-                                    Tagasi lükatud Epic liigub olekusse
-                                    Cancelled ja selle Jira Resolution on Won't
-                                    do.
+                                    <strong>Tagasilükkamine:</strong> Epic liigub
+                                    olekusse Cancelled ja selle Jira Resolution on
+                                    Won't do.
                                 </li>
                                 <li class={bulletClass}>
-                                    Epicu kategooria pärivad selle Storyd,
-                                    Taskid ja Bugid; Sub-task pärib kategooria
-                                    põhitöölt. Grouping'u alla kuuluvad tööd
-                                    liigitatakse eraldi.
+                                    <strong>Pärimine:</strong> Epicu kategooria pärivad
+                                    selle Storyd, Taskid ja Bugid; Sub-task pärib
+                                    kategooria põhitöölt. Grouping'u alla kuuluvad
+                                    tööd liigitatakse eraldi.
                                 </li>
                             </ul>
                         </section>
