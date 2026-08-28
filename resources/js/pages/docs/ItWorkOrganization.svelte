@@ -160,7 +160,9 @@
 
 <SiteLayout>
     <main class="bg-white text-slate-900">
-        <article class="mx-auto max-w-5xl px-5 py-12 lg:px-8 lg:py-16">
+        <article
+            class="mx-auto max-w-5xl px-5 pt-12 pb-32 lg:px-8 lg:pt-16 lg:pb-32"
+        >
             <header class="border-b border-slate-200 pb-10">
                 <img
                     src={itTeamHeaderImage}
@@ -210,17 +212,15 @@
 
             <nav
                 aria-label="Lehe sisukord"
-                class="border-b border-slate-200 py-6"
+                class="fixed inset-x-4 bottom-4 z-50 mx-auto max-w-5xl rounded-2xl border border-slate-200 bg-white/95 p-2 shadow-lg shadow-slate-900/10 backdrop-blur"
             >
-                <ol
-                    class="grid overflow-hidden rounded-lg border border-slate-200 bg-slate-200 sm:grid-cols-2 lg:grid-cols-3"
-                >
+                <ol class="flex gap-1 overflow-x-auto sm:grid sm:grid-cols-3">
                     {#each tableOfContents as item (item.href)}
-                        <li class="bg-white">
+                        <li class="min-w-max flex-1 sm:min-w-0">
                             <a
                                 href={item.href}
                                 onclick={() => openSection(item.href)}
-                                class="flex h-full items-center gap-3 px-4 py-3.5 text-sm transition-colors hover:bg-slate-50 hover:text-stokker-primary"
+                                class="flex items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-sm whitespace-nowrap transition-colors hover:bg-slate-100 hover:text-stokker-primary"
                             >
                                 <span class="font-semibold text-stokker-primary"
                                     >{item.number.padStart(2, '0')}</span
@@ -267,7 +267,7 @@
 
                         <section>
                             <h3
-                                class="text-2xl! leading-tight! font-semibold! text-slate-900 sm:text-3xl!"
+                                class="text-2xl! leading-tight! font-semibold! text-slate-900"
                             >
                                 Scrum ja Kanban
                             </h3>
@@ -341,7 +341,7 @@
                     <div class="space-y-8 pb-10 leading-7 text-slate-700">
                         <section>
                             <h3
-                                class="text-2xl! leading-tight! font-semibold! text-slate-900 sm:text-3xl!"
+                                class="text-2xl! leading-tight! font-semibold! text-slate-900"
                             >
                                 DEV space ja backlog
                             </h3>
@@ -395,7 +395,7 @@
 
                         <section>
                             <h3
-                                class="text-2xl! leading-tight! font-semibold! text-slate-900 sm:text-3xl!"
+                                class="text-2xl! leading-tight! font-semibold! text-slate-900"
                             >
                                 Tööde ületoomine teistest space'idest
                             </h3>
@@ -417,7 +417,7 @@
 
                         <section>
                             <h3
-                                class="text-2xl! leading-tight! font-semibold! text-slate-900 sm:text-3xl!"
+                                class="text-2xl! leading-tight! font-semibold! text-slate-900"
                             >
                                 Tööde tüübid
                             </h3>
@@ -456,7 +456,7 @@
 
                         <section>
                             <h3
-                                class="text-2xl! leading-tight! font-semibold! text-slate-900 sm:text-3xl!"
+                                class="text-2xl! leading-tight! font-semibold! text-slate-900"
                             >
                                 Sub-taski eripära
                             </h3>
@@ -480,7 +480,7 @@
 
                         <section>
                             <h3
-                                class="text-2xl! leading-tight! font-semibold! text-slate-900 sm:text-3xl!"
+                                class="text-2xl! leading-tight! font-semibold! text-slate-900"
                             >
                                 Tööde staatused
                             </h3>
@@ -593,7 +593,7 @@
 
                         <section>
                             <h3
-                                class="text-2xl! leading-tight! font-semibold! text-slate-900 sm:text-3xl!"
+                                class="text-2xl! leading-tight! font-semibold! text-slate-900"
                             >
                                 Epicu eelanalüüs ja tööplaan
                             </h3>
@@ -636,7 +636,7 @@
 
                         <section>
                             <h3
-                                class="text-2xl! leading-tight! font-semibold! text-slate-900 sm:text-3xl!"
+                                class="text-2xl! leading-tight! font-semibold! text-slate-900"
                             >
                                 Epicu kinnitamine ja arendusvoog
                             </h3>
@@ -686,7 +686,7 @@
                     <div class="space-y-8 pb-10 leading-7 text-slate-700">
                         <section>
                             <h3
-                                class="text-2xl! leading-tight! font-semibold! text-slate-900 sm:text-3xl!"
+                                class="text-2xl! leading-tight! font-semibold! text-slate-900"
                             >
                                 Töövaated ja juhendid
                             </h3>
@@ -740,7 +740,7 @@
 
                         <section>
                             <h3
-                                class="text-2xl! leading-tight! font-semibold! text-slate-900 sm:text-3xl!"
+                                class="text-2xl! leading-tight! font-semibold! text-slate-900"
                             >
                                 Kohtumiste rütm
                             </h3>
@@ -786,7 +786,7 @@
 
                         <section>
                             <h3
-                                class="text-2xl! leading-tight! font-semibold! text-slate-900 sm:text-3xl!"
+                                class="text-2xl! leading-tight! font-semibold! text-slate-900"
                             >
                                 Sprindi alustamine ja lõpetamine
                             </h3>
@@ -840,7 +840,7 @@
                     <div class="space-y-8 pb-10 leading-7 text-slate-700">
                         <section>
                             <h3
-                                class="text-2xl! leading-tight! font-semibold! text-slate-900 sm:text-3xl!"
+                                class="text-2xl! leading-tight! font-semibold! text-slate-900"
                             >
                                 Vastutus
                             </h3>
@@ -879,7 +879,7 @@
 
                         <section>
                             <h3
-                                class="text-2xl! leading-tight! font-semibold! text-slate-900 sm:text-3xl!"
+                                class="text-2xl! leading-tight! font-semibold! text-slate-900"
                             >
                                 Töö tegemine ja ajalogimine
                             </h3>
