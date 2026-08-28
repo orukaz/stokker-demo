@@ -3,6 +3,8 @@
     import ExternalLink from 'lucide-svelte/icons/external-link';
     import AppHead from '@/components/AppHead.svelte';
     import JiraIssueBadge from '@/components/JiraIssueBadge.svelte';
+    import JiraStatusBadge from '@/components/JiraStatusBadge.svelte';
+    import JiraStatusFlow from '@/components/JiraStatusFlow.svelte';
     import MermaidDiagram from '@/components/MermaidDiagram.svelte';
     import SiteLayout from '@/layouts/SiteLayout.svelte';
     import itTeamHeaderImage from '../../../images/it-team-header.png';
@@ -62,22 +64,42 @@
         },
     ] as const;
 
+    const epicApprovalFlow = [
+        'In Analysis',
+        'Waiting for Approval',
+        'Approved',
+        'Lahendamisel',
+        'Ready for Release',
+        'Tehtud',
+    ] as const;
+
     const statuses = [
         {
+            key: 'epic',
             types: ['epic'],
-            flow: 'Vaja teha → In Analysis → Waiting for Approval → Approved → Lahendamisel → Ready for Release → Tehtud',
+            flow: ['Vaja teha', ...epicApprovalFlow],
         },
         {
+            key: 'story-bug',
             types: ['story', 'bug'],
-            flow: 'Vaja teha → Lahendamisel → In Review → Testing → Ready for Release → Tehtud',
+            flow: [
+                'Vaja teha',
+                'Lahendamisel',
+                'In Review',
+                'Testing',
+                'Ready for Release',
+                'Tehtud',
+            ],
         },
         {
+            key: 'task',
             types: ['task'],
-            flow: 'Vaja teha → Lahendamisel → In Review → Tehtud',
+            flow: ['Vaja teha', 'Lahendamisel', 'In Review', 'Tehtud'],
         },
         {
+            key: 'subtask',
             types: ['subtask'],
-            flow: 'Vaja teha → Lahendamisel → Tehtud',
+            flow: ['Vaja teha', 'Lahendamisel', 'Tehtud'],
         },
     ] as const;
 
@@ -521,7 +543,7 @@
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-slate-200">
-                                        {#each statuses as status (status.flow)}
+                                        {#each statuses as status (status.key)}
                                             <tr>
                                                 <td class="px-4 py-3">
                                                     <div
@@ -534,24 +556,31 @@
                                                         {/each}
                                                     </div>
                                                 </td>
-                                                <td class="px-4 py-3"
-                                                    >{status.flow}</td
-                                                >
+                                                <td class="px-4 py-3">
+                                                    <JiraStatusFlow
+                                                        statuses={status.flow}
+                                                    />
+                                                </td>
                                             </tr>
                                         {/each}
                                     </tbody>
                                 </table>
                             </div>
                             <ul class="mt-4 space-y-3">
-                                <li class={bulletClass}>
-                                    <strong>On Hold:</strong> töö on ajutiselt peatatud;
-                                    juurde märgitakse põhjus ja järgmine tegevus.
-                                    Töö ei ole valmis.
+                                <li class="flex items-start gap-2.5">
+                                    <JiraStatusBadge status="On Hold" />
+                                    <span>
+                                        Töö on ajutiselt peatatud; juurde
+                                        märgitakse põhjus ja järgmine tegevus.
+                                        Töö ei ole valmis.
+                                    </span>
                                 </li>
-                                <li class={bulletClass}>
-                                    <strong>Cancelled:</strong> tööga ei jätkata;
-                                    juurde märgitakse tühistamise põhjus. Töö ei ole
-                                    valmis.
+                                <li class="flex items-start gap-2.5">
+                                    <JiraStatusBadge status="Cancelled" />
+                                    <span>
+                                        Tööga ei jätkata; juurde märgitakse
+                                        tühistamise põhjus. Töö ei ole valmis.
+                                    </span>
                                 </li>
                             </ul>
                         </section>
@@ -673,9 +702,11 @@
                             </h3>
                             <ul class="mt-4 space-y-3">
                                 <li class={bulletClass}>
-                                    <strong>Voog:</strong> In Analysis → Waiting for
-                                    Approval → Approved → Lahendamisel → Ready for
-                                    Release → Tehtud.
+                                    <strong>Voog:</strong>
+                                    <JiraStatusFlow
+                                        statuses={epicApprovalFlow}
+                                        class="mt-2"
+                                    />
                                 </li>
                                 <li class={bulletClass}>
                                     <strong>Otsustamiseks vajalik:</strong> eesmärk,

@@ -83,6 +83,38 @@ test('it work organization page uses Jira style issue badges', function () {
         );
 });
 
+test('it work organization page uses subtle status badges', function () {
+    $pageSource = file_get_contents(
+        resource_path('js/pages/docs/ItWorkOrganization.svelte'),
+    );
+    $badgeSource = file_get_contents(
+        resource_path('js/components/JiraStatusBadge.svelte'),
+    );
+    $flowSource = file_get_contents(
+        resource_path('js/components/JiraStatusFlow.svelte'),
+    );
+
+    expect($pageSource)
+        ->toContain(
+            'JiraStatusFlow',
+            'statuses={status.flow}',
+            'JiraStatusBadge status="On Hold"',
+            'JiraStatusBadge status="Cancelled"',
+        )
+        ->and($badgeSource)
+        ->toContain(
+            'border-blue-200/70 bg-blue-50/70',
+            'border-green-200/70 bg-green-50/70',
+            'border-slate-200 bg-slate-50',
+        )
+        ->and($flowSource)
+        ->toContain(
+            'flex flex-wrap items-center',
+            'inline-flex items-center',
+            'aria-hidden="true">→',
+        );
+});
+
 test('it work organization guidance uses scan friendly labels', function () {
     $pageSource = file_get_contents(
         resource_path('js/pages/docs/ItWorkOrganization.svelte'),
