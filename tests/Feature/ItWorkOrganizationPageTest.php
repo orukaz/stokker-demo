@@ -10,10 +10,13 @@ test('it work organization overview page is publicly available', function () {
         );
 });
 
-test('it work organization sections start collapsed', function () {
+test('it work organization sections start collapsed and scroll when toggled', function () {
     $pageSource = file_get_contents(
         resource_path('js/pages/docs/ItWorkOrganization.svelte'),
     );
 
-    expect($pageSource)->not->toMatch('/<details\b[^>]*\bopen\b[^>]*>/');
+    expect($pageSource)
+        ->not->toMatch('/<details\b[^>]*\bopen\b[^>]*>/')
+        ->and(substr_count($pageSource, 'onclick={scrollToSection}'))
+        ->toBe(6);
 });

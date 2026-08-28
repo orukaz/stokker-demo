@@ -149,6 +149,15 @@
             section.open = true;
         }
     };
+
+    const scrollToSection = (event: MouseEvent): void => {
+        const summary = event.currentTarget as HTMLElement;
+        const section = summary.closest('details');
+
+        requestAnimationFrame(() => {
+            section?.scrollIntoView({ block: 'start' });
+        });
+    };
 </script>
 
 <AppHead title="IT-tiimi uus töökorraldus">
@@ -235,6 +244,7 @@
             <div class="divide-y divide-slate-200">
                 <details id="miks" class="group scroll-mt-6">
                     <summary
+                        onclick={scrollToSection}
                         class="flex cursor-pointer list-none items-center justify-between gap-6 py-7 marker:hidden"
                     >
                         <h2 class="text-4xl! leading-tight! font-semibold!">
@@ -303,6 +313,7 @@
 
                 <details id="arendusprotsess" class="group scroll-mt-6">
                     <summary
+                        onclick={scrollToSection}
                         class="flex cursor-pointer list-none items-center justify-between gap-6 py-7 marker:hidden"
                     >
                         <h2 class="text-4xl! leading-tight! font-semibold!">
@@ -328,6 +339,7 @@
 
                 <details id="jira" class="group scroll-mt-6">
                     <summary
+                        onclick={scrollToSection}
                         class="flex cursor-pointer list-none items-center justify-between gap-6 py-7 marker:hidden"
                     >
                         <h2 class="text-4xl! leading-tight! font-semibold!">
@@ -533,6 +545,7 @@
 
                 <details id="portfolio" class="group scroll-mt-6">
                     <summary
+                        onclick={scrollToSection}
                         class="flex cursor-pointer list-none items-center justify-between gap-6 py-7 marker:hidden"
                     >
                         <h2 class="text-4xl! leading-tight! font-semibold!">
@@ -673,6 +686,7 @@
 
                 <details id="scrum" class="group scroll-mt-6">
                     <summary
+                        onclick={scrollToSection}
                         class="flex cursor-pointer list-none items-center justify-between gap-6 py-7 marker:hidden"
                     >
                         <h2 class="text-4xl! leading-tight! font-semibold!">
@@ -827,6 +841,7 @@
 
                 <details id="kokkulepped" class="group scroll-mt-6">
                     <summary
+                        onclick={scrollToSection}
                         class="flex cursor-pointer list-none items-center justify-between gap-6 py-7 marker:hidden"
                     >
                         <h2 class="text-4xl! leading-tight! font-semibold!">
