@@ -233,11 +233,11 @@
             </nav>
 
             <div class="divide-y divide-slate-200">
-                <details id="miks" class="group scroll-mt-6" open>
+                <details id="miks" class="group scroll-mt-6">
                     <summary
                         class="flex cursor-pointer list-none items-center justify-between gap-6 py-7 marker:hidden"
                     >
-                        <h2 class="text-2xl font-semibold">
+                        <h2 class="text-4xl! leading-tight! font-semibold!">
                             1. Miks ja kuidas töötame?
                         </h2>
                         <ChevronDown
@@ -301,11 +301,11 @@
                     </div>
                 </details>
 
-                <details id="arendusprotsess" class="group scroll-mt-6" open>
+                <details id="arendusprotsess" class="group scroll-mt-6">
                     <summary
                         class="flex cursor-pointer list-none items-center justify-between gap-6 py-7 marker:hidden"
                     >
-                        <h2 class="text-2xl font-semibold">
+                        <h2 class="text-4xl! leading-tight! font-semibold!">
                             2. Arendusprotsess
                         </h2>
                         <ChevronDown
@@ -330,7 +330,7 @@
                     <summary
                         class="flex cursor-pointer list-none items-center justify-between gap-6 py-7 marker:hidden"
                     >
-                        <h2 class="text-2xl font-semibold">
+                        <h2 class="text-4xl! leading-tight! font-semibold!">
                             3. Töö korraldamine Jiras
                         </h2>
                         <ChevronDown
@@ -535,7 +535,7 @@
                     <summary
                         class="flex cursor-pointer list-none items-center justify-between gap-6 py-7 marker:hidden"
                     >
-                        <h2 class="text-2xl font-semibold">
+                        <h2 class="text-4xl! leading-tight! font-semibold!">
                             4. IT Portfolio Category ja Epicu protsess
                         </h2>
                         <ChevronDown
@@ -675,7 +675,7 @@
                     <summary
                         class="flex cursor-pointer list-none items-center justify-between gap-6 py-7 marker:hidden"
                     >
-                        <h2 class="text-2xl font-semibold">
+                        <h2 class="text-4xl! leading-tight! font-semibold!">
                             5. Scrum: töölaud ja sprindi rütm
                         </h2>
                         <ChevronDown
@@ -829,7 +829,7 @@
                     <summary
                         class="flex cursor-pointer list-none items-center justify-between gap-6 py-7 marker:hidden"
                     >
-                        <h2 class="text-2xl font-semibold">
+                        <h2 class="text-4xl! leading-tight! font-semibold!">
                             6. Igapäevased kokkulepped
                         </h2>
                         <ChevronDown

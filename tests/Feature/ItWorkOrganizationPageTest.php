@@ -9,3 +9,11 @@ test('it work organization overview page is publicly available', function () {
             ->component('docs/ItWorkOrganization'),
         );
 });
+
+test('it work organization sections start collapsed', function () {
+    $pageSource = file_get_contents(
+        resource_path('js/pages/docs/ItWorkOrganization.svelte'),
+    );
+
+    expect($pageSource)->not->toMatch('/<details\b[^>]*\bopen\b[^>]*>/');
+});
