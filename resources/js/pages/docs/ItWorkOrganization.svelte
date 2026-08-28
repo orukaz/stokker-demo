@@ -624,12 +624,21 @@
                                 </li>
                                 <li class={bulletClass}>
                                     Võimalikud arendustööd lisatakse Epicu
-                                    kirjelduse lõppu jaotisesse
-                                    <code>## Võimalikud arendustööd</code> kujul
-                                    <code
-                                        >- **Töö tüüp - Component: Lühike
-                                        kirjeldus** (N MD)</code
-                                    >.
+                                    kirjelduse lõppu jaotisesse järgmise malli
+                                    järgi:
+                                    <div
+                                        class="mt-3 overflow-x-auto rounded-lg border border-slate-200 bg-slate-50 p-4 font-mono text-sm leading-6"
+                                    >
+                                        <code
+                                            class="block whitespace-nowrap text-slate-600"
+                                            >## Võimalikud arendustööd</code
+                                        >
+                                        <code
+                                            class="mt-2 block whitespace-nowrap text-slate-900"
+                                            >- **Töö tüüp - Component: Lühike
+                                            kirjeldus** (N MD)</code
+                                        >
+                                    </div>
                                 </li>
                                 <li class={bulletClass}>
                                     Loend on esialgne tööplaan, mitte Jira

@@ -20,3 +20,15 @@ test('it work organization sections start collapsed and scroll when toggled', fu
         ->and(substr_count($pageSource, 'onclick={scrollToSection}'))
         ->toBe(6);
 });
+
+test('it work organization page includes the Epic work template', function () {
+    $pageSource = file_get_contents(
+        resource_path('js/pages/docs/ItWorkOrganization.svelte'),
+    );
+
+    expect($pageSource)->toContain(
+        '## Võimalikud arendustööd',
+        '- **Töö tüüp - Component: Lühike',
+        'kirjeldus** (N MD)',
+    );
+});
