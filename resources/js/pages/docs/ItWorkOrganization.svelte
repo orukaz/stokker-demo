@@ -883,38 +883,55 @@
                             <h3 class={subsectionHeadingClass}>
                                 Töö tegemine ja ajalogimine
                             </h3>
-                            <ul class="mt-4 space-y-3">
-                                <li class={bulletClass}>
-                                    Takistuse korral märgitakse selle põhjus ja
-                                    järgmine tegevus. Jira tööga seotakse
-                                    vajalik branch, commit'id ja Pull Request.
-                                </li>
-                                <li class={bulletClass}>
-                                    Tegelik aeg logitakse teostustööle ligikaudu
-                                    täistundides, näiteks 1h, 2h või 5h;
-                                    minutitäpsust ei nõuta. Aja võib sisestada
-                                    kohe, päeva või nädala lõpus, kuid kuu
-                                    töölogid peavad olema korras kuu lõpuks.
-                                </li>
-                                <li class={bulletClass}>
-                                    Epicule teostustöödele logitud aega uuesti
-                                    ei lisata.
-                                </li>
-                                <li class={bulletClass}>
-                                    Hinnang sisestatakse väljale Story Points
-                                    0,5 MD sammuga: <strong
-                                        >0,5 SP = 0,5 MD = 2,5 h</strong
-                                    >
-                                    ja <strong>1 SP = 1 MD = 5 h</strong>.
-                                    Näiteks võib ühe tunni töö hinnang olla 0,5
-                                    MD, kuid tegelik töölogi 1h.
-                                </li>
-                                <li class={bulletClass}>
-                                    Hinnanguid ja tööloge kasutatakse sprintide
-                                    planeerimiseks, mitte arendaja
-                                    tulemuslikkuse mõõtmiseks.
-                                </li>
-                            </ul>
+                            <dl class="mt-5 grid gap-4 md:grid-cols-2">
+                                <div
+                                    class="rounded-xl border border-slate-200 bg-slate-50 p-5"
+                                >
+                                    <dt class="font-semibold text-slate-900">
+                                        Takistused ja seosed
+                                    </dt>
+                                    <dd class="mt-2">
+                                        Kui töö takerdub, märgi Jiras takistuse
+                                        põhjus ja järgmine tegevus. Seo töö
+                                        vastava branchi, commit'ide ja Pull
+                                        Requestiga.
+                                    </dd>
+                                </div>
+
+                                <div
+                                    class="rounded-xl border border-slate-200 bg-slate-50 p-5"
+                                >
+                                    <dt class="font-semibold text-slate-900">
+                                        Ajaloogimine
+                                    </dt>
+                                    <dd class="mt-2">
+                                        Logi tegelik teostusaeg ligikaudsete
+                                        täistundidena, näiteks 1 h, 2 h või 5 h.
+                                        Logida võib jooksvalt või hiljem, kuid
+                                        töölogid peavad olema kuu lõpuks korras.
+                                        Epicule sama aega uuesti ei logita.
+                                    </dd>
+                                </div>
+
+                                <div
+                                    class="rounded-xl border border-slate-200 bg-slate-50 p-5 md:col-span-2"
+                                >
+                                    <dt class="font-semibold text-slate-900">
+                                        Hindamine ja planeerimine
+                                    </dt>
+                                    <dd class="mt-2">
+                                        Story Pointsi hinnang sisestatakse 0,5
+                                        MD sammuga:
+                                        <strong>0,5 SP = 0,5 MD = 2,5 h</strong>
+                                        ja <strong>1 SP = 1 MD = 5 h</strong>.
+                                        Ühe tunni töö hinnang võib olla 0,5 MD,
+                                        tegelik töölogi aga 1 h. Hinnangud ja
+                                        töölogid aitavad sprinte planeerida;
+                                        neid ei kasutata arendaja tulemuslikkuse
+                                        mõõtmiseks.
+                                    </dd>
+                                </div>
+                            </dl>
                         </section>
                     </div>
                 </details>

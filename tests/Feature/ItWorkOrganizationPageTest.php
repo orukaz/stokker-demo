@@ -45,3 +45,17 @@ test('it work organization page uses responsive headings and scrollable content'
         'snap-x scroll-px-2',
     );
 });
+
+test('it work organization page groups time logging guidance by topic', function () {
+    $pageSource = file_get_contents(
+        resource_path('js/pages/docs/ItWorkOrganization.svelte'),
+    );
+
+    expect($pageSource)->toContain(
+        'Takistused ja seosed',
+        'Ajaloogimine',
+        'Hindamine ja planeerimine',
+        '0,5 SP = 0,5 MD = 2,5 h',
+        '1 SP = 1 MD = 5 h',
+    );
+});
