@@ -2,7 +2,9 @@
     import ChevronDown from 'lucide-svelte/icons/chevron-down';
     import ExternalLink from 'lucide-svelte/icons/external-link';
     import AppHead from '@/components/AppHead.svelte';
+    import MermaidDiagram from '@/components/MermaidDiagram.svelte';
     import SiteLayout from '@/layouts/SiteLayout.svelte';
+    import itTeamHeaderImage from '../../../images/it-team-header.png';
 
     const tableOfContents = [
         { number: '1', label: 'Miks ja kuidas töötame?', href: '#miks' },
@@ -13,18 +15,24 @@
         { number: '6', label: 'Igapäevased kokkulepped', href: '#kokkulepped' },
     ];
 
-    const developmentSteps = [
-        'Vajaduse registreerimine',
-        'Esmane ülevaatus',
-        'Analüüs ja Refinement',
-        'Kinnitamine ja prioriseerimine',
-        'Sprint Planning',
-        'Lahenduse kavandamine',
-        'Arendus',
-        'Ülevaatus ja testimine',
-        'Release',
-        'Done ja järeltegevused',
-    ];
+    const developmentProcessDiagram = `flowchart TB
+        subgraph R1[" "]
+            direction LR
+            A["1. Vajaduse<br/>registreerimine"] --> B["2. Esmane<br/>ülevaatus"]
+            B --> C["3. Analüüs ja<br/>Refinement"]
+            C --> D["4. Kinnitamine ja<br/>prioriseerimine"]
+            D --> E["5. Sprint<br/>Planning"]
+        end
+
+        subgraph R2[" "]
+            direction RL
+            F["6. Lahenduse<br/>kavandamine"] --> G["7. Arendus"]
+            G --> H["8. Ülevaatus ja<br/>testimine"]
+            H --> I["9. Release"]
+            I --> J["10. Done ja<br/>järeltegevused"]
+        end
+
+        R1 --> R2`;
 
     const issueTypes = [
         [
@@ -133,6 +141,14 @@
         'relative pl-5 before:absolute before:left-0 before:top-[0.7em] before:size-1.5 before:rounded-full before:bg-stokker-primary';
     const externalLinkClass =
         'inline-flex items-center gap-1.5 font-semibold text-stokker-primary underline decoration-stokker-primary/30 underline-offset-4 hover:decoration-stokker-primary';
+
+    const openSection = (href: string): void => {
+        const section = document.querySelector<HTMLDetailsElement>(href);
+
+        if (section) {
+            section.open = true;
+        }
+    };
 </script>
 
 <AppHead title="IT-tiimi uus töökorraldus">
@@ -146,6 +162,11 @@
     <main class="bg-white text-slate-900">
         <article class="mx-auto max-w-5xl px-5 py-12 lg:px-8 lg:py-16">
             <header class="border-b border-slate-200 pb-10">
+                <img
+                    src={itTeamHeaderImage}
+                    alt="Stokkeri IT-tiim"
+                    class="mb-10 aspect-[2560/533] w-full rounded-lg object-cover"
+                />
                 <h1 class="text-4xl font-semibold tracking-tight sm:text-5xl">
                     IT-tiimi uus töökorraldus
                 </h1>
@@ -189,16 +210,22 @@
 
             <nav
                 aria-label="Lehe sisukord"
-                class="border-b border-slate-200 py-5"
+                class="border-b border-slate-200 py-6"
             >
-                <ol class="flex flex-wrap gap-x-5 gap-y-2 text-sm">
+                <ol
+                    class="grid overflow-hidden rounded-lg border border-slate-200 bg-slate-200 sm:grid-cols-2 lg:grid-cols-3"
+                >
                     {#each tableOfContents as item (item.href)}
-                        <li>
+                        <li class="bg-white">
                             <a
                                 href={item.href}
-                                class="text-slate-600 hover:text-stokker-primary"
+                                onclick={() => openSection(item.href)}
+                                class="flex h-full items-center gap-3 px-4 py-3.5 text-sm transition-colors hover:bg-slate-50 hover:text-stokker-primary"
                             >
-                                {item.number}. {item.label}
+                                <span class="font-semibold text-stokker-primary"
+                                    >{item.number.padStart(2, '0')}</span
+                                >
+                                <span class="font-medium">{item.label}</span>
                             </a>
                         </li>
                     {/each}
@@ -238,33 +265,31 @@
                             </li>
                         </ul>
 
-                        <div class="grid gap-6 sm:grid-cols-2">
-                            <div>
-                                <h3 class="font-semibold text-slate-900">
-                                    Scrum
-                                </h3>
-                                <p class="mt-2">
-                                    Arendustööd tehakse ühenädalaste
-                                    sprintidena, millel on valitud tööd ja ühine
-                                    eesmärk.
-                                </p>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold text-slate-900">
-                                    Kanban
-                                </h3>
-                                <p class="mt-2">
-                                    IT Opsi ja IT-toe järgmine töö võetakse
-                                    järjestatud nimekirjast vaba võimekuse
+                        <section>
+                            <h3
+                                class="text-2xl! leading-tight! font-semibold! text-slate-900 sm:text-3xl!"
+                            >
+                                Scrum ja Kanban
+                            </h3>
+                            <ul class="mt-4 space-y-2">
+                                <li class={bulletClass}>
+                                    <strong>Scrum:</strong> arendustööd tehakse ühenädalaste
+                                    sprintidena, millel on valitud tööd ja ühine eesmärk.
+                                </li>
+                                <li class={bulletClass}>
+                                    <strong>Kanban:</strong> IT Opsi ja IT-toe järgmine
+                                    töö võetakse järjestatud nimekirjast vaba võimekuse
                                     tekkimisel.
-                                </p>
-                            </div>
-                        </div>
+                                </li>
+                                <li class={bulletClass}>
+                                    Mõlemas hoitakse tööde seis, prioriteedid,
+                                    vastutajad ja takistused nähtavana.
+                                </li>
+                            </ul>
+                        </section>
 
                         <p>
-                            Mõlemas hoitakse tööde seis, prioriteedid,
-                            vastutajad ja takistused nähtavana. Vajadus
-                            esitatakse üldjuhul
+                            Vajadus esitatakse üldjuhul
                             <a
                                 href="https://stokker365.sharepoint.com/sites/IRONMANEE2/SitePages/ITHelpdeskHome.aspx"
                                 target="_blank"
@@ -289,19 +314,10 @@
                         />
                     </summary>
                     <div class="space-y-7 pb-10 leading-7 text-slate-700">
-                        <ol class="grid gap-x-8 gap-y-3 sm:grid-cols-2">
-                            {#each developmentSteps as step, index (step)}
-                                <li
-                                    class="flex gap-3 border-b border-slate-100 py-2"
-                                >
-                                    <span
-                                        class="w-6 shrink-0 font-semibold text-stokker-primary"
-                                        >{index + 1}.</span
-                                    >
-                                    <span>{step}</span>
-                                </li>
-                            {/each}
-                        </ol>
+                        <MermaidDiagram
+                            definition={developmentProcessDiagram}
+                            label="Arendusprotsessi kümme sammu"
+                        />
                         <p>
                             Sprinti võetakse töö, mille soovitud tulemus,
                             Acceptance Criteria, sõltuvused, töömaht, vastutus
@@ -324,7 +340,9 @@
                     </summary>
                     <div class="space-y-8 pb-10 leading-7 text-slate-700">
                         <section>
-                            <h3 class="text-lg font-semibold text-slate-900">
+                            <h3
+                                class="text-2xl! leading-tight! font-semibold! text-slate-900 sm:text-3xl!"
+                            >
                                 DEV space ja backlog
                             </h3>
                             <ul class="mt-4 space-y-3">
@@ -347,10 +365,14 @@
                                     >.
                                 </li>
                                 <li class={bulletClass}>
-                                    <strong>Component:</strong> kohustuslik
-                                    väli, mis näitab seotud süsteemi. Kui
-                                    komponent pole teada, kasutatakse ajutiselt
-                                    väärtust
+                                    <a
+                                        href="https://stokker-team-ojuicoeqcvdn.atlassian.net/plugins/servlet/project-config/DEV/components"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class={externalLinkClass}>Component</a
+                                    >: kohustuslik väli, mis näitab seotud
+                                    süsteemi. Kui komponent pole teada,
+                                    kasutatakse ajutiselt väärtust
                                     <code>Other</code>.
                                 </li>
                                 <li class={bulletClass}>
@@ -372,7 +394,9 @@
                         </section>
 
                         <section>
-                            <h3 class="text-lg font-semibold text-slate-900">
+                            <h3
+                                class="text-2xl! leading-tight! font-semibold! text-slate-900 sm:text-3xl!"
+                            >
                                 Tööde ületoomine teistest space'idest
                             </h3>
                             <ul class="mt-4 space-y-3">
@@ -392,7 +416,9 @@
                         </section>
 
                         <section>
-                            <h3 class="text-lg font-semibold text-slate-900">
+                            <h3
+                                class="text-2xl! leading-tight! font-semibold! text-slate-900 sm:text-3xl!"
+                            >
                                 Tööde tüübid
                             </h3>
                             <div class="mt-4 overflow-x-auto">
@@ -429,7 +455,9 @@
                         </section>
 
                         <section>
-                            <h3 class="text-lg font-semibold text-slate-900">
+                            <h3
+                                class="text-2xl! leading-tight! font-semibold! text-slate-900 sm:text-3xl!"
+                            >
                                 Sub-taski eripära
                             </h3>
                             <ul class="mt-4 space-y-3">
@@ -451,7 +479,9 @@
                         </section>
 
                         <section>
-                            <h3 class="text-lg font-semibold text-slate-900">
+                            <h3
+                                class="text-2xl! leading-tight! font-semibold! text-slate-900 sm:text-3xl!"
+                            >
                                 Tööde staatused
                             </h3>
                             <div class="mt-4 overflow-x-auto">
@@ -562,7 +592,9 @@
                         </p>
 
                         <section>
-                            <h3 class="text-lg font-semibold text-slate-900">
+                            <h3
+                                class="text-2xl! leading-tight! font-semibold! text-slate-900 sm:text-3xl!"
+                            >
                                 Epicu eelanalüüs ja tööplaan
                             </h3>
                             <ul class="mt-4 space-y-3">
@@ -603,7 +635,9 @@
                         </section>
 
                         <section>
-                            <h3 class="text-lg font-semibold text-slate-900">
+                            <h3
+                                class="text-2xl! leading-tight! font-semibold! text-slate-900 sm:text-3xl!"
+                            >
                                 Epicu kinnitamine ja arendusvoog
                             </h3>
                             <ul class="mt-4 space-y-3">
@@ -651,7 +685,9 @@
                     </summary>
                     <div class="space-y-8 pb-10 leading-7 text-slate-700">
                         <section>
-                            <h3 class="text-lg font-semibold text-slate-900">
+                            <h3
+                                class="text-2xl! leading-tight! font-semibold! text-slate-900 sm:text-3xl!"
+                            >
                                 Töövaated ja juhendid
                             </h3>
                             <ul class="mt-4 space-y-3">
@@ -683,6 +719,15 @@
                                 </li>
                                 <li class={bulletClass}>
                                     <a
+                                        href="https://stokker-team-ojuicoeqcvdn.atlassian.net/plugins/servlet/project-config/DEV/components"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class={externalLinkClass}
+                                        >DEV komponendid</a
+                                    > – süsteemide ja rakenduste loend.
+                                </li>
+                                <li class={bulletClass}>
+                                    <a
                                         href="https://stokker365.sharepoint.com/sites/ITTeam/SitePages/IT-tiimi-uue-t%C3%B6%C3%B6korralduse-kiir%C3%BClevaade.aspx"
                                         target="_blank"
                                         rel="noopener noreferrer"
@@ -694,7 +739,9 @@
                         </section>
 
                         <section>
-                            <h3 class="text-lg font-semibold text-slate-900">
+                            <h3
+                                class="text-2xl! leading-tight! font-semibold! text-slate-900 sm:text-3xl!"
+                            >
                                 Kohtumiste rütm
                             </h3>
                             <div class="mt-4 overflow-x-auto">
@@ -738,7 +785,9 @@
                         </section>
 
                         <section>
-                            <h3 class="text-lg font-semibold text-slate-900">
+                            <h3
+                                class="text-2xl! leading-tight! font-semibold! text-slate-900 sm:text-3xl!"
+                            >
                                 Sprindi alustamine ja lõpetamine
                             </h3>
                             <ul class="mt-4 space-y-3">
@@ -790,7 +839,9 @@
                     </summary>
                     <div class="space-y-8 pb-10 leading-7 text-slate-700">
                         <section>
-                            <h3 class="text-lg font-semibold text-slate-900">
+                            <h3
+                                class="text-2xl! leading-tight! font-semibold! text-slate-900 sm:text-3xl!"
+                            >
                                 Vastutus
                             </h3>
                             <div class="mt-4 overflow-x-auto">
@@ -827,7 +878,9 @@
                         </section>
 
                         <section>
-                            <h3 class="text-lg font-semibold text-slate-900">
+                            <h3
+                                class="text-2xl! leading-tight! font-semibold! text-slate-900 sm:text-3xl!"
+                            >
                                 Töö tegemine ja ajalogimine
                             </h3>
                             <ul class="mt-4 space-y-3">
