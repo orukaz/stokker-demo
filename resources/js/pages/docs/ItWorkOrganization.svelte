@@ -209,7 +209,7 @@
 <SiteLayout>
     <main class="bg-white text-slate-900">
         <article
-            class="mx-auto max-w-5xl px-5 pt-6 pb-32 sm:pt-10 lg:px-8 lg:pt-16 lg:pb-32"
+            class="mx-auto max-w-6xl px-5 pt-6 pb-32 sm:pt-10 lg:px-8 lg:pt-16 lg:pb-32"
         >
             <header class="border-b border-slate-200 pb-10">
                 <img

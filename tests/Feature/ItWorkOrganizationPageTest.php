@@ -39,6 +39,7 @@ test('it work organization page uses responsive headings and scrollable content'
     );
 
     expect($pageSource)->toContain(
+        'mx-auto max-w-6xl',
         "'text-3xl! leading-tight! font-semibold! sm:text-4xl!'",
         "'pt-2 text-2xl! leading-tight! font-semibold! text-slate-900'",
         "'overflow-x-auto overscroll-x-contain rounded-lg border border-slate-200'",
