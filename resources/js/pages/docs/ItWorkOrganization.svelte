@@ -212,18 +212,18 @@
 
             <nav
                 aria-label="Lehe sisukord"
-                class="fixed inset-x-4 bottom-4 z-50 mx-auto max-w-5xl rounded-2xl border border-slate-200 bg-white/95 p-2 shadow-lg shadow-slate-900/10 backdrop-blur"
+                class="fixed inset-x-4 bottom-4 z-50 mx-auto max-w-6xl rounded-2xl border border-stokker-primary bg-stokker-primary p-2 shadow-lg shadow-slate-900/15"
             >
-                <ol class="flex gap-1 overflow-x-auto sm:grid sm:grid-cols-3">
+                <ol class="flex gap-1 overflow-x-auto">
                     {#each tableOfContents as item (item.href)}
-                        <li class="min-w-max flex-1 sm:min-w-0">
+                        <li class="min-w-max flex-1">
                             <a
                                 href={item.href}
                                 onclick={() => openSection(item.href)}
-                                class="flex items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-sm whitespace-nowrap transition-colors hover:bg-slate-100 hover:text-stokker-primary"
+                                class="flex items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-sm whitespace-nowrap text-white transition-colors hover:bg-white/15 hover:text-white"
                             >
-                                <span class="font-semibold text-stokker-primary"
-                                    >{item.number.padStart(2, '0')}</span
+                                <span class="font-semibold text-white/70"
+                                    >{item.number}</span
                                 >
                                 <span class="font-medium">{item.label}</span>
                             </a>
