@@ -9,11 +9,11 @@
     type JiraIssueType = 'task' | 'story' | 'bug' | 'epic' | 'subtask';
 
     const labels: Record<JiraIssueType, string> = {
-        task: 'Ülesanne',
-        story: 'Lugu',
-        bug: 'Viga',
+        task: 'Task / Ülesanne',
+        story: 'Story / Lugu',
+        bug: 'Bug / Viga',
         epic: 'Epic',
-        subtask: 'Alamülesanne',
+        subtask: 'Sub-task / Alamülesanne',
     };
 
     const badgeClasses: Record<JiraIssueType, string> = {
