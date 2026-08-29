@@ -531,7 +531,7 @@
                                         <strong>Sprindi nimi:</strong>
                                         <code
                                             class="inline-flex rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1 font-mono text-sm font-medium text-stokker-primary"
-                                            >IT Dev Sprint YY-Www</code
+                                            >{'IT Dev Sprint {YY}-W{ww}'}</code
                                         >
                                         <span
                                             class="text-sm font-medium text-slate-400"

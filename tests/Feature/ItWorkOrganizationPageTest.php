@@ -137,7 +137,7 @@ test('sprint name guidance separates the template from its example', function ()
         '<strong>Sprindi nimi:</strong>',
         'flex flex-wrap items-center gap-2',
         'border-slate-200 bg-slate-50 px-2.5 py-1 font-mono text-sm font-medium text-stokker-primary',
-        'IT Dev Sprint YY-Www',
+        "'IT Dev Sprint {YY}-W{ww}'",
         '>näiteks</span',
         'border-stokker-primary/25 bg-stokker-primary-50',
         'IT Dev Sprint 26-W35',
