@@ -199,6 +199,14 @@
 
     const roles = [
         [
+            'Assignee / omanik',
+            'Tegeleb tööga ning vastutab järgmise tegevuse ja ajakohase staatuse eest.',
+        ],
+        [
+            'Reporter',
+            'Jira töö esitaja või sisestaja, kellelt saab vajaduse kohta lisainfot; ei pruugi olla tellija.',
+        ],
+        [
             'Tellija / ärivastutaja',
             'Kirjeldab vajaduse ja kinnitab soovitud tulemuse.',
         ],
@@ -207,24 +215,16 @@
             'Annavad tööks vajalikku sisendit ja tagasisidet ning osalevad neid puudutavates otsustes.',
         ],
         [
+            'Arendustiim',
+            'Hindab ja planeerib tööd ning vastutab arenduse, ülevaatuse, testimise ja valmimise eest.',
+        ],
+        [
             'Product Owner',
             'Järjestab backlogi ja otsustab koos tiimiga, millal töö sprinti võtta.',
         ],
         [
             'Scrum Master',
             'Korraldab Scrum evente, aitab eemaldada töökorralduslikke takistusi ja järgida kokkuleppeid.',
-        ],
-        [
-            'Arendustiim',
-            'Hindab ja planeerib tööd ning vastutab arenduse, ülevaatuse, testimise ja valmimise eest.',
-        ],
-        [
-            'Reporter',
-            'Jira töö esitaja või sisestaja, kellelt saab vajaduse kohta lisainfot; ei pruugi olla tellija.',
-        ],
-        [
-            'Assignee / omanik',
-            'Tegeleb tööga ning vastutab järgmise tegevuse ja ajakohase staatuse eest.',
         ],
     ];
 

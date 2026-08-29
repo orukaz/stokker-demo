@@ -61,7 +61,10 @@ test('it work organization page matches the source guide details', function () {
             "'Assignee / omanik'",
             'Tegeleb tööga ning vastutab järgmise tegevuse',
         )
-        ->not->toContain('Töö ei ole valmis.', "'Omanik ehk Assignee'");
+        ->not->toContain('Töö ei ole valmis.', "'Omanik ehk Assignee'")
+        ->toMatch(
+            "/const roles = \[.*'Assignee \/ omanik'.*'Reporter'.*'Tellija \/ ärivastutaja'.*'Stakeholderid'.*'Arendustiim'.*'Product Owner'.*'Scrum Master'.*\];/s",
+        );
 });
 
 test('it work organization page uses responsive headings and scrollable content', function () {
