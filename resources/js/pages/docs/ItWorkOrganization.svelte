@@ -525,9 +525,23 @@
                                     <code>Other</code>.
                                 </li>
                                 <li class={bulletClass}>
-                                    <strong>Sprindi nimi:</strong>
-                                    <code>IT Dev Sprint YY-Www</code>, näiteks
-                                    <code>IT Dev Sprint 26-W35</code>.
+                                    <div
+                                        class="flex flex-wrap items-center gap-2"
+                                    >
+                                        <strong>Sprindi nimi:</strong>
+                                        <code
+                                            class="inline-flex rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1 font-mono text-sm font-medium text-slate-700"
+                                            >IT Dev Sprint YY-Www</code
+                                        >
+                                        <span
+                                            class="text-sm font-medium text-slate-400"
+                                            >näiteks</span
+                                        >
+                                        <code
+                                            class="inline-flex rounded-md border border-blue-200 bg-blue-50 px-2.5 py-1 font-mono text-sm font-semibold text-blue-700"
+                                            >IT Dev Sprint 26-W35</code
+                                        >
+                                    </div>
                                 </li>
                                 <li class={bulletClass}>
                                     <a

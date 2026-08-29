@@ -128,6 +128,22 @@ test('it work organization page groups time logging guidance by topic', function
         ->toBe(2);
 });
 
+test('sprint name guidance separates the template from its example', function () {
+    $pageSource = file_get_contents(
+        resource_path('js/pages/docs/ItWorkOrganization.svelte'),
+    );
+
+    expect($pageSource)->toContain(
+        '<strong>Sprindi nimi:</strong>',
+        'flex flex-wrap items-center gap-2',
+        'border-slate-200 bg-slate-50',
+        'IT Dev Sprint YY-Www',
+        '>näiteks</span',
+        'border-blue-200 bg-blue-50',
+        'IT Dev Sprint 26-W35',
+    );
+});
+
 test('it work organization page uses Jira style issue badges', function () {
     $pageSource = file_get_contents(
         resource_path('js/pages/docs/ItWorkOrganization.svelte'),
