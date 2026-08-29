@@ -144,6 +144,22 @@ test('sprint name guidance separates the template from its example', function ()
     );
 });
 
+test('jira setup values and backlog lists are highlighted', function () {
+    $pageSource = file_get_contents(
+        resource_path('js/pages/docs/ItWorkOrganization.svelte'),
+    );
+
+    expect($pageSource)->toContain(
+        'bg-stokker-primary-50 px-2 py-0.5 font-mono text-sm font-semibold text-stokker-primary',
+        '>Other</code',
+        'inline-flex flex-wrap items-center gap-1.5 align-middle',
+        'JiraStatusBadge',
+        'status="Initial Review"',
+        'status="In refinement"',
+        'status="Ready for Development"',
+    );
+});
+
 test('it work organization page uses Jira style issue badges', function () {
     $pageSource = file_get_contents(
         resource_path('js/pages/docs/ItWorkOrganization.svelte'),

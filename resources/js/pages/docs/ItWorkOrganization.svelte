@@ -522,7 +522,10 @@
                                     >: kohustuslik väli, mis näitab seotud
                                     süsteemi. Kui komponent pole teada,
                                     kasutatakse ajutiselt väärtust
-                                    <code>Other</code>.
+                                    <code
+                                        class="inline-flex rounded-md border border-stokker-primary/25 bg-stokker-primary-50 px-2 py-0.5 font-mono text-sm font-semibold text-stokker-primary"
+                                        >Other</code
+                                    >.
                                 </li>
                                 <li class={bulletClass}>
                                     <div
@@ -549,9 +552,20 @@
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         class={externalLinkClass}>Backlog</a
-                                    >: planeerimata tööd on nimekirjades Initial
-                                    Review, In refinement ja Ready for
-                                    Development.
+                                    >: planeerimata tööd on nimekirjades
+                                    <span
+                                        class="inline-flex flex-wrap items-center gap-1.5 align-middle"
+                                    >
+                                        <JiraStatusBadge
+                                            status="Initial Review"
+                                        />
+                                        <JiraStatusBadge
+                                            status="In refinement"
+                                        />
+                                        <JiraStatusBadge
+                                            status="Ready for Development"
+                                        />
+                                    </span>.
                                 </li>
                                 <li class={bulletClass}>
                                     <strong>Sprint ja tähtaeg:</strong> sprint näitab
