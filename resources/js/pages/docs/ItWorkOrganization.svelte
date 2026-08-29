@@ -515,7 +515,7 @@
                                 </li>
                                 <li class={bulletClass}>
                                     <a
-                                        href="https://stokker-team-ojuicoeqcvdn.atlassian.net/plugins/servlet/project-config/DEV/components"
+                                        href="https://stokker-team-ojuicoeqcvdn.atlassian.net/jira/software/c/projects/DEV/components"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         class={externalLinkClass}>Component</a
@@ -999,7 +999,7 @@
                                 </li>
                                 <li class={bulletClass}>
                                     <a
-                                        href="https://stokker-team-ojuicoeqcvdn.atlassian.net/plugins/servlet/project-config/DEV/components"
+                                        href="https://stokker-team-ojuicoeqcvdn.atlassian.net/jira/software/c/projects/DEV/components"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         class={externalLinkClass}
