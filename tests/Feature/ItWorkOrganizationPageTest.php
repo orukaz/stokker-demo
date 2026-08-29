@@ -137,6 +137,28 @@ test('it work organization page uses subtle status badges', function () {
         );
 });
 
+test('it work organization page uses English Jira statuses', function () {
+    $pageSource = file_get_contents(
+        resource_path('js/pages/docs/ItWorkOrganization.svelte'),
+    );
+    $badgeSource = file_get_contents(
+        resource_path('js/components/JiraStatusBadge.svelte'),
+    );
+
+    expect($pageSource)
+        ->toContain(
+            "'To Do'",
+            "'In Progress'",
+            "'Done'",
+            'olekuga To Do',
+            'Done-staatusesse',
+        )
+        ->not->toContain("'Vaja teha'", "'Lahendamisel'", "'Tehtud'")
+        ->and($badgeSource)
+        ->toContain("'In Progress'", "new Set(['Done', 'Cancelled'])")
+        ->not->toContain("'Lahendamisel'", "'Tehtud'");
+});
+
 test('it work organization guidance uses scan friendly labels', function () {
     $pageSource = file_get_contents(
         resource_path('js/pages/docs/ItWorkOrganization.svelte'),

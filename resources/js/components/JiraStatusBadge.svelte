@@ -4,12 +4,12 @@
     const activeStatuses = new Set([
         'In Analysis',
         'Waiting for Approval',
-        'Lahendamisel',
+        'In Progress',
         'In Review',
         'Testing',
         'Ready for Release',
     ]);
-    const completedStatuses = new Set(['Tehtud', 'Cancelled']);
+    const completedStatuses = new Set(['Done', 'Cancelled']);
 
     let { status }: { status: string } = $props();
 

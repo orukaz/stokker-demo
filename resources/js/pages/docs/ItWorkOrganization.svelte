@@ -68,38 +68,38 @@
         'In Analysis',
         'Waiting for Approval',
         'Approved',
-        'Lahendamisel',
+        'In Progress',
         'Ready for Release',
-        'Tehtud',
+        'Done',
     ] as const;
 
     const statuses = [
         {
             key: 'epic',
             types: ['epic'],
-            flow: ['Vaja teha', ...epicApprovalFlow],
+            flow: ['To Do', ...epicApprovalFlow],
         },
         {
             key: 'story-bug',
             types: ['story', 'bug'],
             flow: [
-                'Vaja teha',
-                'Lahendamisel',
+                'To Do',
+                'In Progress',
                 'In Review',
                 'Testing',
                 'Ready for Release',
-                'Tehtud',
+                'Done',
             ],
         },
         {
             key: 'task',
             types: ['task'],
-            flow: ['Vaja teha', 'Lahendamisel', 'In Review', 'Tehtud'],
+            flow: ['To Do', 'In Progress', 'In Review', 'Done'],
         },
         {
             key: 'subtask',
             types: ['subtask'],
-            flow: ['Vaja teha', 'Lahendamisel', 'Tehtud'],
+            flow: ['To Do', 'In Progress', 'Done'],
         },
     ] as const;
 
@@ -863,8 +863,8 @@
                                 <li class={bulletClass}>
                                     <strong>Sprint Planning:</strong> lepitakse kokku
                                     Sprint Goal ja valitakse realistlik töömaht. Tööd
-                                    lisatakse uude sprinti olekuga Vaja teha ning
-                                    sprint käivitatakse Jiras.
+                                    lisatakse uude sprinti olekuga To Do ning sprint
+                                    käivitatakse Jiras.
                                 </li>
                                 <li class={bulletClass}>
                                     <strong>Sprint Goal:</strong> 1–3 lühikest tulemust,
@@ -873,10 +873,10 @@
                                 </li>
                                 <li class={bulletClass}>
                                     <strong>Lõpetamine:</strong> Sprint Review'l vaadatakse
-                                    tulemus üle. Tehtud on ainult kokkulepitud tulemustele
-                                    ja kvaliteedinõuetele vastav töö. Sprint lõpetatakse
-                                    Jiras ning Retrospective'il lepitakse kokku vähemalt
-                                    üks parandus.
+                                    tulemus üle. Done-staatusesse liigub ainult kokkulepitud
+                                    tulemustele ja kvaliteedinõuetele vastav töö.
+                                    Sprint lõpetatakse Jiras ning Retrospective'il
+                                    lepitakse kokku vähemalt üks parandus.
                                 </li>
                                 <li class={bulletClass}>
                                     <strong>Lõpetamata töö:</strong> uuendatakse staatus,
