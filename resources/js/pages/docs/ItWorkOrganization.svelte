@@ -1157,16 +1157,30 @@
                                     <dt class="font-semibold text-slate-900">
                                         Hindamine ja planeerimine
                                     </dt>
-                                    <dd class="mt-2">
-                                        Story Pointsi hinnang sisestatakse 0,5
-                                        MD sammuga:
-                                        <strong>0,5 SP = 0,5 MD = 2,5 h</strong>
-                                        ja <strong>1 SP = 1 MD = 5 h</strong>.
-                                        Ühe tunni töö hinnang võib olla 0,5 MD,
-                                        tegelik töölogi aga 1 h. Hinnangud ja
-                                        töölogid aitavad sprinte planeerida;
-                                        neid ei kasutata arendaja tulemuslikkuse
-                                        mõõtmiseks.
+                                    <dd class="mt-3">
+                                        <ul class="space-y-2">
+                                            <li class={bulletClass}>
+                                                Story Pointsi hinnang
+                                                sisestatakse 0,5 MD sammuga:
+                                                <strong
+                                                    >0,5 SP = 0,5 MD = 2,5 h</strong
+                                                >
+                                                ja
+                                                <strong
+                                                    >1 SP = 1 MD = 5 h</strong
+                                                >.
+                                            </li>
+                                            <li class={bulletClass}>
+                                                Ühe tunni töö hinnang võib olla
+                                                0,5 MD, tegelik töölogi aga 1 h.
+                                            </li>
+                                            <li class={bulletClass}>
+                                                Hinnangud ja töölogid aitavad
+                                                sprinte planeerida; neid ei
+                                                kasutata arendaja tulemuslikkuse
+                                                mõõtmiseks.
+                                            </li>
+                                        </ul>
                                     </dd>
                                 </div>
                             </dl>
