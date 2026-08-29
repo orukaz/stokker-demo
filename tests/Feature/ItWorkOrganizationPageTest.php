@@ -43,7 +43,7 @@ test('it work organization page matches the source guide details', function () {
         ->toContain(
             'Sprint lõpetatakse',
             'Jiras ning Retrospective',
-            'Logida võib kohe, päeva või nädala',
+            'Logida võib kohe, päeva või',
             'Töö on peatatud; juurde märgitakse',
             'põhjus ja järgmine tegevus.',
             "secondaryEmphasis: 'uus funktsionaalsus või parendus'",
@@ -113,6 +113,10 @@ test('it work organization page groups time logging guidance by topic', function
     expect($pageSource)->toContain(
         'Takistused ja seosed',
         'Ajaloogimine',
+        '<ul class="space-y-2">',
+        'Logi tegelik teostusaeg',
+        'Logida võib kohe, päeva või',
+        'Epicule sama aega uuesti ei',
         'Hindamine ja planeerimine',
         '0,5 SP = 0,5 MD = 2,5 h',
         '1 SP = 1 MD = 5 h',

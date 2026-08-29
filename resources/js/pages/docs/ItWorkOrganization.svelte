@@ -1131,13 +1131,23 @@
                                     <dt class="font-semibold text-slate-900">
                                         Ajaloogimine
                                     </dt>
-                                    <dd class="mt-2">
-                                        Logi tegelik teostusaeg ligikaudsete
-                                        täistundidena, näiteks 1 h, 2 h või 5 h.
-                                        Logida võib kohe, päeva või nädala
-                                        lõpus, kuid töölogid peavad olema kuu
-                                        lõpuks korras. Epicule sama aega uuesti
-                                        ei logita.
+                                    <dd class="mt-3">
+                                        <ul class="space-y-2">
+                                            <li class={bulletClass}>
+                                                Logi tegelik teostusaeg
+                                                ligikaudsete täistundidena,
+                                                näiteks 1 h, 2 h või 5 h.
+                                            </li>
+                                            <li class={bulletClass}>
+                                                Logida võib kohe, päeva või
+                                                nädala lõpus, kuid töölogid
+                                                peavad olema kuu lõpuks korras.
+                                            </li>
+                                            <li class={bulletClass}>
+                                                Epicule sama aega uuesti ei
+                                                logita.
+                                            </li>
+                                        </ul>
                                     </dd>
                                 </div>
 
