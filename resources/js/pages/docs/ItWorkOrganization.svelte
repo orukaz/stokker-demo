@@ -39,7 +39,7 @@
             I --> J["10. Done ja<br/>järeltegevused"]
         end
 
-        E --> F`;
+        R1 --> R2`;
 
     const issueTypes = [
         {

@@ -300,7 +300,7 @@ test('it work organization page includes the latest source guide revisions', fun
 
     expect($pageSource)
         ->toContain(
-            'E --> F`;',
+            'R1 --> R2`;',
             "const epicApprovalFlow = [\n        'To Do',",
             '<strong>Sprinti võetakse:</strong> selge, hinnatud ja',
             'Kui komponent pole veel teada',
@@ -313,7 +313,7 @@ test('it work organization page includes the latest source guide revisions', fun
             'Epicule teostustöödele logitud',
         )
         ->not->toContain(
-            'R1 --> R2`;',
+            'E --> F`;',
             'Acceptance Criteria, sõltuvused, töömaht, vastutus',
             'eelmise sprindi lõpetamata',
             'backlogi või teadlikult järgmisse sprinti',
