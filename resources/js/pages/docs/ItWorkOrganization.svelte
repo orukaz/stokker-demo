@@ -433,9 +433,14 @@
                                     <code>IT Dev Sprint 26-W35</code>.
                                 </li>
                                 <li class={bulletClass}>
-                                    <strong>Backlog:</strong> planeerimata tööd on
-                                    nimekirjades Initial Review, In refinement ja
-                                    Ready for Development.
+                                    <a
+                                        href="https://stokker-team-ojuicoeqcvdn.atlassian.net/jira/people/712020:f3032e30-90f2-497b-81ea-7be97174f69d/boards/45/backlog"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class={externalLinkClass}>Backlog</a
+                                    >: planeerimata tööd on nimekirjades Initial
+                                    Review, In refinement ja Ready for
+                                    Development.
                                 </li>
                                 <li class={bulletClass}>
                                     <strong>Sprint ja tähtaeg:</strong> sprint näitab
@@ -570,16 +575,15 @@
                                 <li class="flex items-start gap-2.5">
                                     <JiraStatusBadge status="On Hold" />
                                     <span>
-                                        Töö on ajutiselt peatatud; juurde
-                                        märgitakse põhjus ja järgmine tegevus.
-                                        Töö ei ole valmis.
+                                        Töö on peatatud; juurde märgitakse
+                                        põhjus ja järgmine tegevus.
                                     </span>
                                 </li>
                                 <li class="flex items-start gap-2.5">
                                     <JiraStatusBadge status="Cancelled" />
                                     <span>
                                         Tööga ei jätkata; juurde märgitakse
-                                        tühistamise põhjus. Töö ei ole valmis.
+                                        tühistamise põhjus.
                                     </span>
                                 </li>
                             </ul>
@@ -666,6 +670,8 @@
                                 <li class={bulletClass}>
                                     <strong>Tööplaan:</strong> võimalikud
                                     arendustööd lisatakse Epicu kirjelduse lõppu
+                                    jaotisesse „Võimalikud arendustööd“. Iga töö
+                                    juurde lisatakse esialgne MD-hinnang
                                     järgmise malli järgi:
                                     <div
                                         class="mt-3 overflow-x-auto rounded-lg border border-slate-200 bg-slate-50 p-4 font-mono text-sm leading-6"
@@ -868,8 +874,9 @@
                                 <li class={bulletClass}>
                                     <strong>Lõpetamine:</strong> Sprint Review'l vaadatakse
                                     tulemus üle. Tehtud on ainult kokkulepitud tulemustele
-                                    ja kvaliteedinõuetele vastav töö. Retrospective'il
-                                    lepitakse kokku vähemalt üks parandus.
+                                    ja kvaliteedinõuetele vastav töö. Sprint lõpetatakse
+                                    Jiras ning Retrospective'il lepitakse kokku vähemalt
+                                    üks parandus.
                                 </li>
                                 <li class={bulletClass}>
                                     <strong>Lõpetamata töö:</strong> uuendatakse staatus,
@@ -959,9 +966,10 @@
                                     <dd class="mt-2">
                                         Logi tegelik teostusaeg ligikaudsete
                                         täistundidena, näiteks 1 h, 2 h või 5 h.
-                                        Logida võib jooksvalt või hiljem, kuid
-                                        töölogid peavad olema kuu lõpuks korras.
-                                        Epicule sama aega uuesti ei logita.
+                                        Logida võib kohe, päeva või nädala
+                                        lõpus, kuid töölogid peavad olema kuu
+                                        lõpuks korras. Epicule sama aega uuesti
+                                        ei logita.
                                     </dd>
                                 </div>
 

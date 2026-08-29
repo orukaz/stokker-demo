@@ -28,9 +28,26 @@ test('it work organization page includes the Epic work template', function () {
 
     expect($pageSource)->toContain(
         '## Võimalikud arendustööd',
+        'juurde lisatakse esialgne MD-hinnang',
         '- **Töö tüüp - Component: Lühike',
         'kirjeldus** (N MD)',
     );
+});
+
+test('it work organization page matches the source guide details', function () {
+    $pageSource = file_get_contents(
+        resource_path('js/pages/docs/ItWorkOrganization.svelte'),
+    );
+
+    expect($pageSource)
+        ->toContain(
+            'Sprint lõpetatakse',
+            'Jiras ning Retrospective',
+            'Logida võib kohe, päeva või nädala',
+            'Töö on peatatud; juurde märgitakse',
+            'põhjus ja järgmine tegevus.',
+        )
+        ->not->toContain('Töö ei ole valmis.');
 });
 
 test('it work organization page uses responsive headings and scrollable content', function () {
