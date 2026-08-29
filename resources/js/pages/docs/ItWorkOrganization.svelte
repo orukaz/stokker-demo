@@ -1,6 +1,10 @@
 <script lang="ts">
+    import CalendarDays from 'lucide-svelte/icons/calendar-days';
     import ChevronDown from 'lucide-svelte/icons/chevron-down';
+    import Clock3 from 'lucide-svelte/icons/clock-3';
+    import Euro from 'lucide-svelte/icons/euro';
     import ExternalLink from 'lucide-svelte/icons/external-link';
+    import Layers from 'lucide-svelte/icons/layers';
     import AppHead from '@/components/AppHead.svelte';
     import JiraIssueBadge from '@/components/JiraIssueBadge.svelte';
     import JiraStatusBadge from '@/components/JiraStatusBadge.svelte';
@@ -104,28 +108,55 @@
     ] as const;
 
     const portfolioCategories = [
-        [
-            'Grouping',
-            'Epic eri kategooriatega tööde koondamiseks',
-            'Eraldi kinnitust ei ole.',
-        ],
-        ['IT Support', 'Kuni 2 MD / 10 h või alla 1 000 EUR', 'IT-tiim.'],
-        [
-            'IT Change',
-            '2–6 MD / 10–30 h või 1 000–3 000 EUR',
-            'IT-tiim ja sisemine tellija.',
-        ],
-        [
-            'IT Improvement',
-            '4–10 MD / 20–50 h või 2 000–5 000 EUR',
-            'IT-komitee ja juhatus.',
-        ],
-        [
-            'IT Project',
-            'Üle 10 MD / 50 h või üle 5 000 EUR',
-            'IT-komitee ja juhatus.',
-        ],
-    ];
+        {
+            name: 'Grouping',
+            size: {
+                kind: 'grouping',
+                label: 'Epic eri kategooriatega tööde koondamiseks',
+            },
+            approval: 'Eraldi kinnitust ei ole.',
+        },
+        {
+            name: 'IT Support',
+            size: {
+                kind: 'estimate',
+                days: 'Kuni 2 MD',
+                hours: '10 h',
+                cost: 'alla 1 000 EUR',
+            },
+            approval: 'IT-tiim.',
+        },
+        {
+            name: 'IT Change',
+            size: {
+                kind: 'estimate',
+                days: '2–6 MD',
+                hours: '10–30 h',
+                cost: '1 000–3 000 EUR',
+            },
+            approval: 'IT-tiim ja sisemine tellija.',
+        },
+        {
+            name: 'IT Improvement',
+            size: {
+                kind: 'estimate',
+                days: '4–10 MD',
+                hours: '20–50 h',
+                cost: '2 000–5 000 EUR',
+            },
+            approval: 'IT-komitee ja juhatus.',
+        },
+        {
+            name: 'IT Project',
+            size: {
+                kind: 'estimate',
+                days: 'Üle 10 MD',
+                hours: '50 h',
+                cost: 'üle 5 000 EUR',
+            },
+            approval: 'IT-komitee ja juhatus.',
+        },
+    ] as const;
 
     const meetings = [
         [
@@ -623,7 +654,8 @@
                                         <th class="px-4 py-3 font-semibold"
                                             >Kategooria</th
                                         >
-                                        <th class="px-4 py-3 font-semibold"
+                                        <th
+                                            class="w-[52%] px-4 py-3 font-semibold"
                                             >Orienteeruv suurus</th
                                         >
                                         <th class="px-4 py-3 font-semibold"
@@ -632,14 +664,71 @@
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-slate-200">
-                                    {#each portfolioCategories as item (item[0])}
-                                        <tr>
+                                    {#each portfolioCategories as item (item.name)}
+                                        <tr
+                                            class="transition-colors hover:bg-slate-50/60"
+                                        >
                                             <td
-                                                class="px-4 py-3 font-semibold text-slate-900"
-                                                >{item[0]}</td
+                                                class="px-4 py-4 font-semibold text-slate-900"
+                                                >{item.name}</td
                                             >
-                                            <td class="px-4 py-3">{item[1]}</td>
-                                            <td class="px-4 py-3">{item[2]}</td>
+                                            <td class="px-4 py-4">
+                                                {#if item.size.kind === 'grouping'}
+                                                    <span
+                                                        class="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-sm font-medium text-slate-600"
+                                                    >
+                                                        <Layers
+                                                            class="size-4 shrink-0 text-slate-400"
+                                                            aria-hidden="true"
+                                                        />
+                                                        {item.size.label}
+                                                    </span>
+                                                {:else}
+                                                    <div
+                                                        class="flex flex-wrap items-center gap-1.5"
+                                                    >
+                                                        <span
+                                                            class="inline-flex items-center gap-1.5 whitespace-nowrap rounded-md border border-blue-200 bg-blue-50 px-2.5 py-1 text-sm font-semibold text-blue-700"
+                                                        >
+                                                            <CalendarDays
+                                                                class="size-3.5"
+                                                                aria-hidden="true"
+                                                            />
+                                                            {item.size.days}
+                                                        </span>
+                                                        <span
+                                                            class="text-xs font-medium text-slate-300"
+                                                            aria-hidden="true"
+                                                            >/</span
+                                                        >
+                                                        <span
+                                                            class="inline-flex items-center gap-1.5 whitespace-nowrap rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1 text-sm font-medium text-slate-600"
+                                                        >
+                                                            <Clock3
+                                                                class="size-3.5 text-slate-400"
+                                                                aria-hidden="true"
+                                                            />
+                                                            {item.size.hours}
+                                                        </span>
+                                                        <span
+                                                            class="px-0.5 text-xs font-medium text-slate-400"
+                                                            >või</span
+                                                        >
+                                                        <span
+                                                            class="inline-flex items-center gap-1.5 whitespace-nowrap rounded-md border border-emerald-200/80 bg-emerald-50/70 px-2.5 py-1 text-sm font-medium text-emerald-700"
+                                                        >
+                                                            <Euro
+                                                                class="size-3.5"
+                                                                aria-hidden="true"
+                                                            />
+                                                            {item.size.cost}
+                                                        </span>
+                                                    </div>
+                                                {/if}
+                                            </td>
+                                            <td class="px-4 py-4"
+                                                >{item.approval}</td
+                                            >
                                         </tr>
                                     {/each}
                                 </tbody>

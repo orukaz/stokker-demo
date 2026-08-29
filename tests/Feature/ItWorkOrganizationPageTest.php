@@ -64,6 +64,22 @@ test('it work organization page uses responsive headings and scrollable content'
     );
 });
 
+test('portfolio estimates use scan friendly visual labels', function () {
+    $pageSource = file_get_contents(
+        resource_path('js/pages/docs/ItWorkOrganization.svelte'),
+    );
+
+    expect($pageSource)->toContain(
+        'lucide-svelte/icons/calendar-days',
+        'lucide-svelte/icons/clock-3',
+        'lucide-svelte/icons/euro',
+        'lucide-svelte/icons/layers',
+        "item.size.kind === 'grouping'",
+        'border-blue-200 bg-blue-50',
+        'border-emerald-200/80 bg-emerald-50/70',
+    );
+});
+
 test('it work organization page groups time logging guidance by topic', function () {
     $pageSource = file_get_contents(
         resource_path('js/pages/docs/ItWorkOrganization.svelte'),
