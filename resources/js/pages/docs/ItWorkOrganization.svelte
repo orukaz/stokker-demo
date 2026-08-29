@@ -198,35 +198,75 @@
     ];
 
     const roles = [
-        [
-            'Assignee / omanik',
-            'Tegeleb tööga ning vastutab järgmise tegevuse ja ajakohase staatuse eest.',
-        ],
-        [
-            'Reporter',
-            'Jira töö esitaja või sisestaja, kellelt saab vajaduse kohta lisainfot; ei pruugi olla tellija.',
-        ],
-        [
-            'Tellija / ärivastutaja',
-            'Kirjeldab vajaduse ja kinnitab soovitud tulemuse.',
-        ],
-        [
-            'Stakeholderid',
-            'Annavad tööks vajalikku sisendit ja tagasisidet ning osalevad neid puudutavates otsustes.',
-        ],
-        [
-            'Arendustiim',
-            'Hindab ja planeerib tööd ning vastutab arenduse, ülevaatuse, testimise ja valmimise eest.',
-        ],
-        [
-            'Product Owner',
-            'Järjestab backlogi ja otsustab koos tiimiga, millal töö sprinti võtta.',
-        ],
-        [
-            'Scrum Master',
-            'Korraldab Scrum evente, aitab eemaldada töökorralduslikke takistusi ja järgida kokkuleppeid.',
-        ],
-    ];
+        {
+            name: 'Assignee / omanik',
+            responsibility: [
+                { text: 'Tegeleb tööga ning vastutab ' },
+                {
+                    text: 'järgmise tegevuse ja ajakohase staatuse',
+                    emphasis: true,
+                },
+                { text: ' eest.' },
+            ],
+        },
+        {
+            name: 'Reporter',
+            responsibility: [
+                { text: 'Jira töö esitaja või sisestaja', emphasis: true },
+                { text: ', kellelt saab vajaduse kohta lisainfot; ' },
+                { text: 'ei pruugi olla tellija', emphasis: true },
+                { text: '.' },
+            ],
+        },
+        {
+            name: 'Tellija / ärivastutaja',
+            responsibility: [
+                {
+                    text: 'Kirjeldab vajaduse ja kinnitab soovitud tulemuse',
+                    emphasis: true,
+                },
+                { text: '.' },
+            ],
+        },
+        {
+            name: 'Stakeholderid',
+            responsibility: [
+                { text: 'Annavad tööks vajalikku ' },
+                { text: 'sisendit ja tagasisidet', emphasis: true },
+                { text: ' ning osalevad neid puudutavates otsustes.' },
+            ],
+        },
+        {
+            name: 'Arendustiim',
+            responsibility: [
+                { text: 'Hindab ja planeerib tööd', emphasis: true },
+                { text: ' ning vastutab ' },
+                {
+                    text: 'arenduse, ülevaatuse, testimise ja valmimise',
+                    emphasis: true,
+                },
+                { text: ' eest.' },
+            ],
+        },
+        {
+            name: 'Product Owner',
+            responsibility: [
+                { text: 'Järjestab backlogi', emphasis: true },
+                { text: ' ja otsustab koos tiimiga, ' },
+                { text: 'millal töö sprinti võtta', emphasis: true },
+                { text: '.' },
+            ],
+        },
+        {
+            name: 'Scrum Master',
+            responsibility: [
+                { text: 'Korraldab Scrum evente', emphasis: true },
+                { text: ', aitab eemaldada ' },
+                { text: 'töökorralduslikke takistusi', emphasis: true },
+                { text: ' ja järgida kokkuleppeid.' },
+            ],
+        },
+    ] as const;
 
     const bulletClass =
         'relative pl-5 before:absolute before:left-0 before:top-[0.7em] before:size-1.5 before:rounded-full before:bg-stokker-primary';
@@ -1042,15 +1082,23 @@
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-slate-200">
-                                        {#each roles as role (role[0])}
+                                        {#each roles as role (role.name)}
                                             <tr>
                                                 <td
                                                     class="px-4 py-3 font-semibold text-slate-900"
-                                                    >{role[0]}</td
+                                                    >{role.name}</td
                                                 >
-                                                <td class="px-4 py-3"
-                                                    >{role[1]}</td
-                                                >
+                                                <td class="px-4 py-3">
+                                                    {#each role.responsibility as part (part.text)}
+                                                        {#if 'emphasis' in part && part.emphasis}
+                                                            <strong
+                                                                >{part.text}</strong
+                                                            >
+                                                        {:else}
+                                                            {part.text}
+                                                        {/if}
+                                                    {/each}
+                                                </td>
                                             </tr>
                                         {/each}
                                     </tbody>

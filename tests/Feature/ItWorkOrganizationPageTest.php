@@ -51,19 +51,27 @@ test('it work organization page matches the source guide details', function () {
             "secondaryEmphasis: 'ei ole arendustöö'",
             "secondaryEmphasis: 'väiksem teostussamm'",
             "'Stakeholderid'",
-            'Annavad tööks vajalikku sisendit ja tagasisidet',
             "'Scrum Master'",
-            'Korraldab Scrum evente',
             "'Arendustiim'",
-            'vastutab arenduse, ülevaatuse, testimise ja valmimise eest',
             "'Reporter'",
             'ei pruugi olla tellija',
             "'Assignee / omanik'",
-            'Tegeleb tööga ning vastutab järgmise tegevuse',
+            "text: 'järgmise tegevuse ja ajakohase staatuse'",
+            "text: 'Jira töö esitaja või sisestaja', emphasis: true",
+            "text: 'Kirjeldab vajaduse ja kinnitab soovitud tulemuse'",
+            "text: 'sisendit ja tagasisidet', emphasis: true",
+            "text: 'Hindab ja planeerib tööd', emphasis: true",
+            "text: 'arenduse, ülevaatuse, testimise ja valmimise'",
+            "text: 'Järjestab backlogi', emphasis: true",
+            "text: 'millal töö sprinti võtta', emphasis: true",
+            "text: 'Korraldab Scrum evente', emphasis: true",
+            "text: 'töökorralduslikke takistusi', emphasis: true",
+            '<strong',
+            '>{part.text}</strong',
         )
         ->not->toContain('Töö ei ole valmis.', "'Omanik ehk Assignee'")
         ->toMatch(
-            "/const roles = \[.*'Assignee \/ omanik'.*'Reporter'.*'Tellija \/ ärivastutaja'.*'Stakeholderid'.*'Arendustiim'.*'Product Owner'.*'Scrum Master'.*\];/s",
+            "/const roles = \[.*name: 'Assignee \/ omanik'.*name: 'Reporter'.*name: 'Tellija \/ ärivastutaja'.*name: 'Stakeholderid'.*name: 'Arendustiim'.*name: 'Product Owner'.*name: 'Scrum Master'.*\] as const;/s",
         );
 });
 
