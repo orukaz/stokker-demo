@@ -530,7 +530,7 @@
                                     >
                                         <strong>Sprindi nimi:</strong>
                                         <code
-                                            class="inline-flex rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1 font-mono text-sm font-medium text-slate-700"
+                                            class="inline-flex rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1 font-mono text-sm font-medium text-stokker-primary"
                                             >IT Dev Sprint YY-Www</code
                                         >
                                         <span
@@ -538,7 +538,7 @@
                                             >näiteks</span
                                         >
                                         <code
-                                            class="inline-flex rounded-md border border-blue-200 bg-blue-50 px-2.5 py-1 font-mono text-sm font-semibold text-blue-700"
+                                            class="inline-flex rounded-md border border-stokker-primary/25 bg-stokker-primary-50 px-2.5 py-1 font-mono text-sm font-semibold text-stokker-primary"
                                             >IT Dev Sprint 26-W35</code
                                         >
                                     </div>
