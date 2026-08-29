@@ -44,32 +44,37 @@
     const issueTypes = [
         {
             type: 'epic',
-            prefix: '',
-            emphasis: 'Suurem teema või projekt',
-            suffix: ', mis koosneb seotud arendustöödest.',
+            primaryEmphasis: 'Suurem teema või projekt',
+            middle: ', mis koosneb seotud arendustöödest.',
+            secondaryEmphasis: '',
+            suffix: '',
         },
         {
             type: 'story',
-            prefix: '',
-            emphasis: 'Arendustöö',
-            suffix: ', millega luuakse uus funktsionaalsus või parendus.',
+            primaryEmphasis: 'Arendustöö',
+            middle: ', millega luuakse ',
+            secondaryEmphasis: 'uus funktsionaalsus või parendus',
+            suffix: '.',
         },
         {
             type: 'bug',
-            prefix: '',
-            emphasis: 'Arendustöö',
-            suffix: ', millega parandatakse olemasoleva lahenduse viga.',
+            primaryEmphasis: 'Arendustöö',
+            middle: ', millega parandatakse ',
+            secondaryEmphasis: 'olemasoleva lahenduse viga',
+            suffix: '.',
         },
         {
             type: 'task',
-            prefix: 'Analüüsi-, seadistus-, tehniline või muu ',
-            emphasis: 'sisemine töö',
+            primaryEmphasis: '',
+            middle: 'Analüüsi-, seadistus- või muu töö, mis ',
+            secondaryEmphasis: 'ei ole arendustöö',
             suffix: '.',
         },
         {
             type: 'subtask',
-            prefix: 'Loo, ülesande või vea väiksem ',
-            emphasis: 'teostussamm',
+            primaryEmphasis: '',
+            middle: 'Story, Taski või Bugi ',
+            secondaryEmphasis: 'väiksem teostussamm',
             suffix: '.',
         },
     ] as const;
@@ -196,6 +201,10 @@
         [
             'Tellija / ärivastutaja',
             'Kirjeldab vajaduse ja kinnitab soovitud tulemuse.',
+        ],
+        [
+            'Stakeholderid',
+            'Annavad tööks vajalikku sisendit ja tagasisidet ning osalevad neid puudutavates otsustes.',
         ],
         [
             'Product Owner',
@@ -534,9 +543,11 @@
                                                     />
                                                 </td>
                                                 <td class="px-4 py-3">
-                                                    {issue.prefix}<strong
-                                                        >{issue.emphasis}</strong
-                                                    >{issue.suffix}
+                                                    {#if issue.primaryEmphasis}<strong
+                                                            >{issue.primaryEmphasis}</strong
+                                                        >{/if}{issue.middle}{#if issue.secondaryEmphasis}<strong
+                                                            >{issue.secondaryEmphasis}</strong
+                                                        >{/if}{issue.suffix}
                                                 </td>
                                             </tr>
                                         {/each}

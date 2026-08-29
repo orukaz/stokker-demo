@@ -46,6 +46,12 @@ test('it work organization page matches the source guide details', function () {
             'Logida võib kohe, päeva või nädala',
             'Töö on peatatud; juurde märgitakse',
             'põhjus ja järgmine tegevus.',
+            "secondaryEmphasis: 'uus funktsionaalsus või parendus'",
+            "secondaryEmphasis: 'olemasoleva lahenduse viga'",
+            "secondaryEmphasis: 'ei ole arendustöö'",
+            "secondaryEmphasis: 'väiksem teostussamm'",
+            "'Stakeholderid'",
+            'Annavad tööks vajalikku sisendit ja tagasisidet',
         )
         ->not->toContain('Töö ei ole valmis.');
 });
@@ -187,11 +193,12 @@ test('it work organization guidance uses scan friendly labels', function () {
         '<strong>Eelanalüüsi Task:</strong>',
         '<strong>Pärast kinnitamist:</strong>',
         '<strong>Pärimine:</strong>',
-        "emphasis: 'Suurem teema või projekt'",
-        "emphasis: 'Arendustöö'",
-        "emphasis: 'sisemine töö'",
-        "emphasis: 'teostussamm'",
+        "primaryEmphasis: 'Suurem teema või projekt'",
+        "primaryEmphasis: 'Arendustöö'",
+        "secondaryEmphasis: 'ei ole arendustöö'",
+        "secondaryEmphasis: 'väiksem teostussamm'",
         '<strong',
-        '>{issue.emphasis}</strong',
+        '>{issue.primaryEmphasis}</strong',
+        '>{issue.secondaryEmphasis}</strong',
     );
 });
