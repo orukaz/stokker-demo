@@ -52,8 +52,16 @@ test('it work organization page matches the source guide details', function () {
             "secondaryEmphasis: 'väiksem teostussamm'",
             "'Stakeholderid'",
             'Annavad tööks vajalikku sisendit ja tagasisidet',
+            "'Scrum Master'",
+            'Korraldab Scrum evente',
+            "'Arendustiim'",
+            'vastutab arenduse, ülevaatuse, testimise ja valmimise eest',
+            "'Reporter'",
+            'ei pruugi olla tellija',
+            "'Assignee / omanik'",
+            'Tegeleb tööga ning vastutab järgmise tegevuse',
         )
-        ->not->toContain('Töö ei ole valmis.');
+        ->not->toContain('Töö ei ole valmis.', "'Omanik ehk Assignee'");
 });
 
 test('it work organization page uses responsive headings and scrollable content', function () {

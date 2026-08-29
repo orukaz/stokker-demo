@@ -211,8 +211,20 @@
             'Järjestab backlogi ja otsustab koos tiimiga, millal töö sprinti võtta.',
         ],
         [
-            'Omanik ehk Assignee',
-            'Vastutab töö järgmise aktiivse tegevuse ja ajakohase staatuse eest.',
+            'Scrum Master',
+            'Korraldab Scrum evente, aitab eemaldada töökorralduslikke takistusi ja järgida kokkuleppeid.',
+        ],
+        [
+            'Arendustiim',
+            'Hindab ja planeerib tööd ning vastutab arenduse, ülevaatuse, testimise ja valmimise eest.',
+        ],
+        [
+            'Reporter',
+            'Jira töö esitaja või sisestaja, kellelt saab vajaduse kohta lisainfot; ei pruugi olla tellija.',
+        ],
+        [
+            'Assignee / omanik',
+            'Tegeleb tööga ning vastutab järgmise tegevuse ja ajakohase staatuse eest.',
         ],
     ];
 
