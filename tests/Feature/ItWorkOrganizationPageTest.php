@@ -311,9 +311,16 @@ test('it work organization page includes the latest source guide revisions', fun
             'loendis kirjeldatud Jira tööd luuakse pärast IT-komitee',
             'Takistuse korral märgitakse selle põhjus',
             'Epicule teostustöödele logitud',
+            'jira/software/c/projects/DEV/boards/112',
+            'jira/software/c/projects/DEV/boards/112/backlog',
+            'jira/software/c/projects/DEV/boards/145',
+            'IT Team - DEV - Board (Scrum)',
+            'IT Team - Epics - Board (Kanban)',
+            'Epicute töölaud',
         )
         ->not->toContain(
             'E --> F`;',
+            '/boards/45',
             'Acceptance Criteria, sõltuvused, töömaht, vastutus',
             'eelmise sprindi lõpetamata',
             'backlogi või teadlikult järgmisse sprinti',

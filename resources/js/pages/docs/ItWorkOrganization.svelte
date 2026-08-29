@@ -504,13 +504,21 @@
                                         class={externalLinkClass}
                                         >IT Development ehk DEV space</a
                                     >
-                                    ja
+                                    ,
                                     <a
-                                        href="https://stokker-team-ojuicoeqcvdn.atlassian.net/jira/people/712020:f3032e30-90f2-497b-81ea-7be97174f69d/boards/45"
+                                        href="https://stokker-team-ojuicoeqcvdn.atlassian.net/jira/software/c/projects/DEV/boards/112"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         class={externalLinkClass}
-                                        >IT Team – Development – Board (Scrum)</a
+                                        >IT Team - DEV - Board (Scrum)</a
+                                    >
+                                    ja
+                                    <a
+                                        href="https://stokker-team-ojuicoeqcvdn.atlassian.net/jira/software/c/projects/DEV/boards/145"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class={externalLinkClass}
+                                        >IT Team - Epics - Board (Kanban)</a
                                     >.
                                 </li>
                                 <li class={bulletClass}>
@@ -548,7 +556,7 @@
                                 </li>
                                 <li class={bulletClass}>
                                     <a
-                                        href="https://stokker-team-ojuicoeqcvdn.atlassian.net/jira/people/712020:f3032e30-90f2-497b-81ea-7be97174f69d/boards/45/backlog"
+                                        href="https://stokker-team-ojuicoeqcvdn.atlassian.net/jira/software/c/projects/DEV/boards/112/backlog"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         class={externalLinkClass}>Backlog</a
@@ -973,7 +981,7 @@
                             <ul class="mt-4 space-y-3">
                                 <li class={bulletClass}>
                                     <a
-                                        href="https://stokker-team-ojuicoeqcvdn.atlassian.net/jira/people/712020:f3032e30-90f2-497b-81ea-7be97174f69d/boards/45"
+                                        href="https://stokker-team-ojuicoeqcvdn.atlassian.net/jira/software/c/projects/DEV/boards/112"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         class={externalLinkClass}
@@ -982,11 +990,20 @@
                                 </li>
                                 <li class={bulletClass}>
                                     <a
-                                        href="https://stokker-team-ojuicoeqcvdn.atlassian.net/jira/people/712020:f3032e30-90f2-497b-81ea-7be97174f69d/boards/45/backlog"
+                                        href="https://stokker-team-ojuicoeqcvdn.atlassian.net/jira/software/c/projects/DEV/boards/112/backlog"
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         class={externalLinkClass}>Backlog</a
                                     > – täpsustamine, järjestamine ja planeerimine.
+                                </li>
+                                <li class={bulletClass}>
+                                    <a
+                                        href="https://stokker-team-ojuicoeqcvdn.atlassian.net/jira/software/c/projects/DEV/boards/145"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class={externalLinkClass}
+                                        >Epicute töölaud</a
+                                    > – Epicute ülevaade ja kinnitamise voog.
                                 </li>
                                 <li class={bulletClass}>
                                     <a
