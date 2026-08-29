@@ -496,30 +496,39 @@
                             </h3>
                             <ul class="mt-4 space-y-3">
                                 <li class={bulletClass}>
-                                    <strong>Töö asukoht:</strong>
-                                    <a
-                                        href="https://stokker-team-ojuicoeqcvdn.atlassian.net/browse/DEV"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        class={externalLinkClass}
-                                        >IT Development ehk DEV space</a
+                                    <strong class="block">Töö asukoht:</strong>
+                                    <ul
+                                        class="mt-2 list-disc space-y-1.5 pl-5 marker:text-stokker-primary/70"
                                     >
-                                    ,
-                                    <a
-                                        href="https://stokker-team-ojuicoeqcvdn.atlassian.net/jira/software/c/projects/DEV/boards/112"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        class={externalLinkClass}
-                                        >IT Team - DEV - Board (Scrum)</a
-                                    >
-                                    ja
-                                    <a
-                                        href="https://stokker-team-ojuicoeqcvdn.atlassian.net/jira/software/c/projects/DEV/boards/145"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        class={externalLinkClass}
-                                        >IT Team - Epics - Board (Kanban)</a
-                                    >.
+                                        <li>
+                                            <a
+                                                href="https://stokker-team-ojuicoeqcvdn.atlassian.net/browse/DEV"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                class={externalLinkClass}
+                                                >IT Development ehk DEV space</a
+                                            > – arendustööde peamine Jira space.
+                                        </li>
+                                        <li>
+                                            <a
+                                                href="https://stokker-team-ojuicoeqcvdn.atlassian.net/jira/software/c/projects/DEV/boards/112"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                class={externalLinkClass}
+                                                >IT Team - DEV - Board (Scrum)</a
+                                            > – arendustööde sprindid.
+                                        </li>
+                                        <li>
+                                            <a
+                                                href="https://stokker-team-ojuicoeqcvdn.atlassian.net/jira/software/c/projects/DEV/boards/145"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                class={externalLinkClass}
+                                                >IT Team - Epics - Board
+                                                (Kanban)</a
+                                            > – Epicute üldvaade.
+                                        </li>
+                                    </ul>
                                 </li>
                                 <li class={bulletClass}>
                                     <a
@@ -1234,13 +1243,21 @@
                                                     >Story Points</code
                                                 >i hinnang sisestatakse 0,5 MD
                                                 sammuga:
-                                                <strong
-                                                    >0,5 SP = 0,5 MD = 2,5 h</strong
+                                                <ul
+                                                    class="mt-2 list-disc space-y-1 pl-5 marker:text-stokker-primary/70"
                                                 >
-                                                ja
-                                                <strong
-                                                    >1 SP = 1 MD = 5 h</strong
-                                                >.
+                                                    <li>
+                                                        <strong
+                                                            >0,5 SP = 0,5 MD =
+                                                            2,5 h</strong
+                                                        >
+                                                    </li>
+                                                    <li>
+                                                        <strong
+                                                            >1 SP = 1 MD = 5 h</strong
+                                                        >
+                                                    </li>
+                                                </ul>
                                             </li>
                                             <li class={bulletClass}>
                                                 Ühe tunni töö hinnang võib olla

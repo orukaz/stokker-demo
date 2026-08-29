@@ -327,3 +327,20 @@ test('it work organization page includes the latest source guide revisions', fun
             'Epicule sama aega uuesti ei',
         );
 });
+
+test('dense guidance uses nested bullets', function () {
+    $pageSource = file_get_contents(
+        resource_path('js/pages/docs/ItWorkOrganization.svelte'),
+    );
+
+    expect($pageSource)->toContain(
+        '<strong class="block">Töö asukoht:</strong>',
+        'list-disc space-y-1.5 pl-5 marker:text-stokker-primary/70',
+        'arendustööde peamine Jira space.',
+        'arendustööde sprindid.',
+        'Epicute üldvaade.',
+        'list-disc space-y-1 pl-5 marker:text-stokker-primary/70',
+        '>0,5 SP = 0,5 MD =',
+        '>1 SP = 1 MD = 5 h</strong',
+    );
+});
