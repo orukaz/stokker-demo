@@ -44,8 +44,8 @@ test('it work organization page matches the source guide details', function () {
             'Sprint lõpetatakse',
             'Jiras ning Retrospective',
             'Logida võib kohe, päeva või',
-            'Töö on peatatud; juurde märgitakse',
-            'põhjus ja järgmine tegevus.',
+            'Töö on peatatud; märgitakse',
+            'järgmine tegevus.',
             "secondaryEmphasis: 'uus funktsionaalsus või parendus'",
             "secondaryEmphasis: 'olemasoleva lahenduse viga'",
             "secondaryEmphasis: 'ei ole arendustöö'",
@@ -117,7 +117,8 @@ test('it work organization page groups time logging guidance by topic', function
             '<ul class="space-y-2">',
             'Logi tegelik teostusaeg',
             'Logida võib kohe, päeva või',
-            'Epicule sama aega uuesti ei',
+            'Epicule teostustöödele logitud',
+            'aega uuesti ei lisata.',
             'Hindamine ja planeerimine',
             '0,5 SP = 0,5 MD = 2,5 h',
             '1 SP = 1 MD = 5 h',
@@ -197,7 +198,9 @@ test('subtask rules highlight the allowed parent issue types', function () {
             'Sub-taski eripära',
             'flex flex-wrap items-center gap-x-2 gap-y-1.5',
             '<span>— mitte</span>',
-            'luuakse see eraldi tööna:',
+            'kui töö on iseseisev või vajab',
+            'luuakse see eraldi',
+            'tööna:</span',
         )
         ->and(substr_count($pageSource, '<JiraIssueBadge type="story" />'))
         ->toBe(2)
@@ -254,7 +257,6 @@ test('it work organization page uses English Jira statuses', function () {
             "'To Do'",
             "'In Progress'",
             "'Done'",
-            'olekuga To Do',
             'Done-staatusesse',
         )
         ->not->toContain("'Vaja teha'", "'Lahendamisel'", "'Tehtud'")
@@ -276,10 +278,10 @@ test('it work organization guidance uses scan friendly labels', function () {
         '<strong>IT Ops ja IT-tugi:</strong>',
         '>Scrum</strong',
         '>Kanban</strong>',
-        '<strong>Sprinti valmis töö:</strong>',
+        '<strong>Sprinti võetakse:</strong>',
         '<strong>Mida tuuakse:</strong>',
         '<strong>Eelanalüüsi Task:</strong>',
-        '<strong>Pärast kinnitamist:</strong>',
+        'Pärast ülevaatust ja kinnitamist:',
         '<strong>Pärimine:</strong>',
         "primaryEmphasis: 'Suurem teema või projekt'",
         "primaryEmphasis: 'Arendustöö'",
@@ -289,4 +291,32 @@ test('it work organization guidance uses scan friendly labels', function () {
         '>{issue.primaryEmphasis}</strong',
         '>{issue.secondaryEmphasis}</strong',
     )->not->toContain('Scrum ja Kanban', '<strong>Ühine põhimõte:</strong>');
+});
+
+test('it work organization page includes the latest source guide revisions', function () {
+    $pageSource = file_get_contents(
+        resource_path('js/pages/docs/ItWorkOrganization.svelte'),
+    );
+
+    expect($pageSource)
+        ->toContain(
+            'E --> F`;',
+            "const epicApprovalFlow = [\n        'To Do',",
+            '<strong>Sprinti võetakse:</strong> selge, hinnatud ja',
+            'Kui komponent pole veel teada',
+            'planeerimata tööd paiknevad nimekirjades',
+            'Sub-taski ei planeerita',
+            'see valmib koos põhitööga samas',
+            '<strong>Loendi tähendus:</strong> loend on tööplaan,',
+            'loendis kirjeldatud Jira tööd luuakse pärast IT-komitee',
+            'Takistuse korral märgitakse selle põhjus',
+            'Epicule teostustöödele logitud',
+        )
+        ->not->toContain(
+            'R1 --> R2`;',
+            'Acceptance Criteria, sõltuvused, töömaht, vastutus',
+            'eelmise sprindi lõpetamata',
+            'backlogi või teadlikult järgmisse sprinti',
+            'Epicule sama aega uuesti ei',
+        );
 });

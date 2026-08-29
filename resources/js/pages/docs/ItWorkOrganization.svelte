@@ -39,7 +39,7 @@
             I --> J["10. Done ja<br/>järeltegevused"]
         end
 
-        R1 --> R2`;
+        E --> F`;
 
     const issueTypes = [
         {
@@ -80,6 +80,7 @@
     ] as const;
 
     const epicApprovalFlow = [
+        'To Do',
         'In Analysis',
         'Waiting for Approval',
         'Approved',
@@ -92,7 +93,7 @@
         {
             key: 'epic',
             types: ['epic'],
-            flow: ['To Do', ...epicApprovalFlow],
+            flow: epicApprovalFlow,
         },
         {
             key: 'story-bug',
@@ -469,9 +470,8 @@
                         <p
                             class="rounded-xl border border-slate-200 bg-slate-50 p-5"
                         >
-                            <strong>Sprinti valmis töö:</strong> soovitud tulemus,
-                            Acceptance Criteria, sõltuvused, töömaht, vastutus ja
-                            vajalik kinnitus on piisavalt selged.
+                            <strong>Sprinti võetakse:</strong> selge, hinnatud ja
+                            vajaliku kinnituse saanud töö.
                         </p>
                     </div>
                 </details>
@@ -502,7 +502,7 @@
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         class={externalLinkClass}
-                                        >IT Development ehk DEV</a
+                                        >IT Development ehk DEV space</a
                                     >
                                     ja
                                     <a
@@ -510,7 +510,7 @@
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         class={externalLinkClass}
-                                        >Development Board</a
+                                        >IT Team – Development – Board (Scrum)</a
                                     >.
                                 </li>
                                 <li class={bulletClass}>
@@ -520,7 +520,7 @@
                                         rel="noopener noreferrer"
                                         class={externalLinkClass}>Component</a
                                     >: kohustuslik väli, mis näitab seotud
-                                    süsteemi. Kui komponent pole teada,
+                                    süsteemi. Kui komponent pole veel teada,
                                     kasutatakse ajutiselt väärtust
                                     <code
                                         class="inline-flex rounded-md border border-stokker-primary/25 bg-stokker-primary-50 px-2 py-0.5 font-mono text-sm font-semibold text-stokker-primary"
@@ -552,7 +552,7 @@
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         class={externalLinkClass}>Backlog</a
-                                    >: planeerimata tööd on nimekirjades
+                                    >: planeerimata tööd paiknevad nimekirjades
                                     <span
                                         class="inline-flex flex-wrap items-center gap-1.5 align-middle"
                                     >
@@ -568,9 +568,13 @@
                                     </span>.
                                 </li>
                                 <li class={bulletClass}>
-                                    <strong>Sprint ja tähtaeg:</strong> sprint näitab
-                                    planeeritud nädalat. Due date'i kasutatakse ainult
-                                    kindla tähtaja korral.
+                                    <strong>Sprint ja tähtaeg:</strong> sprint
+                                    näitab planeeritud nädalat.
+                                    <code
+                                        class="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm font-medium text-stokker-primary"
+                                        >Due date</code
+                                    >'i kasutatakse ainult kindla tähtaja
+                                    korral.
                                 </li>
                             </ul>
                         </section>
@@ -655,9 +659,9 @@
                                     </div>
                                 </li>
                                 <li class={bulletClass}>
-                                    <strong>Sprint:</strong> Sub-taski ei lisata eraldi
-                                    sprinti; see järgib oma põhitöö sprinti ja peab
-                                    valmima koos põhitööga.
+                                    <strong>Sprint:</strong> Sub-taski ei planeerita
+                                    eraldi sprinti; see valmib koos põhitööga samas
+                                    sprindis.
                                 </li>
                                 <li class={bulletClass}>
                                     <div
@@ -665,8 +669,9 @@
                                     >
                                         <strong>Iseseisev töö:</strong>
                                         <span
-                                            >kui töö vajab eraldi sprinti,
-                                            luuakse see eraldi tööna:</span
+                                            >kui töö on iseseisev või vajab
+                                            eraldi sprinti, luuakse see eraldi
+                                            tööna:</span
                                         >
                                         <JiraIssueBadge type="story" />
                                         <JiraIssueBadge type="task" />
@@ -725,15 +730,15 @@
                                 <li class="flex items-start gap-2.5">
                                     <JiraStatusBadge status="On Hold" />
                                     <span>
-                                        Töö on peatatud; juurde märgitakse
-                                        põhjus ja järgmine tegevus.
+                                        Töö on peatatud; märgitakse põhjus ja
+                                        järgmine tegevus.
                                     </span>
                                 </li>
                                 <li class="flex items-start gap-2.5">
                                     <JiraStatusBadge status="Cancelled" />
                                     <span>
-                                        Tööga ei jätkata; juurde märgitakse
-                                        tühistamise põhjus.
+                                        Tööga ei jätkata; märgitakse tühistamise
+                                        põhjus.
                                     </span>
                                 </li>
                             </ul>
@@ -866,13 +871,13 @@
                             </h3>
                             <ul class="mt-4 space-y-3">
                                 <li class={bulletClass}>
-                                    <strong>Epic:</strong> kinnitamist vajavat Epicut
-                                    ennast eelanalüüsi tegemiseks sprinti ei lisata.
+                                    <strong>Epic:</strong> Epicut ennast eelanalüüsiks
+                                    sprinti ei lisata.
                                 </li>
                                 <li class={bulletClass}>
-                                    <strong>Eelanalüüsi Task:</strong> luuakse Epicu
-                                    alla ja planeeritakse sprinti. Selle käigus täpsustatakse
-                                    Epicu eesmärk, skoop, sõltuvused, riskid ja võimalikud
+                                    <strong>Eelanalüüsi Task:</strong> Epicu alla
+                                    luuakse sprinti planeeritav Task, milles täpsustatakse
+                                    eesmärk, skoop, sõltuvused, riskid ja võimalikud
                                     arendustööd.
                                 </li>
                                 <li class={bulletClass}>
@@ -896,16 +901,16 @@
                                     </div>
                                 </li>
                                 <li class={bulletClass}>
-                                    <strong>Enne kinnitamist:</strong> loend on esialgne
-                                    tööplaan, mitte Jira backlog. Epicu eelanalüüsi
-                                    Task on erand; teisi töid veel ei looda.
+                                    <strong>Loendi tähendus:</strong> loend on tööplaan,
+                                    mitte Jira backlog.
                                 </li>
                                 <li class={bulletClass}>
-                                    <strong>Pärast kinnitamist:</strong> Jira tööd
-                                    luuakse pärast IT-komitee ülevaatust ja Epicule
-                                    vajaliku kinnituse saamist. Seejärel täpsustatakse
-                                    need Refinementis ning planeeritakse backlogi
-                                    või sprinti.
+                                    <strong
+                                        >Pärast ülevaatust ja kinnitamist:</strong
+                                    >
+                                    loendis kirjeldatud Jira tööd luuakse pärast IT-komitee
+                                    ülevaatust ja vajaliku kinnituse saamist ning
+                                    täpsustatakse Refinementis.
                                 </li>
                             </ul>
                         </section>
@@ -928,8 +933,8 @@
                                     valmimisaeg.
                                 </li>
                                 <li class={bulletClass}>
-                                    <strong>Sprint:</strong> kinnitamata IT Improvement
-                                    või IT Project algatust sprinti ei võeta.
+                                    <strong>Sprint:</strong> kinnitamata IT Improvementi
+                                    või IT Projecti algatust sprinti ei võeta.
                                 </li>
                                 <li class={bulletClass}>
                                     <strong>Tagasilükkamine:</strong> Epic liigub
@@ -1065,14 +1070,13 @@
                                 <li class={bulletClass}>
                                     <strong>Ettevalmistus:</strong> Product Owner
                                     järjestab Ready for Development tööd. Tiim kontrollib
-                                    saadavust, sõltuvusi ja eelmise sprindi lõpetamata
-                                    töid.
+                                    saadavust ja sõltuvusi.
                                 </li>
                                 <li class={bulletClass}>
                                     <strong>Sprint Planning:</strong> lepitakse kokku
                                     Sprint Goal ja valitakse realistlik töömaht. Tööd
-                                    lisatakse uude sprinti olekuga To Do ning sprint
-                                    käivitatakse Jiras.
+                                    lisatakse uude sprinti ning sprint käivitatakse
+                                    Jiras.
                                 </li>
                                 <li class={bulletClass}>
                                     <strong>Sprint Goal:</strong> 1–3 lühikest tulemust,
@@ -1088,9 +1092,9 @@
                                 </li>
                                 <li class={bulletClass}>
                                     <strong>Lõpetamata töö:</strong> uuendatakse staatus,
-                                    takistuse põhjus, töölogid ja järelejäänud maht.
-                                    Product Owner ja tiim otsustavad, kas töö läheb
-                                    backlogi või teadlikult järgmisse sprinti.
+                                    takistus, töölogid ja järelejäänud maht. Product
+                                    Owner ja tiim otsustavad, kas töö läheb backlogi
+                                    või järgmisse sprinti.
                                 </li>
                             </ul>
                         </section>
@@ -1166,10 +1170,10 @@
                                         Takistused ja seosed
                                     </dt>
                                     <dd class="mt-2">
-                                        Kui töö takerdub, märgi Jiras takistuse
-                                        põhjus ja järgmine tegevus. Seo töö
-                                        vastava branchi, commit'ide ja Pull
-                                        Requestiga.
+                                        Takistuse korral märgitakse selle põhjus
+                                        ja järgmine tegevus. Jira tööga seotakse
+                                        vajalik branch, commit'id ja Pull
+                                        Request.
                                     </dd>
                                 </div>
 
@@ -1192,8 +1196,8 @@
                                                 peavad olema kuu lõpuks korras.
                                             </li>
                                             <li class={bulletClass}>
-                                                Epicule sama aega uuesti ei
-                                                logita.
+                                                Epicule teostustöödele logitud
+                                                aega uuesti ei lisata.
                                             </li>
                                         </ul>
                                     </dd>
@@ -1208,8 +1212,11 @@
                                     <dd class="mt-3">
                                         <ul class="space-y-2">
                                             <li class={bulletClass}>
-                                                Story Pointsi hinnang
-                                                sisestatakse 0,5 MD sammuga:
+                                                <code
+                                                    class="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm font-medium text-stokker-primary"
+                                                    >Story Points</code
+                                                >i hinnang sisestatakse 0,5 MD
+                                                sammuga:
                                                 <strong
                                                     >0,5 SP = 0,5 MD = 2,5 h</strong
                                                 >
@@ -1220,7 +1227,14 @@
                                             </li>
                                             <li class={bulletClass}>
                                                 Ühe tunni töö hinnang võib olla
-                                                0,5 MD, tegelik töölogi aga 1 h.
+                                                <code
+                                                    class="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm font-medium text-stokker-primary"
+                                                    >0,5 MD</code
+                                                >, tegelik töölogi aga
+                                                <code
+                                                    class="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm font-medium text-stokker-primary"
+                                                    >1 h</code
+                                                >.
                                             </li>
                                             <li class={bulletClass}>
                                                 Hinnangud ja töölogid aitavad
