@@ -187,6 +187,28 @@ test('it work organization page uses Jira style issue badges', function () {
         );
 });
 
+test('subtask rules highlight the allowed parent issue types', function () {
+    $pageSource = file_get_contents(
+        resource_path('js/pages/docs/ItWorkOrganization.svelte'),
+    );
+
+    expect($pageSource)
+        ->toContain(
+            'Sub-taski eripära',
+            'flex flex-wrap items-center gap-x-2 gap-y-1.5',
+            '<span>— mitte</span>',
+            'luuakse see eraldi tööna:',
+        )
+        ->and(substr_count($pageSource, '<JiraIssueBadge type="story" />'))
+        ->toBe(2)
+        ->and(substr_count($pageSource, '<JiraIssueBadge type="task" />'))
+        ->toBe(2)
+        ->and(substr_count($pageSource, '<JiraIssueBadge type="bug" />'))
+        ->toBe(2)
+        ->and(substr_count($pageSource, '<JiraIssueBadge type="epic" />'))
+        ->toBe(1);
+});
+
 test('it work organization page uses subtle status badges', function () {
     $pageSource = file_get_contents(
         resource_path('js/pages/docs/ItWorkOrganization.svelte'),

@@ -641,8 +641,18 @@
                             </h3>
                             <ul class="mt-4 space-y-3">
                                 <li class={bulletClass}>
-                                    <strong>Parent:</strong> Sub-taski otsene parent
-                                    on Story, Task või Bug, mitte Epic.
+                                    <div
+                                        class="flex flex-wrap items-center gap-x-2 gap-y-1.5"
+                                    >
+                                        <strong>Parent:</strong>
+                                        <span>Sub-taski otsene parent on</span>
+                                        <JiraIssueBadge type="story" />
+                                        <JiraIssueBadge type="task" />
+                                        <span>või</span>
+                                        <JiraIssueBadge type="bug" />
+                                        <span>— mitte</span>
+                                        <JiraIssueBadge type="epic" />
+                                    </div>
                                 </li>
                                 <li class={bulletClass}>
                                     <strong>Sprint:</strong> Sub-taski ei lisata eraldi
@@ -650,8 +660,19 @@
                                     valmima koos põhitööga.
                                 </li>
                                 <li class={bulletClass}>
-                                    <strong>Iseseisev töö:</strong> kui töö vajab
-                                    eraldi sprinti, luuakse see Story, Taski või Bugina.
+                                    <div
+                                        class="flex flex-wrap items-center gap-x-2 gap-y-1.5"
+                                    >
+                                        <strong>Iseseisev töö:</strong>
+                                        <span
+                                            >kui töö vajab eraldi sprinti,
+                                            luuakse see eraldi tööna:</span
+                                        >
+                                        <JiraIssueBadge type="story" />
+                                        <JiraIssueBadge type="task" />
+                                        <span>või</span>
+                                        <JiraIssueBadge type="bug" />
+                                    </div>
                                 </li>
                             </ul>
                         </section>
