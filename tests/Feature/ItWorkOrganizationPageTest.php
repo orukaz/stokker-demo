@@ -187,5 +187,11 @@ test('it work organization guidance uses scan friendly labels', function () {
         '<strong>Eelanalüüsi Task:</strong>',
         '<strong>Pärast kinnitamist:</strong>',
         '<strong>Pärimine:</strong>',
+        "emphasis: 'Suurem teema või projekt'",
+        "emphasis: 'Arendustöö'",
+        "emphasis: 'sisemine töö'",
+        "emphasis: 'teostussamm'",
+        '<strong',
+        '>{issue.emphasis}</strong',
     );
 });

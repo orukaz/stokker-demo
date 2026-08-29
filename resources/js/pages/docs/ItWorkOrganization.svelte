@@ -44,27 +44,33 @@
     const issueTypes = [
         {
             type: 'epic',
-            description:
-                'Suurem teema või projekt, mis koosneb seotud arendustöödest.',
+            prefix: '',
+            emphasis: 'Suurem teema või projekt',
+            suffix: ', mis koosneb seotud arendustöödest.',
         },
         {
             type: 'story',
-            description:
-                'Arendustöö, millega luuakse uus funktsionaalsus või parendus.',
+            prefix: '',
+            emphasis: 'Arendustöö',
+            suffix: ', millega luuakse uus funktsionaalsus või parendus.',
         },
         {
             type: 'bug',
-            description:
-                'Arendustöö, millega parandatakse olemasoleva lahenduse viga.',
+            prefix: '',
+            emphasis: 'Arendustöö',
+            suffix: ', millega parandatakse olemasoleva lahenduse viga.',
         },
         {
             type: 'task',
-            description:
-                'Analüüsi-, seadistus-, tehniline või muu sisemine töö.',
+            prefix: 'Analüüsi-, seadistus-, tehniline või muu ',
+            emphasis: 'sisemine töö',
+            suffix: '.',
         },
         {
             type: 'subtask',
-            description: 'Loo, ülesande või vea väiksem teostussamm.',
+            prefix: 'Loo, ülesande või vea väiksem ',
+            emphasis: 'teostussamm',
+            suffix: '.',
         },
     ] as const;
 
@@ -527,9 +533,11 @@
                                                         type={issue.type}
                                                     />
                                                 </td>
-                                                <td class="px-4 py-3"
-                                                    >{issue.description}</td
-                                                >
+                                                <td class="px-4 py-3">
+                                                    {issue.prefix}<strong
+                                                        >{issue.emphasis}</strong
+                                                    >{issue.suffix}
+                                                </td>
                                             </tr>
                                         {/each}
                                     </tbody>
