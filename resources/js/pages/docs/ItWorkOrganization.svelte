@@ -395,44 +395,43 @@
                         />
                     </summary>
                     <div class="space-y-6 pb-10 leading-7 text-slate-700">
-                        <p>Uus töökorraldus aitab:</p>
-                        <ul class="space-y-2">
-                            <li class={bulletClass}>
-                                <strong>Fookus:</strong> suunata tiimi võimekus kõige
-                                olulisematele töödele;
-                            </li>
-                            <li class={bulletClass}>
-                                <strong>Vähem pooleliolevat:</strong> vähendada korraga
-                                pooleliolevate tööde hulka;
-                            </li>
-                            <li class={bulletClass}>
-                                <strong>Selgus:</strong> muuta prioriteedid, vastutus
-                                ja tööde seis arusaadavaks;
-                            </li>
-                            <li class={bulletClass}>
-                                <strong>Riskid nähtavaks:</strong> tuua takistused,
-                                sõltuvused ja riskid varem nähtavale.
-                            </li>
-                        </ul>
-
                         <section>
                             <h3 class={subsectionHeadingClass}>
-                                Scrum ja Kanban
+                                Uus töökorraldus aitab
                             </h3>
                             <ul class="mt-4 space-y-2">
                                 <li class={bulletClass}>
-                                    <strong>Scrum:</strong> arendustööd tehakse ühenädalaste
-                                    sprintidena, millel on valitud tööd ja ühine eesmärk.
+                                    <strong>Fookus:</strong> suunata tiimi võimekus
+                                    kõige olulisematele töödele;
                                 </li>
                                 <li class={bulletClass}>
-                                    <strong>Kanban:</strong> IT Opsi ja IT-toe järgmine
-                                    töö võetakse järjestatud nimekirjast vaba võimekuse
-                                    tekkimisel.
+                                    <strong>Vähem pooleliolevat:</strong> vähendada
+                                    korraga pooleliolevate tööde hulka;
                                 </li>
                                 <li class={bulletClass}>
-                                    <strong>Ühine põhimõte:</strong> mõlemas hoitakse
-                                    tööde seis, prioriteedid, vastutajad ja takistused
-                                    nähtavana.
+                                    <strong>Selgus:</strong> muuta prioriteedid, vastutus
+                                    ja tööde seis arusaadavaks;
+                                </li>
+                                <li class={bulletClass}>
+                                    <strong>Riskid nähtavaks:</strong> tuua takistused,
+                                    sõltuvused ja riskid varem nähtavale.
+                                </li>
+                            </ul>
+                        </section>
+
+                        <section>
+                            <h3 class={subsectionHeadingClass}>Tööviis</h3>
+                            <ul class="mt-4 space-y-2">
+                                <li class={bulletClass}>
+                                    <strong>Arendus:</strong> tööd tehakse
+                                    ühenädalaste ühise eesmärgiga sprintidena (<strong
+                                        >Scrum</strong
+                                    >).
+                                </li>
+                                <li class={bulletClass}>
+                                    <strong>IT Ops ja IT-tugi:</strong> tööd
+                                    liiguvad järjestatud nimekirja alusel pideva
+                                    voona (<strong>Kanban</strong>).
                                 </li>
                             </ul>
                         </section>

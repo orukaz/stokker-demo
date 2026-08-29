@@ -124,8 +124,8 @@ test('it work organization page groups time logging guidance by topic', function
             'Ühe tunni töö hinnang võib olla',
             'Hinnangud ja töölogid aitavad',
         )
-        ->and(substr_count($pageSource, '<ul class="space-y-2">'))
-        ->toBe(3);
+        ->and(substr_count($pageSource, '<dd class="mt-3">'))
+        ->toBe(2);
 });
 
 test('it work organization page uses Jira style issue badges', function () {
@@ -215,7 +215,13 @@ test('it work organization guidance uses scan friendly labels', function () {
     );
 
     expect($pageSource)->toContain(
+        'Uus töökorraldus aitab',
         '<strong>Fookus:</strong>',
+        '>Tööviis</h3>',
+        '<strong>Arendus:</strong>',
+        '<strong>IT Ops ja IT-tugi:</strong>',
+        '>Scrum</strong',
+        '>Kanban</strong>',
         '<strong>Sprinti valmis töö:</strong>',
         '<strong>Mida tuuakse:</strong>',
         '<strong>Eelanalüüsi Task:</strong>',
@@ -228,5 +234,5 @@ test('it work organization guidance uses scan friendly labels', function () {
         '<strong',
         '>{issue.primaryEmphasis}</strong',
         '>{issue.secondaryEmphasis}</strong',
-    );
+    )->not->toContain('Scrum ja Kanban', '<strong>Ühine põhimõte:</strong>');
 });
