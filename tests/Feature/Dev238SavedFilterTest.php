@@ -35,13 +35,17 @@ test('the DEV-238 saved filters demo page is available', function () {
         );
 });
 
-test('saved filter names are edited inline and the active view is badged', function () {
+test('saved filters use inline management controls', function () {
     $component = File::get(resource_path('js/pages/demos/SavedFilters.svelte'));
 
     expect($component)
         ->toContain('editingFilterId === savedFilter.id')
         ->toContain('Aktiivne')
         ->toContain('data-testid="inline-filter-save"')
+        ->toContain('data-testid="inline-filter-create"')
+        ->toContain('data-testid="inline-filter-create-save"')
+        ->toContain('isCreatingFilter')
+        ->toContain('is_default: false')
         ->toContain('data-testid="saved-filters-header"')
         ->toContain('data-testid="unsaved-filter-actions"')
         ->toContain('Salvesta üle')
@@ -56,6 +60,8 @@ test('saved filter names are edited inline and the active view is badged', funct
         ->toContain('aria-pressed={savedFilter.isDefault}')
         ->toContain("'text-amber-500 hover:text-amber-600'")
         ->not->toContain('filterSummary(')
+        ->not->toContain('saveDialogOpen')
+        ->not->toContain('saveAsDefault')
         ->not->toContain('renameDialogOpen');
 });
 

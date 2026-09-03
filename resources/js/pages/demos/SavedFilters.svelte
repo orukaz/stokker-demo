@@ -176,13 +176,12 @@
         cloneFilters(initialDefault?.filters ?? emptyFilters()),
     );
     let selectedFilterId = $state<number | null>(initialDefault?.id ?? null);
-    let saveDialogOpen = $state(false);
+    let isCreatingFilter = $state(false);
     let deleteDialogOpen = $state(false);
     let savedFiltersMenuOpen = $state(false);
     let editingFilterId = $state<number | null>(null);
     let pendingFilter = $state<SavedFilter | null>(null);
     let filterName = $state('');
-    let saveAsDefault = $state(false);
     let nameError = $state('');
     let isSaving = $state(false);
     let isDeleting = $state(false);
@@ -297,8 +296,8 @@
         selectedFilterId = null;
     }
 
-    function openSaveDialog(): void {
-        openSaveDialogWithName(`Minu filter ${savedFilters.length + 1}`);
+    function startInlineCreate(): void {
+        startInlineCreateWithName(`Minu filter ${savedFilters.length + 1}`);
     }
 
     function openChangedFiltersAsNew(): void {
@@ -306,17 +305,21 @@
             ? `${selectedFilter.name} koopia`
             : 'Minu filter';
 
-        openSaveDialogWithName(availableFilterName(baseName));
+        startInlineCreateWithName(availableFilterName(baseName));
     }
 
-    function openSaveDialogWithName(suggestedName: string): void {
-        savedFiltersMenuOpen = false;
+    function startInlineCreateWithName(suggestedName: string): void {
         editingFilterId = null;
         pendingFilter = null;
         filterName = suggestedName;
-        saveAsDefault = savedFilters.length === 0;
         nameError = '';
-        saveDialogOpen = true;
+        isCreatingFilter = true;
+    }
+
+    function cancelInlineCreate(): void {
+        isCreatingFilter = false;
+        filterName = '';
+        nameError = '';
     }
 
     function availableFilterName(baseName: string): string {
@@ -337,6 +340,7 @@
     }
 
     function startInlineRename(savedFilter: SavedFilter): void {
+        isCreatingFilter = false;
         editingFilterId = savedFilter.id;
         filterName = savedFilter.name;
         nameError = '';
@@ -414,7 +418,7 @@
                 view: 'orders',
                 name: filterName.trim(),
                 filters: cloneFilters(filters),
-                is_default: saveAsDefault,
+                is_default: false,
             });
 
             if (response.savedFilter.isDefault) {
@@ -429,7 +433,8 @@
                 ...savedFilters,
             ]);
             selectedFilterId = response.savedFilter.id;
-            saveDialogOpen = false;
+            isCreatingFilter = false;
+            filterName = '';
             toast.success('Filter salvestatud');
         } catch (error) {
             if (error instanceof RequestError) {
@@ -939,7 +944,7 @@
                             </div>
 
                             <CardContent class="p-2">
-                                {#if hasUnsavedChanges}
+                                {#if hasUnsavedChanges && !isCreatingFilter}
                                     <div
                                         data-testid="unsaved-filter-actions"
                                         class="rounded-lg border border-amber-200/80 bg-amber-50/60 p-3 text-slate-900"
@@ -1201,12 +1206,60 @@
                                     </div>
                                 {/if}
 
-                                {#if !hasUnsavedChanges}
+                                {#if isCreatingFilter}
+                                    <div class="my-2 h-px bg-slate-100"></div>
+                                    <form
+                                        data-testid="inline-filter-create"
+                                        class="flex items-start gap-1 p-1.5"
+                                        onsubmit={saveNewFilter}
+                                    >
+                                        <div class="min-w-0 flex-1">
+                                            <Input
+                                                id="new-filter-name"
+                                                bind:value={filterName}
+                                                maxlength={60}
+                                                aria-label="Uue filtri nimi"
+                                                aria-invalid={Boolean(
+                                                    nameError,
+                                                )}
+                                                class="h-8 bg-white text-sm font-semibold"
+                                                autofocus
+                                            />
+                                            {#if nameError}
+                                                <p
+                                                    class="px-1 pt-1 text-xs text-destructive"
+                                                >
+                                                    {nameError}
+                                                </p>
+                                            {/if}
+                                        </div>
+                                        <button
+                                            type="submit"
+                                            data-testid="inline-filter-create-save"
+                                            class="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-stokker-primary transition-colors hover:bg-stokker-primary-50 hover:text-stokker-primary-dark focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-stokker-primary disabled:opacity-40"
+                                            aria-label="Salvesta uus filter"
+                                            title="Salvesta"
+                                            disabled={isSaving ||
+                                                filterName.trim() === ''}
+                                        >
+                                            <Save class="size-4" />
+                                        </button>
+                                        <button
+                                            type="button"
+                                            class="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white hover:text-slate-700 focus-visible:outline-2 focus-visible:outline-stokker-primary"
+                                            aria-label="Loobu filtri lisamisest"
+                                            title="Loobu"
+                                            onclick={cancelInlineCreate}
+                                        >
+                                            <X class="size-4" />
+                                        </button>
+                                    </form>
+                                {:else if !hasUnsavedChanges}
                                     <div class="my-2 h-px bg-slate-100"></div>
                                     <button
                                         type="button"
                                         class="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-stokker-primary"
-                                        onclick={openSaveDialog}
+                                        onclick={startInlineCreate}
                                     >
                                         <Plus class="size-4" />
                                         Salvesta uue filtrina
@@ -1222,70 +1275,6 @@
         <SourceCodeFiles sourceSet="saved-filters" />
     </div>
 </main>
-
-<Dialog bind:open={saveDialogOpen}>
-    <DialogContent class="max-w-md">
-        <form class="grid gap-5" onsubmit={saveNewFilter}>
-            <div class="grid gap-1.5">
-                <DialogTitle>Salvesta uus filter</DialogTitle>
-            </div>
-
-            <div class="grid gap-2">
-                <Label for="new-filter-name">Filtri nimi</Label>
-                <Input
-                    id="new-filter-name"
-                    bind:value={filterName}
-                    maxlength={60}
-                    aria-invalid={Boolean(nameError)}
-                    aria-describedby={nameError
-                        ? 'new-filter-name-error'
-                        : undefined}
-                    autofocus
-                />
-                {#if nameError}
-                    <p
-                        id="new-filter-name-error"
-                        class="text-sm text-destructive"
-                    >
-                        {nameError}
-                    </p>
-                {/if}
-            </div>
-
-            <label
-                class="flex cursor-pointer items-start gap-3 rounded-lg border bg-slate-50 p-3"
-            >
-                <input
-                    type="checkbox"
-                    bind:checked={saveAsDefault}
-                    class="mt-0.5 size-4 rounded border-slate-300 text-stokker-primary accent-stokker-primary"
-                />
-                <span>
-                    <span class="block text-sm font-semibold text-slate-900">
-                        Määra vaikefiltriks
-                    </span>
-                </span>
-            </label>
-
-            <DialogFooter>
-                <Button
-                    type="button"
-                    variant="outline"
-                    onclick={() => (saveDialogOpen = false)}
-                >
-                    Loobu
-                </Button>
-                <Button
-                    type="submit"
-                    class="bg-stokker-primary text-white hover:bg-stokker-primary-dark"
-                    disabled={isSaving || filterName.trim() === ''}
-                >
-                    {isSaving ? 'Salvestan…' : 'Salvesta filter'}
-                </Button>
-            </DialogFooter>
-        </form>
-    </DialogContent>
-</Dialog>
 
 <Dialog bind:open={deleteDialogOpen}>
     <DialogContent class="max-w-md">
