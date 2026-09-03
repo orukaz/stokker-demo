@@ -626,14 +626,6 @@
                                             {activeFilterCount} aktiivset
                                         </span>
                                     {/if}
-                                    {#if selectedFilter}
-                                        <span
-                                            class="inline-flex items-center gap-1 rounded-full bg-sky-50 px-2.5 py-1 text-xs font-semibold text-sky-700 ring-1 ring-sky-600/15"
-                                        >
-                                            <BookmarkCheck class="size-3.5" />
-                                            {selectedFilter.name}
-                                        </span>
-                                    {/if}
                                 </div>
 
                                 <div class="flex flex-wrap items-center gap-2">
@@ -647,6 +639,15 @@
                                         <X class="size-4" />
                                         Tühjenda
                                     </Button>
+                                    {#if selectedFilter}
+                                        <span
+                                            data-testid="selected-filter-indicator"
+                                            class="inline-flex max-w-48 items-center truncate rounded-full bg-sky-50 px-2.5 py-1 text-xs font-semibold text-sky-700 ring-1 ring-sky-600/15"
+                                            title={`Valitud filter: ${selectedFilter.name}`}
+                                        >
+                                            {selectedFilter.name}
+                                        </span>
+                                    {/if}
                                     <Button
                                         variant="outline"
                                         size="icon-sm"
@@ -916,7 +917,7 @@
                     ></button>
 
                     <aside
-                        class="absolute top-3 right-3 z-50 w-[min(22rem,calc(100%-1.5rem))]"
+                        class="absolute top-3 right-3 left-3 z-50 sm:left-auto sm:w-[22rem]"
                         aria-labelledby="saved-filters-heading"
                     >
                         <Card
@@ -1015,7 +1016,7 @@
                                             )}
                                     >
                                         <ul
-                                            class="grid gap-1"
+                                            class="grid min-w-0 gap-1"
                                             aria-busy={isReordering}
                                         >
                                             {#each savedFilters as savedFilter, index (savedFilter.id)}
@@ -1031,7 +1032,7 @@
                                                     data-dragging={isDragging.current}
                                                     class:selected-filter={selectedFilterId ===
                                                         savedFilter.id}
-                                                    class="group relative z-0 rounded-lg border border-transparent transition-[border-color,background-color,box-shadow,opacity] hover:bg-slate-50 data-[dragging=true]:z-10 data-[dragging=true]:scale-[1.02] data-[dragging=true]:border-stokker-primary data-[dragging=true]:bg-white data-[dragging=true]:opacity-90 data-[dragging=true]:shadow-lg [&.selected-filter]:border-sky-200 [&.selected-filter]:bg-sky-50"
+                                                    class="group relative z-0 min-w-0 rounded-lg border border-transparent transition-[border-color,background-color,box-shadow,opacity] hover:bg-slate-50 data-[dragging=true]:z-10 data-[dragging=true]:scale-[1.02] data-[dragging=true]:border-stokker-primary data-[dragging=true]:bg-white data-[dragging=true]:opacity-90 data-[dragging=true]:shadow-lg [&.selected-filter]:border-sky-200 [&.selected-filter]:bg-sky-50"
                                                     {@attach ref}
                                                 >
                                                     {#if editingFilterId === savedFilter.id}
@@ -1111,14 +1112,15 @@
                                                             </button>
                                                             <button
                                                                 type="button"
-                                                                class="flex min-w-0 flex-1 items-center gap-2 rounded-md px-2 py-1.5 text-left focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-stokker-primary"
+                                                                class="flex min-w-0 flex-1 items-center gap-2 overflow-hidden rounded-md px-2 py-1.5 text-left focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-stokker-primary"
+                                                                title={savedFilter.name}
                                                                 onclick={() =>
                                                                     applySavedFilter(
                                                                         savedFilter,
                                                                     )}
                                                             >
                                                                 <span
-                                                                    class="truncate text-sm font-semibold text-slate-900"
+                                                                    class="min-w-0 flex-1 truncate text-sm font-semibold text-slate-900"
                                                                 >
                                                                     {savedFilter.name}
                                                                 </span>
@@ -1132,7 +1134,8 @@
                                                             </button>
 
                                                             <div
-                                                                class="flex shrink-0 items-center gap-0.5"
+                                                                data-testid={`saved-filter-actions-${savedFilter.id}`}
+                                                                class="ml-auto flex shrink-0 items-center gap-0.5"
                                                             >
                                                                 <button
                                                                     type="button"
