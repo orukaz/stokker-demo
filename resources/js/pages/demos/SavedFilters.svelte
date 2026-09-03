@@ -1032,7 +1032,7 @@
                                                     data-dragging={isDragging.current}
                                                     class:selected-filter={selectedFilterId ===
                                                         savedFilter.id}
-                                                    class="group relative z-0 min-w-0 rounded-lg border border-transparent transition-[border-color,background-color,box-shadow,opacity] hover:bg-slate-50 data-[dragging=true]:z-10 data-[dragging=true]:scale-[1.02] data-[dragging=true]:border-stokker-primary data-[dragging=true]:bg-white data-[dragging=true]:opacity-90 data-[dragging=true]:shadow-lg [&.selected-filter]:border-sky-200 [&.selected-filter]:bg-sky-50"
+                                                    class="group relative z-0 min-w-0 rounded-lg border border-transparent transition-[border-color,background-color,box-shadow,opacity] hover:border-sky-200 hover:bg-sky-50/70 hover:shadow-sm data-[dragging=true]:z-10 data-[dragging=true]:scale-[1.02] data-[dragging=true]:border-stokker-primary data-[dragging=true]:bg-white data-[dragging=true]:opacity-90 data-[dragging=true]:shadow-lg [&.selected-filter]:border-sky-200 [&.selected-filter]:bg-sky-50"
                                                     {@attach ref}
                                                 >
                                                     {#if editingFilterId === savedFilter.id}

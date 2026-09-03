@@ -63,6 +63,7 @@ test('saved filters use inline management controls', function () {
         ->toContain('ml-auto flex shrink-0')
         ->toContain('grid min-w-0 gap-1')
         ->toContain('relative z-0 min-w-0')
+        ->toContain('hover:border-sky-200 hover:bg-sky-50/70 hover:shadow-sm')
         ->toContain('left-3 z-50 sm:left-auto sm:w-[22rem]')
         ->toContain('aria-pressed={savedFilter.isDefault}')
         ->toContain("'text-amber-500 hover:text-amber-600'")
