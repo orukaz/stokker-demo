@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductFavoriteController;
+use App\Http\Controllers\SavedFilterController;
 use App\Http\Controllers\SourceCodeController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,6 +17,18 @@ Route::inertia('/demos/dev-193/phone-field', 'demos/PhoneField', [
     'siteCountryIsos' => config('phone.site_country_isos'),
 ])
     ->name('demos.dev_193.phone_field');
+Route::prefix('demos/dev-238')->name('demos.dev_238.')->group(function () {
+    Route::get('/saved-filters', [SavedFilterController::class, 'index'])
+        ->name('saved_filters.index');
+    Route::post('/saved-filters', [SavedFilterController::class, 'store'])
+        ->name('saved_filters.store');
+    Route::patch('/saved-filters/{savedFilter}', [SavedFilterController::class, 'update'])
+        ->name('saved_filters.update');
+    Route::put('/saved-filters/{savedFilter}/default', [SavedFilterController::class, 'makeDefault'])
+        ->name('saved_filters.make_default');
+    Route::delete('/saved-filters/{savedFilter}', [SavedFilterController::class, 'destroy'])
+        ->name('saved_filters.destroy');
+});
 Route::prefix('demos/dev-160')->name('demos.dev_160.')->group(function () {
     Route::get('/discount-reason-modal', fn () => response()->file(
         public_path('dev-160-discount-reason-modal.html'),

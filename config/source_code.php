@@ -31,6 +31,36 @@ return [
     'max_file_size' => 512 * 1024,
 
     'source_sets' => [
+        'saved-filters' => [
+            'title' => 'Salvestatud filtrite lähtekood',
+            'files' => [
+                'demo-page' => [
+                    'label' => 'resources/js/pages/demos/SavedFilters.svelte',
+                    'language' => 'svelte',
+                    'path' => 'resources/js/pages/demos/SavedFilters.svelte',
+                ],
+                'controller' => [
+                    'label' => 'app/Http/Controllers/SavedFilterController.php',
+                    'language' => 'php',
+                    'path' => 'app/Http/Controllers/SavedFilterController.php',
+                ],
+                'model' => [
+                    'label' => 'app/Models/SavedFilter.php',
+                    'language' => 'php',
+                    'path' => 'app/Models/SavedFilter.php',
+                ],
+                'store-request' => [
+                    'label' => 'app/Http/Requests/StoreSavedFilterRequest.php',
+                    'language' => 'php',
+                    'path' => 'app/Http/Requests/StoreSavedFilterRequest.php',
+                ],
+                'feature-test' => [
+                    'label' => 'tests/Feature/Dev238SavedFilterTest.php',
+                    'language' => 'php',
+                    'path' => 'tests/Feature/Dev238SavedFilterTest.php',
+                ],
+            ],
+        ],
         'phone-field' => [
             'title' => 'Telefonivälja lähtekood',
             'files' => [
