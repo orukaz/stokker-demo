@@ -1,9 +1,9 @@
 <script lang="ts">
     import BookmarkCheck from 'lucide-svelte/icons/bookmark-check';
-    import Check from 'lucide-svelte/icons/check';
     import ChevronDown from 'lucide-svelte/icons/chevron-down';
     import Pencil from 'lucide-svelte/icons/pencil';
     import Plus from 'lucide-svelte/icons/plus';
+    import Save from 'lucide-svelte/icons/save';
     import Search from 'lucide-svelte/icons/search';
     import Star from 'lucide-svelte/icons/star';
     import Trash2 from 'lucide-svelte/icons/trash-2';
@@ -171,9 +171,9 @@
     );
     let selectedFilterId = $state<number | null>(initialDefault?.id ?? null);
     let saveDialogOpen = $state(false);
-    let renameDialogOpen = $state(false);
     let deleteDialogOpen = $state(false);
     let savedFiltersMenuOpen = $state(false);
+    let editingFilterId = $state<number | null>(null);
     let pendingFilter = $state<SavedFilter | null>(null);
     let filterName = $state('');
     let saveAsDefault = $state(false);
@@ -261,20 +261,54 @@
     }
 
     function openSaveDialog(): void {
+        openSaveDialogWithName(`Minu filter ${savedFilters.length + 1}`);
+    }
+
+    function openChangedFiltersAsNew(): void {
+        const baseName = selectedFilter
+            ? `${selectedFilter.name} koopia`
+            : 'Minu filter';
+
+        openSaveDialogWithName(availableFilterName(baseName));
+    }
+
+    function openSaveDialogWithName(suggestedName: string): void {
         savedFiltersMenuOpen = false;
+        editingFilterId = null;
         pendingFilter = null;
-        filterName = `Minu filter ${savedFilters.length + 1}`;
+        filterName = suggestedName;
         saveAsDefault = savedFilters.length === 0;
         nameError = '';
         saveDialogOpen = true;
     }
 
-    function openRenameDialog(savedFilter: SavedFilter): void {
-        savedFiltersMenuOpen = false;
-        pendingFilter = savedFilter;
+    function availableFilterName(baseName: string): string {
+        const existingNames = new Set(
+            savedFilters.map((savedFilter) =>
+                savedFilter.name.toLocaleLowerCase('et'),
+            ),
+        );
+        let candidate = baseName;
+        let suffix = 2;
+
+        while (existingNames.has(candidate.toLocaleLowerCase('et'))) {
+            candidate = `${baseName} ${suffix}`;
+            suffix += 1;
+        }
+
+        return candidate;
+    }
+
+    function startInlineRename(savedFilter: SavedFilter): void {
+        editingFilterId = savedFilter.id;
         filterName = savedFilter.name;
         nameError = '';
-        renameDialogOpen = true;
+    }
+
+    function cancelInlineRename(): void {
+        editingFilterId = null;
+        filterName = '';
+        nameError = '';
     }
 
     function openDeleteDialog(savedFilter: SavedFilter): void {
@@ -396,10 +430,15 @@
         }
     }
 
-    async function renameFilter(event: SubmitEvent): Promise<void> {
+    async function renameFilter(
+        event: SubmitEvent,
+        savedFilter: SavedFilter,
+    ): Promise<void> {
         event.preventDefault();
 
-        if (!pendingFilter) {
+        if (filterName.trim() === '') {
+            nameError = 'Filtri nimi on kohustuslik.';
+
             return;
         }
 
@@ -408,16 +447,17 @@
 
         try {
             const response = await requestJson<SavedFilterResponse>(
-                update(pendingFilter.id),
+                update(savedFilter.id),
                 {
-                    view: pendingFilter.view,
+                    view: savedFilter.view,
                     name: filterName.trim(),
-                    filters: cloneFilters(pendingFilter.filters),
+                    filters: cloneFilters(savedFilter.filters),
                 },
             );
 
             mergeSavedFilter(response.savedFilter);
-            renameDialogOpen = false;
+            editingFilterId = null;
+            filterName = '';
             toast.success('Filter ümber nimetatud');
         } catch (error) {
             if (error instanceof RequestError) {
@@ -480,35 +520,6 @@
         } finally {
             isDeleting = false;
         }
-    }
-
-    function filterSummary(savedFilter: SavedFilter): string {
-        const parts: string[] = [];
-
-        if (savedFilter.filters.status) {
-            parts.push(
-                statusLabels[savedFilter.filters.status as OrderStatus] ??
-                    savedFilter.filters.status,
-            );
-        }
-
-        if (savedFilter.filters.branch) {
-            parts.push(savedFilter.filters.branch);
-        }
-
-        if (savedFilter.filters.assignee) {
-            parts.push(savedFilter.filters.assignee);
-        }
-
-        if (savedFilter.filters.date_from || savedFilter.filters.date_to) {
-            parts.push('Kuupäev');
-        }
-
-        if (savedFilter.filters.search) {
-            parts.push(`“${savedFilter.filters.search}”`);
-        }
-
-        return parts.join(' · ') || 'Kõik tellimused';
     }
 
     function formatCurrency(amount: number): string {
@@ -869,54 +880,84 @@
                         <Card
                             class="gap-0 overflow-hidden rounded-xl border-slate-200 py-0 shadow-xl"
                         >
-                            <CardHeader class="border-b px-4 py-3">
-                                <div
-                                    class="flex items-center justify-between gap-3"
-                                >
-                                    <div id="saved-filters-heading">
-                                        <CardTitle class="text-base">
-                                            Salvestatud filtrid
-                                        </CardTitle>
-                                    </div>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon-sm"
-                                        aria-label="Sulge menüü"
-                                        title="Sulge"
-                                        onclick={() =>
-                                            (savedFiltersMenuOpen = false)}
-                                    >
-                                        <X class="size-4" />
-                                    </Button>
+                            <div
+                                data-testid="saved-filters-header"
+                                class="flex h-11 items-center justify-between gap-3 border-b px-4"
+                            >
+                                <div id="saved-filters-heading">
+                                    <CardTitle class="text-base">
+                                        Salvestatud filtrid
+                                    </CardTitle>
                                 </div>
-                            </CardHeader>
+                                <Button
+                                    variant="ghost"
+                                    size="icon-sm"
+                                    aria-label="Sulge menüü"
+                                    title="Sulge"
+                                    onclick={() =>
+                                        (savedFiltersMenuOpen = false)}
+                                >
+                                    <X class="size-4" />
+                                </Button>
+                            </div>
 
                             <CardContent class="p-2">
                                 {#if hasUnsavedChanges}
-                                    <button
-                                        type="button"
-                                        class="flex w-full items-center gap-3 rounded-lg bg-amber-50 px-3 py-2.5 text-left text-amber-950 transition-colors hover:bg-amber-100 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-amber-600 disabled:opacity-60"
-                                        disabled={isSaving}
-                                        onclick={overwriteSelectedFilter}
+                                    <div
+                                        data-testid="unsaved-filter-actions"
+                                        class="rounded-lg border border-amber-200/80 bg-amber-50/60 p-3 text-slate-900"
+                                        aria-label="Salvestamata muudatuste salvestamine"
                                     >
-                                        <BookmarkCheck
-                                            class="size-4 shrink-0 text-amber-700"
-                                        />
-                                        <span class="min-w-0 flex-1">
-                                            <span
-                                                class="block text-sm font-semibold"
+                                        <div class="flex items-center gap-2">
+                                            <BookmarkCheck
+                                                class="size-4 shrink-0 text-amber-600"
+                                            />
+                                            <span class="min-w-0 flex-1">
+                                                <span
+                                                    class="block text-sm font-semibold"
+                                                >
+                                                    Salvestamata muudatused
+                                                </span>
+                                                <span
+                                                    class="block truncate text-xs text-slate-600"
+                                                >
+                                                    <span class="font-medium"
+                                                        >Filter:</span
+                                                    >
+                                                    {selectedFilter?.name}
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <div
+                                            class="mt-3 grid grid-cols-2 gap-2"
+                                        >
+                                            <Button
+                                                size="sm"
+                                                class="bg-stokker-primary text-white hover:bg-stokker-primary-dark"
+                                                disabled={isSaving}
+                                                onclick={overwriteSelectedFilter}
                                             >
+                                                <Save class="size-3.5" />
                                                 {isSaving
                                                     ? 'Salvestan…'
-                                                    : 'Salvesta muudatused'}
-                                            </span>
-                                            <span
-                                                class="block truncate text-xs"
+                                                    : 'Salvesta üle'}
+                                            </Button>
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                class="border-slate-200 bg-white text-slate-700 hover:bg-slate-100 hover:text-slate-900"
+                                                disabled={isSaving}
+                                                onclick={openChangedFiltersAsNew}
                                             >
-                                                {selectedFilter?.name}
-                                            </span>
-                                        </span>
-                                    </button>
+                                                <Plus class="size-3.5" />
+                                                <span
+                                                    class="block text-sm font-semibold"
+                                                >
+                                                    Salvesta uuena
+                                                </span>
+                                            </Button>
+                                        </div>
+                                    </div>
                                     <div class="my-2 h-px bg-slate-100"></div>
                                 {/if}
 
@@ -928,19 +969,74 @@
                                                     savedFilter.id}
                                                 class="group rounded-lg border border-transparent transition-colors hover:bg-slate-50 [&.selected-filter]:border-sky-200 [&.selected-filter]:bg-sky-50"
                                             >
-                                                <div
-                                                    class="flex items-start gap-1 p-1.5"
-                                                >
-                                                    <button
-                                                        type="button"
-                                                        class="min-w-0 flex-1 rounded-md px-2 py-1.5 text-left focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-stokker-primary"
-                                                        onclick={() =>
-                                                            applySavedFilter(
+                                                {#if editingFilterId === savedFilter.id}
+                                                    <form
+                                                        class="flex items-start gap-1 p-1.5"
+                                                        onsubmit={(event) =>
+                                                            renameFilter(
+                                                                event,
                                                                 savedFilter,
                                                             )}
                                                     >
-                                                        <span
-                                                            class="flex items-center gap-2"
+                                                        <div
+                                                            class="min-w-0 flex-1"
+                                                        >
+                                                            <Input
+                                                                id={`saved-filter-name-${savedFilter.id}`}
+                                                                bind:value={
+                                                                    filterName
+                                                                }
+                                                                maxlength={60}
+                                                                aria-label="Filtri nimi"
+                                                                aria-invalid={Boolean(
+                                                                    nameError,
+                                                                )}
+                                                                class="h-8 bg-white text-sm font-semibold"
+                                                                autofocus
+                                                            />
+                                                            {#if nameError}
+                                                                <p
+                                                                    class="px-1 pt-1 text-xs text-destructive"
+                                                                >
+                                                                    {nameError}
+                                                                </p>
+                                                            {/if}
+                                                        </div>
+                                                        <button
+                                                            type="submit"
+                                                            data-testid="inline-filter-save"
+                                                            class="inline-flex size-8 shrink-0 items-center justify-center rounded-md bg-stokker-primary text-white transition-colors hover:bg-stokker-primary-dark focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-stokker-primary disabled:opacity-50"
+                                                            aria-label="Salvesta nimi"
+                                                            title="Salvesta"
+                                                            disabled={isSaving ||
+                                                                filterName.trim() ===
+                                                                    ''}
+                                                        >
+                                                            <Save
+                                                                class="size-4"
+                                                            />
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            class="inline-flex size-8 shrink-0 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white hover:text-slate-700 focus-visible:outline-2 focus-visible:outline-stokker-primary"
+                                                            aria-label="Loobu nime muutmisest"
+                                                            title="Loobu"
+                                                            onclick={cancelInlineRename}
+                                                        >
+                                                            <X class="size-4" />
+                                                        </button>
+                                                    </form>
+                                                {:else}
+                                                    <div
+                                                        class="flex items-center gap-1 p-1.5"
+                                                    >
+                                                        <button
+                                                            type="button"
+                                                            class="flex min-w-0 flex-1 items-center gap-2 rounded-md px-2 py-1.5 text-left focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-stokker-primary"
+                                                            onclick={() =>
+                                                                applySavedFilter(
+                                                                    savedFilter,
+                                                                )}
                                                         >
                                                             <span
                                                                 class="truncate text-sm font-semibold text-slate-900"
@@ -948,77 +1044,72 @@
                                                                 {savedFilter.name}
                                                             </span>
                                                             {#if selectedFilterId === savedFilter.id}
-                                                                <Check
-                                                                    class="size-3.5 shrink-0 text-stokker-primary"
-                                                                />
+                                                                <span
+                                                                    class="shrink-0 rounded-full bg-sky-100 px-2 py-0.5 text-[10px] font-semibold tracking-wide text-sky-700 uppercase"
+                                                                >
+                                                                    Aktiivne
+                                                                </span>
                                                             {/if}
-                                                        </span>
-                                                        <span
-                                                            class="mt-0.5 block truncate text-xs text-slate-500"
-                                                        >
-                                                            {filterSummary(
-                                                                savedFilter,
-                                                            )}
-                                                        </span>
-                                                    </button>
+                                                        </button>
 
-                                                    <div
-                                                        class="flex shrink-0 items-center gap-0.5 pt-1"
-                                                    >
-                                                        <button
-                                                            type="button"
-                                                            class="inline-flex size-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white hover:text-amber-600 focus-visible:outline-2 focus-visible:outline-stokker-primary disabled:opacity-60"
-                                                            class:text-amber-500={savedFilter.isDefault}
-                                                            aria-label={savedFilter.isDefault
-                                                                ? `${savedFilter.name} on vaikefilter`
-                                                                : `Määra ${savedFilter.name} vaikefiltriks`}
-                                                            title={savedFilter.isDefault
-                                                                ? 'Vaikefilter'
-                                                                : 'Määra vaikefiltriks'}
-                                                            disabled={pendingDefaultId !==
-                                                                null}
-                                                            onclick={() =>
-                                                                setDefault(
-                                                                    savedFilter,
-                                                                )}
+                                                        <div
+                                                            class="flex shrink-0 items-center gap-0.5"
                                                         >
-                                                            <Star
-                                                                class="size-4"
-                                                                fill={savedFilter.isDefault
-                                                                    ? 'currentColor'
-                                                                    : 'none'}
-                                                            />
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            class="inline-flex size-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white hover:text-slate-700 focus-visible:outline-2 focus-visible:outline-stokker-primary"
-                                                            aria-label={`Nimeta ${savedFilter.name} ümber`}
-                                                            title="Nimeta ümber"
-                                                            onclick={() =>
-                                                                openRenameDialog(
-                                                                    savedFilter,
-                                                                )}
-                                                        >
-                                                            <Pencil
-                                                                class="size-3.5"
-                                                            />
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            class="inline-flex size-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600 focus-visible:outline-2 focus-visible:outline-red-500"
-                                                            aria-label={`Kustuta ${savedFilter.name}`}
-                                                            title="Kustuta"
-                                                            onclick={() =>
-                                                                openDeleteDialog(
-                                                                    savedFilter,
-                                                                )}
-                                                        >
-                                                            <Trash2
-                                                                class="size-3.5"
-                                                            />
-                                                        </button>
+                                                            <button
+                                                                type="button"
+                                                                class={`inline-flex size-7 items-center justify-center rounded-md transition-colors hover:bg-white focus-visible:outline-2 focus-visible:outline-stokker-primary disabled:opacity-60 ${savedFilter.isDefault ? 'text-amber-500 hover:text-amber-600' : 'text-slate-400 hover:text-amber-600'}`}
+                                                                aria-label={savedFilter.isDefault
+                                                                    ? `${savedFilter.name} on vaikefilter`
+                                                                    : `Määra ${savedFilter.name} vaikefiltriks`}
+                                                                aria-pressed={savedFilter.isDefault}
+                                                                title={savedFilter.isDefault
+                                                                    ? 'Vaikefilter'
+                                                                    : 'Määra vaikefiltriks'}
+                                                                disabled={pendingDefaultId !==
+                                                                    null}
+                                                                onclick={() =>
+                                                                    setDefault(
+                                                                        savedFilter,
+                                                                    )}
+                                                            >
+                                                                <Star
+                                                                    class="size-4"
+                                                                    fill={savedFilter.isDefault
+                                                                        ? 'currentColor'
+                                                                        : 'none'}
+                                                                />
+                                                            </button>
+                                                            <button
+                                                                type="button"
+                                                                class="inline-flex size-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-white hover:text-slate-700 focus-visible:outline-2 focus-visible:outline-stokker-primary"
+                                                                aria-label={`Nimeta ${savedFilter.name} ümber`}
+                                                                title="Nimeta ümber"
+                                                                onclick={() =>
+                                                                    startInlineRename(
+                                                                        savedFilter,
+                                                                    )}
+                                                            >
+                                                                <Pencil
+                                                                    class="size-3.5"
+                                                                />
+                                                            </button>
+                                                            <button
+                                                                type="button"
+                                                                class="inline-flex size-7 items-center justify-center rounded-md text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600 focus-visible:outline-2 focus-visible:outline-red-500"
+                                                                aria-label={`Kustuta ${savedFilter.name}`}
+                                                                title="Kustuta"
+                                                                onclick={() =>
+                                                                    openDeleteDialog(
+                                                                        savedFilter,
+                                                                    )}
+                                                            >
+                                                                <Trash2
+                                                                    class="size-3.5"
+                                                                />
+                                                            </button>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                {/if}
                                             </li>
                                         {/each}
                                     </ul>
@@ -1035,15 +1126,17 @@
                                     </div>
                                 {/if}
 
-                                <div class="my-2 h-px bg-slate-100"></div>
-                                <button
-                                    type="button"
-                                    class="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-stokker-primary"
-                                    onclick={openSaveDialog}
-                                >
-                                    <Plus class="size-4" />
-                                    Salvesta uue filtrina
-                                </button>
+                                {#if !hasUnsavedChanges}
+                                    <div class="my-2 h-px bg-slate-100"></div>
+                                    <button
+                                        type="button"
+                                        class="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-stokker-primary"
+                                        onclick={openSaveDialog}
+                                    >
+                                        <Plus class="size-4" />
+                                        Salvesta uue filtrina
+                                    </button>
+                                {/if}
                             </CardContent>
                         </Card>
                     </aside>
@@ -1113,55 +1206,6 @@
                     disabled={isSaving || filterName.trim() === ''}
                 >
                     {isSaving ? 'Salvestan…' : 'Salvesta filter'}
-                </Button>
-            </DialogFooter>
-        </form>
-    </DialogContent>
-</Dialog>
-
-<Dialog bind:open={renameDialogOpen}>
-    <DialogContent class="max-w-md">
-        <form class="grid gap-5" onsubmit={renameFilter}>
-            <div class="grid gap-1.5">
-                <DialogTitle>Nimeta filter ümber</DialogTitle>
-            </div>
-
-            <div class="grid gap-2">
-                <Label for="rename-filter-name">Filtri nimi</Label>
-                <Input
-                    id="rename-filter-name"
-                    bind:value={filterName}
-                    maxlength={60}
-                    aria-invalid={Boolean(nameError)}
-                    aria-describedby={nameError
-                        ? 'rename-filter-name-error'
-                        : undefined}
-                    autofocus
-                />
-                {#if nameError}
-                    <p
-                        id="rename-filter-name-error"
-                        class="text-sm text-destructive"
-                    >
-                        {nameError}
-                    </p>
-                {/if}
-            </div>
-
-            <DialogFooter>
-                <Button
-                    type="button"
-                    variant="outline"
-                    onclick={() => (renameDialogOpen = false)}
-                >
-                    Loobu
-                </Button>
-                <Button
-                    type="submit"
-                    class="bg-stokker-primary text-white hover:bg-stokker-primary-dark"
-                    disabled={isSaving || filterName.trim() === ''}
-                >
-                    {isSaving ? 'Salvestan…' : 'Salvesta nimi'}
                 </Button>
             </DialogFooter>
         </form>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\SavedFilter;
+use Illuminate\Support\Facades\File;
 use Inertia\Testing\AssertableInertia as Assert;
 
 function orderFilters(array $overrides = []): array
@@ -32,6 +33,24 @@ test('the DEV-238 saved filters demo page is available', function () {
             ->where('savedFilters.0.filters.status', 'in_progress')
             ->where('savedFilters.0.isDefault', true),
         );
+});
+
+test('saved filter names are edited inline and the active view is badged', function () {
+    $component = File::get(resource_path('js/pages/demos/SavedFilters.svelte'));
+
+    expect($component)
+        ->toContain('editingFilterId === savedFilter.id')
+        ->toContain('Aktiivne')
+        ->toContain('data-testid="inline-filter-save"')
+        ->toContain('data-testid="saved-filters-header"')
+        ->toContain('data-testid="unsaved-filter-actions"')
+        ->toContain('Salvesta üle')
+        ->toContain('Salvesta uuena')
+        ->toContain('Filter:')
+        ->toContain('aria-pressed={savedFilter.isDefault}')
+        ->toContain("'text-amber-500 hover:text-amber-600'")
+        ->not->toContain('filterSummary(')
+        ->not->toContain('renameDialogOpen');
 });
 
 test('a filter can be saved and made the default', function () {
