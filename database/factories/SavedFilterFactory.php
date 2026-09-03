@@ -29,6 +29,7 @@ class SavedFilterFactory extends Factory
                 'date_to' => '',
             ],
             'is_default' => false,
+            'position' => 0,
         ];
     }
 }

@@ -13,5 +13,6 @@ export type SavedFilter = {
     name: string;
     filters: OrderFilterCriteria;
     isDefault: boolean;
+    position: number;
     updatedAt: string;
 };

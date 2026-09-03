@@ -47,6 +47,12 @@ test('saved filter names are edited inline and the active view is badged', funct
         ->toContain('Salvesta üle')
         ->toContain('Salvesta uuena')
         ->toContain('Filter:')
+        ->toContain('GripVertical')
+        ->toContain('DragDropProvider')
+        ->toContain('useSortable')
+        ->toContain('{@attach handleRef}')
+        ->toContain('reorder()')
+        ->toContain('hover:bg-stokker-primary-50')
         ->toContain('aria-pressed={savedFilter.isDefault}')
         ->toContain("'text-amber-500 hover:text-amber-600'")
         ->not->toContain('filterSummary(')
@@ -131,6 +137,31 @@ test('a different saved filter can be selected as the default', function () {
 
     expect($oldDefault->refresh()->is_default)->toBeFalse()
         ->and($newDefault->refresh()->is_default)->toBeTrue();
+});
+
+test('saved filters can be reordered', function () {
+    $firstFilter = SavedFilter::factory()->create([
+        'name' => 'Esimene filter',
+        'position' => 0,
+    ]);
+    $secondFilter = SavedFilter::factory()->create([
+        'name' => 'Teine filter',
+        'position' => 1,
+    ]);
+
+    $this->putJson(route('demos.dev_238.saved_filters.reorder'), [
+        'ids' => [$secondFilter->id, $firstFilter->id],
+    ])->assertNoContent();
+
+    expect($secondFilter->refresh()->position)->toBe(0)
+        ->and($firstFilter->refresh()->position)->toBe(1);
+
+    $this->get(route('demos.dev_238.saved_filters.index'))
+        ->assertSuccessful()
+        ->assertInertia(fn (Assert $page) => $page
+            ->where('savedFilters.0.id', $secondFilter->id)
+            ->where('savedFilters.1.id', $firstFilter->id),
+        );
 });
 
 test('a saved filter can be deleted', function () {

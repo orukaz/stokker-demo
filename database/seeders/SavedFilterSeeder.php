@@ -31,7 +31,8 @@ class SavedFilterSeeder extends Seeder
      * @return list<array{
      *     name: string,
      *     filters: array<string, string>,
-     *     is_default: bool
+     *     is_default: bool,
+     *     position: int
      * }>
      */
     private function filters(): array
@@ -48,6 +49,7 @@ class SavedFilterSeeder extends Seeder
                     'date_to' => '2026-09-03',
                 ],
                 'is_default' => true,
+                'position' => 0,
             ],
             [
                 'name' => 'Minu töölaud',
@@ -60,6 +62,7 @@ class SavedFilterSeeder extends Seeder
                     'date_to' => '',
                 ],
                 'is_default' => false,
+                'position' => 1,
             ],
             [
                 'name' => 'Tartu väljastamata',
@@ -72,6 +75,7 @@ class SavedFilterSeeder extends Seeder
                     'date_to' => '',
                 ],
                 'is_default' => false,
+                'position' => 2,
             ],
         ];
     }

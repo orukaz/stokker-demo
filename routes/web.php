@@ -22,6 +22,8 @@ Route::prefix('demos/dev-238')->name('demos.dev_238.')->group(function () {
         ->name('saved_filters.index');
     Route::post('/saved-filters', [SavedFilterController::class, 'store'])
         ->name('saved_filters.store');
+    Route::put('/saved-filters/reorder', [SavedFilterController::class, 'reorder'])
+        ->name('saved_filters.reorder');
     Route::patch('/saved-filters/{savedFilter}', [SavedFilterController::class, 'update'])
         ->name('saved_filters.update');
     Route::put('/saved-filters/{savedFilter}/default', [SavedFilterController::class, 'makeDefault'])

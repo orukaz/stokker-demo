@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-#[Fillable(['view', 'name', 'filters', 'is_default'])]
+#[Fillable(['view', 'name', 'filters', 'is_default', 'position'])]
 class SavedFilter extends Model
 {
     /** @use HasFactory<SavedFilterFactory> */
@@ -20,6 +20,7 @@ class SavedFilter extends Model
     protected $attributes = [
         'view' => 'orders',
         'is_default' => false,
+        'position' => 0,
     ];
 
     /**
@@ -30,6 +31,7 @@ class SavedFilter extends Model
         return [
             'filters' => 'array',
             'is_default' => 'boolean',
+            'position' => 'integer',
         ];
     }
 

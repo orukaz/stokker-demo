@@ -41,6 +41,9 @@
         "vue-tsc": "^3.3.9"
     },
     "dependencies": {
+        "@dnd-kit-svelte/svelte": "^0.1.6",
+        "@dnd-kit/abstract": "^0.5.0",
+        "@dnd-kit/helpers": "^0.5.0",
         "@inertiajs/svelte": "^3.0.0",
         "@inertiajs/vite": "^3.0.0",
         "@laravel/passkeys": "^0.2.0",
